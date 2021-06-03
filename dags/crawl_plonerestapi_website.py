@@ -1,11 +1,10 @@
 from xml.dom import minidom
 
 from airflow.decorators import dag, task
-# from airflow.providers.http.operators.http import SimpleHttpOperator
+from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.utils.dates import days_ago
 
 from tasks.dagrun import BulkTriggerDagRunOperator
-from tasks.http import PooledHttpOperator
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
@@ -67,7 +66,7 @@ def crawl_plonerestapi_website(website_url: str = "",
 
     xc_sitemap_url = get_sitemap_url(website_url)
 
-    xc_sitemap = PooledHttpOperator(
+    xc_sitemap = SimpleHttpOperator(
         task_id="get_sitemap",
         method="GET",
         endpoint=xc_sitemap_url,
