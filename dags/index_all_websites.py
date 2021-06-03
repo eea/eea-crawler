@@ -3,7 +3,7 @@ from airflow.models import Variable
 from airflow.operators import trigger_dagrun
 from airflow.utils.dates import days_ago
 
-import helpers
+from lib.debug import hostname, pretty_id
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
@@ -26,12 +26,13 @@ def index_all_websites():
     DAG for all of them.
     """
 
-    configured_websites = Variable.get("indexed_websites", deserialize_json=True)
+    configured_websites = Variable.get(
+        "indexed_websites", deserialize_json=True)
 
     #    helpers.debug_value(configured_websites)
 
     for site_url in configured_websites:
-        task_id = "trigger_crawl_dag_" + helpers.nicename(site_url)
+        task_id = "trigger_crawl_dag_" + pretty_id(site_url)
         trigger_dagrun.TriggerDagRunOperator(
             task_id=task_id,
             trigger_dag_id="crawl_plonerestapi_website",
@@ -39,6 +40,7 @@ def index_all_websites():
                 "website_url": site_url,
                 # TODO: read also maintainer from configuration
                 "maintainer_email": "tibi@example.com",
+                "allocated_api_pool": "api_{}".format(hostname(site_url))[:40]
             },
         )
 

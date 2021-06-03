@@ -1,11 +1,12 @@
 import json
+from urllib.parse import urlparse
 
 from airflow.decorators import dag, task
 from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.utils.dates import days_ago
 from eea.rabbitmq.client import RabbitMQConnector
 
-import helpers
+from lib.debug import pretty_id
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
@@ -34,7 +35,7 @@ def get_relevant_data(doc, item, parent):
     data["review_state"] = json_doc.get("review_state", "no state")
     data["modified"] = json_doc.get("modified", "not modified")
     data["UID"] = json_doc.get("UID")
-    data["id"] = helpers.nicename(item)
+    data["id"] = pretty_id(item)
     data["cluster"] = parent
     return data
 
@@ -60,22 +61,26 @@ def send_to_rabbitmq(doc):
     default_args=default_args,
     schedule_interval=None,
     start_date=days_ago(2),
-    tags=["crawl"],
+    tags=["semantic-search"],
 )
 def fetch_url(item: str = "", parent: str = ""):
     """
     ### get info about an url
     """
-    url_with_api = get_api_url(item)
-    doc = SimpleHttpOperator(
-        task_id="get_doc",
-        method="GET",
-        endpoint=url_with_api,
-        headers={"Accept": "application/json"},
-    )
 
-    prepared_data = get_relevant_data(doc.output, item, parent)
-    send_to_rabbitmq(prepared_data)
+    print('fetch_url', item)
+
+    url_with_api = get_api_url(item)
+
+    # doc = SimpleHttpOperator(
+    #     task_id="get_doc",
+    #     method="GET",
+    #     endpoint=url_with_api,
+    #     headers={"Accept": "application/json"},
+    # )
+    #
+    # prepared_data = get_relevant_data(doc.output, item, parent)
+    # send_to_rabbitmq(prepared_data)
 
 
 fetch_url_dag = fetch_url()
