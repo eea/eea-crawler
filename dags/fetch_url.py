@@ -72,15 +72,15 @@ def fetch_url(item: str = "", parent: str = ""):
 
     url_with_api = get_api_url(item)
 
-    # doc = SimpleHttpOperator(
-    #     task_id="get_doc",
-    #     method="GET",
-    #     endpoint=url_with_api,
-    #     headers={"Accept": "application/json"},
-    # )
-    #
-    # prepared_data = get_relevant_data(doc.output, item, parent)
-    # send_to_rabbitmq(prepared_data)
+    doc = SimpleHttpOperator(
+        task_id="get_doc",
+        method="GET",
+        endpoint=url_with_api,
+        headers={"Accept": "application/json"},
+    )
+
+    prepared_data = get_relevant_data(doc.output, item, parent)
+    send_to_rabbitmq(prepared_data)
 
 
 fetch_url_dag = fetch_url()

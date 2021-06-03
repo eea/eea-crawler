@@ -48,7 +48,7 @@ def index_all_websites():
         cpo = CreatePoolOperator(
             task_id="create_pool_" + pretty_id(site_url),
             name=url_to_pool(site_url),
-            slots=4
+            slots=2
         )
 
         t >> cpo
