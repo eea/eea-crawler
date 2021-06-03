@@ -93,16 +93,17 @@ class BulkTriggerDagRunOperator(BaseOperator):
     def execute(self, context: Dict, session):
         execution_date = timezone.utcnow()
         self.log.info('context: %r, %r', context, self.parent)
-        counter = 10
+        counter = 2
         for item in self.items:
             # run_id = DagRun.generate_run_id(
             #     DagRunType.MANUAL, execution_date)
-            print(item)
+            # print(item)
             dag_run = trigger_dag(
                 dag_id=self.trigger_dag_id,
                 # run_id=run_id,
                 conf={"item": item, "parent": self.parent},
-                execution_date=execution_date + timedelta(seconds=counter),
+                execution_date=execution_date + \
+                timedelta(microseconds=counter),
                 replace_microseconds=False,
             )
             tis = dag_run.get_task_instances()
@@ -110,7 +111,7 @@ class BulkTriggerDagRunOperator(BaseOperator):
                 ti.pool = url_to_pool(self.parent)
                 session.add(ti)
                 self.log.info("ti: %s", ti)
-            print(dag_run)
+            # print(dag_run)
             counter += 1
 
         # try:

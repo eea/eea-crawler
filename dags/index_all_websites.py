@@ -4,6 +4,8 @@ from airflow.operators import trigger_dagrun
 from airflow.utils.dates import days_ago
 
 from lib.debug import hostname, pretty_id
+from lib.pool import url_to_pool
+from tasks.pool import CreatePoolOperator
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
@@ -33,7 +35,7 @@ def index_all_websites():
 
     for site_url in configured_websites:
         task_id = "trigger_crawl_dag_" + pretty_id(site_url)
-        trigger_dagrun.TriggerDagRunOperator(
+        t = trigger_dagrun.TriggerDagRunOperator(
             task_id=task_id,
             trigger_dag_id="crawl_plonerestapi_website",
             conf={
@@ -43,6 +45,13 @@ def index_all_websites():
                 "allocated_api_pool": "api_{}".format(hostname(site_url))[:40]
             },
         )
+        cpo = CreatePoolOperator(
+            task_id="create_pool_" + pretty_id(site_url),
+            name=url_to_pool(site_url),
+            slots=4
+        )
+
+        t >> cpo
 
 
 index_all_websites_dag = index_all_websites()
