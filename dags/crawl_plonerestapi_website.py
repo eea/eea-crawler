@@ -51,9 +51,11 @@ def get_urls_to_update(urls: list = []) -> dict:
     start_date=days_ago(2),
     tags=["semantic-search"],
 )
-def crawl_plonerestapi_website(website_url: str = "",
-                               allocated_api_pool: str = "default_pool",
-                               maintainer_email: str = ""):
+def crawl_plonerestapi_website(
+    website_url: str = "",
+    allocated_api_pool: str = "default_pool",
+    maintainer_email: str = "",
+):
     """
     ### Crawls a plone.restapi powered website.
 

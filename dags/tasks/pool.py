@@ -5,16 +5,11 @@ from airflow.models import BaseOperator
 
 class CreatePoolOperator(BaseOperator):
     # its pool blue, get it?
-    ui_color = '#b8e9ee'
-    template_fields = ['name']
+    ui_color = "#b8e9ee"
+    template_fields = ["name"]
 
     # @apply_defaults
-    def __init__(
-            self,
-            name,
-            slots,
-            description='',
-            *args, **kwargs):
+    def __init__(self, name, slots, description="", *args, **kwargs):
         super(CreatePoolOperator, self).__init__(*args, **kwargs)
         self.description = description
         self.slots = slots
@@ -24,10 +19,11 @@ class CreatePoolOperator(BaseOperator):
         try:
             pool = get_pool(name=self.name)
             if pool:
-                self.log.info(f'Pool exists: {pool}')
+                self.log.info(f"Pool exists: {pool}")
                 return
         except PoolNotFound:
             # create the pool
-            pool = create_pool(name=self.name, slots=self.slots,
-                               description=self.description)
-            self.log.info(f'Created pool: {pool}')
+            pool = create_pool(
+                name=self.name, slots=self.slots, description=self.description
+            )
+            self.log.info(f"Created pool: {pool}")

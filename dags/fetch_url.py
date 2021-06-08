@@ -68,7 +68,7 @@ def fetch_url(item: str = "", parent: str = ""):
     ### get info about an url
     """
 
-    print('fetch_url', item)
+    print("fetch_url", item)
 
     url_with_api = get_api_url(item)
 

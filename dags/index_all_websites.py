@@ -28,9 +28,9 @@ def index_all_websites():
     DAG for all of them.
     """
 
-    configured_websites = Variable.get(
-        "indexed_websites", deserialize_json=True)
+    configured_websites = Variable.get("indexed_websites", deserialize_json=True)
 
+    #    configured_websites = ["https://biodiversity.europa.eu1"]
     #    helpers.debug_value(configured_websites)
 
     for site_url in configured_websites:
@@ -42,13 +42,13 @@ def index_all_websites():
                 "website_url": site_url,
                 # TODO: read also maintainer from configuration
                 "maintainer_email": "tibi@example.com",
-                "allocated_api_pool": "api_{}".format(hostname(site_url))[:40]
+                "allocated_api_pool": "api_{}".format(hostname(site_url))[:40],
             },
         )
         cpo = CreatePoolOperator(
             task_id="create_pool_" + pretty_id(site_url),
             name=url_to_pool(site_url),
-            slots=2
+            slots=2,
         )
 
         t >> cpo
