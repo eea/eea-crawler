@@ -20,7 +20,6 @@ def build_command(app_name):
 def esbootstrap_nodejs_indexer(app_name: str = 'pam'):
     debug_value(app_name)
     cmd = build_command(app_name)
-    print("XXXXXXXXXXXXXXXXXXXXX")
     print(cmd)
     esbootstrap_indexer_task = BashOperator(
         task_id="bash_task",
