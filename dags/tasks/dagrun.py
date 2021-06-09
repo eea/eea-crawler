@@ -79,7 +79,9 @@ class BulkTriggerDagRunOperator(BaseOperator):
         self.poke_interval = poke_interval
         self.allowed_states = allowed_states or [State.SUCCESS]
         self.failed_states = failed_states or [State.FAILED]
-        if not isinstance(execution_date, (str, datetime.datetime, type(None))):
+
+        if not isinstance(execution_date,
+                          (str, datetime.datetime, type(None))):
             raise TypeError(
                 "Expected str or datetime.datetime type for execution_date."
                 "Got {}".format(type(execution_date))
@@ -92,16 +94,15 @@ class BulkTriggerDagRunOperator(BaseOperator):
     def execute(self, context: Dict, session):
         execution_date = timezone.utcnow()
         self.log.info("context: %r, %r", context, self.parent)
-        counter = 2
+
+        counter = 2000
+
         for item in self.items:
-            # run_id = DagRun.generate_run_id(
-            #     DagRunType.MANUAL, execution_date)
-            # print(item)
+            exec_date = execution_date + timedelta(microseconds=counter)
             dag_run = trigger_dag(
                 dag_id=self.trigger_dag_id,
-                # run_id=run_id,
                 conf={"item": item, "parent": self.parent},
-                execution_date=execution_date + timedelta(microseconds=counter),
+                execution_date=exec_date,
                 replace_microseconds=False,
             )
             tis = dag_run.get_task_instances()
