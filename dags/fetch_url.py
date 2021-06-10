@@ -19,7 +19,7 @@ default_args = {
 def get_api_url(url):
     no_protocol_url = url.split("://")[-1]
     url_parts = no_protocol_url.split("/")
-    url_parts.insert(1, "api")
+    url_parts.insert(1, "api/SITE")
     url_with_api = "/".join(url_parts)
     print(url_with_api)
     return url_with_api
