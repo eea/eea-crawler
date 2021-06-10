@@ -80,8 +80,7 @@ class BulkTriggerDagRunOperator(BaseOperator):
         self.allowed_states = allowed_states or [State.SUCCESS]
         self.failed_states = failed_states or [State.FAILED]
 
-        if not isinstance(execution_date,
-                          (str, datetime.datetime, type(None))):
+        if not isinstance(execution_date, (str, datetime.datetime, type(None))):
             raise TypeError(
                 "Expected str or datetime.datetime type for execution_date."
                 "Got {}".format(type(execution_date))
