@@ -4,10 +4,12 @@ from typing import Dict, List, Optional, Union
 
 from airflow.api.common.experimental.trigger_dag import trigger_dag
 from airflow.models import BaseOperator  # BaseOperatorLink,AirflowException,
+from airflow.models import DagBag, DagModel, DagRun
 from airflow.utils import timezone
 from airflow.utils.session import provide_session
 from airflow.utils.state import State
 from lib.pool import url_to_pool
+from airflow.utils.types import DagRunType
 
 # from airflow.exceptions import DagNotFound, DagRunAlreadyExists
 # from airflow.models import DagBag, DagModel, DagRun
@@ -91,27 +93,20 @@ class BulkTriggerDagRunOperator(BaseOperator):
 
     @provide_session
     def execute(self, context: Dict, session):
-        execution_date = timezone.utcnow()
-        self.log.info("context: %r, %r", context, self.parent)
-
-        counter = 2000
+        #        execution_date = timezone.utcnow()
+        #        self.log.info("context: %r, %r", context, self.parent)
 
         for item in self.items:
-            exec_date = execution_date + timedelta(microseconds=counter)
+            execution_date = timezone.utcnow()
+            run_id = DagRun.generate_run_id(DagRunType.MANUAL, execution_date)
+            print(item)
             dag_run = trigger_dag(
                 dag_id=self.trigger_dag_id,
+                run_id=run_id,
                 conf={"item": item, "parent": self.parent},
-                execution_date=exec_date,
+                execution_date=self.execution_date,
                 replace_microseconds=False,
             )
-            tis = dag_run.get_task_instances()
-            for ti in tis:
-                ti.pool = url_to_pool(self.parent)
-                session.add(ti)
-                self.log.info("ti: %s", ti)
-            # print(dag_run)
-            counter += 1
-
         # try:
         # except DagRunAlreadyExists as e:
         #     if self.reset_dag_run:

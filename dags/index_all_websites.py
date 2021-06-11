@@ -28,9 +28,9 @@ def index_all_websites():
     DAG for all of them.
     """
 
-    configured_websites = Variable.get("indexed_websites", deserialize_json=True)
+    # configured_websites = Variable.get("indexed_websites", deserialize_json=True)
 
-    #    configured_websites = ["https://biodiversity.europa.eu1"]
+    configured_websites = ["https://eea.europa.eu"]
     #    helpers.debug_value(configured_websites)
 
     for site_url in configured_websites:

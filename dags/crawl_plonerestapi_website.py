@@ -6,6 +6,8 @@ from airflow.utils.dates import days_ago
 
 from tasks.dagrun import BulkTriggerDagRunOperator
 
+from usp.tree import sitemap_tree_for_homepage
+
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
 default_args = {
@@ -45,6 +47,24 @@ def get_urls_to_update(urls: list = []) -> dict:
     return my_clean_urls
 
 
+@task
+def get_sitemap(url):
+    tree = sitemap_tree_for_homepage(url)
+    urls = []
+    for page in tree.all_pages():
+        #        print (page)
+        #        print (page.url)
+        #        print (page.last_modified)
+        urls.append(
+            {
+                "url": page.url
+                # , 'last_modified':page.last_modified.strftime("%m/%d/%Y, %H:%M:%S")
+            }
+        )
+    print("Retrieved %s urls" % len(urls))
+    return urls
+
+
 @dag(
     default_args=default_args,
     schedule_interval=None,
@@ -61,32 +81,41 @@ def crawl_plonerestapi_website(
 
     Main task to crawl a website
     """
-
-    #   helpers.show_dag_run_conf(
-    #        {"website_url": website_url, "maintainer_email": maintainer_email}
-    #    )
-
-    xc_sitemap_url = get_sitemap_url(website_url)
-
-    xc_sitemap = SimpleHttpOperator(
-        task_id="get_sitemap",
-        method="GET",
-        endpoint=xc_sitemap_url,
-        # pool="{{ti.xcom_pull('allocated_api_pool')}}"
-    )
-
-    #    helpers.debug_value(xc_sitemap.output)
-
-    xc_urls = get_urls_from_sitemap(xc_sitemap.output)
-
+    xc_urls = get_sitemap(website_url)
     xc_clean_urls = get_urls_to_update(xc_urls)
-
     BulkTriggerDagRunOperator(
         task_id="fetch_urls",
         items=xc_clean_urls,
         trigger_dag_id="fetch_url",
         parent=website_url,
     )
+
+    #   helpers.show_dag_run_conf(
+    #        {"website_url": website_url, "maintainer_email": maintainer_email}
+    #    )
+
+
+#    xc_sitemap_url = get_sitemap_url(website_url)
+
+#    xc_sitemap = SimpleHttpOperator(
+#        task_id="get_sitemap",
+#        method="GET",
+#        endpoint=xc_sitemap_url,
+# pool="{{ti.xcom_pull('allocated_api_pool')}}"
+#    )
+
+#    helpers.debug_value(xc_sitemap.output)
+
+#    xc_urls = get_urls_from_sitemap(xc_sitemap.output)
+
+#    xc_clean_urls = get_urls_to_update(xc_urls)
+
+#    BulkTriggerDagRunOperator(
+#        task_id="fetch_urls",
+#        items=xc_clean_urls,
+#        trigger_dag_id="fetch_url",
+#        parent=website_url,
+#    )
 
 
 crawl_website_dag = crawl_plonerestapi_website()
