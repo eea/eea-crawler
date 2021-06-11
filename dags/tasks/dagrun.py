@@ -47,7 +47,12 @@ class BulkTriggerDagRunOperator(BaseOperator):
     :type failed_states: list
     """
 
-    template_fields = ("trigger_dag_id", "execution_date", "items", "parent")
+    template_fields = (
+        "trigger_dag_id",
+        "execution_date",
+        "items",
+        "custom_pool",
+    )
     template_fields_renderers = {"conf": "py"}
     ui_color = "#ffefeb"
 
@@ -60,7 +65,7 @@ class BulkTriggerDagRunOperator(BaseOperator):
         self,
         *,
         items: list,
-        parent: str,
+        custom_pool: Optional[str] = "",
         trigger_dag_id: str,
         conf: Optional[Dict] = None,
         execution_date: Optional[Union[str, datetime.datetime]] = None,
@@ -73,7 +78,7 @@ class BulkTriggerDagRunOperator(BaseOperator):
     ) -> None:
         super().__init__(**kwargs)
         self.items = items
-        self.parent = parent
+        self.custom_pool = custom_pool
         self.trigger_dag_id = trigger_dag_id
         self.reset_dag_run = reset_dag_run
         self.wait_for_completion = wait_for_completion
@@ -81,8 +86,9 @@ class BulkTriggerDagRunOperator(BaseOperator):
         self.allowed_states = allowed_states or [State.SUCCESS]
         self.failed_states = failed_states or [State.FAILED]
 
-        if not isinstance(execution_date,
-                          (str, datetime.datetime, type(None))):
+        if not isinstance(
+            execution_date, (str, datetime.datetime, type(None))
+        ):
             raise TypeError(
                 "Expected str or datetime.datetime type for execution_date."
                 "Got {}".format(type(execution_date))
@@ -93,27 +99,30 @@ class BulkTriggerDagRunOperator(BaseOperator):
 
     @provide_session
     def execute(self, context: Dict, session):
-
+        print("XXXXXXXXXXXXXXXXXXXXXXXXXX")
+        print(self.custom_pool)
+        print(self.items)
         counter = 2000
 
         for item in self.items:
-            execution_date = timezone.utcnow() + \
-                timedelta(microseconds=counter)
+            execution_date = timezone.utcnow() + timedelta(
+                microseconds=counter
+            )
             run_id = DagRun.generate_run_id(DagRunType.MANUAL, execution_date)
 
-            print(item)
             dag_run = trigger_dag(
                 dag_id=self.trigger_dag_id,
                 run_id=run_id,
-                conf={"item": item, "parent": self.parent},
+                conf={"item": item},
                 execution_date=self.execution_date,
                 replace_microseconds=False,
             )
-
-            tis = dag_run.get_task_instances()
-            for ti in tis:
-                ti.pool = url_to_pool(self.parent)
-                session.add(ti)
-                self.log.info("ti: %s", ti)
+            if self.custom_pool:
+                print("should_add_to_custom_pool")
+                tis = dag_run.get_task_instances()
+                for ti in tis:
+                    ti.pool = self.custom_pool
+                    session.add(ti)
+                    self.log.info("ti: %s", ti)
 
             counter += 1

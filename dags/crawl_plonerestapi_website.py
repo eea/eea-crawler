@@ -7,6 +7,9 @@ from airflow.utils.dates import days_ago
 from tasks.dagrun import BulkTriggerDagRunOperator
 
 from usp.tree import sitemap_tree_for_homepage
+from tasks.pool import CreatePoolOperator
+from lib.pool import url_to_pool
+from tasks.debug import debug_value
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
@@ -14,8 +17,7 @@ default_args = {
     "owner": "airflow",
 }
 
-
-@task()
+""" @task()
 def get_sitemap_url(website_url: str):
     sitemap_url = website_url.split("://")[-1] + "/sitemap.xml.gz"
     print("sitemap_url", sitemap_url)
@@ -35,7 +37,7 @@ def get_urls_from_sitemap(sitemap: str):
         }
         response.append(item)
     print(response)
-    return response
+    return response """
 
 
 @task
@@ -52,9 +54,6 @@ def get_sitemap(url):
     tree = sitemap_tree_for_homepage(url)
     urls = []
     for page in tree.all_pages():
-        #        print (page)
-        #        print (page.url)
-        #        print (page.last_modified)
         urls.append(
             {
                 "url": page.url
@@ -72,8 +71,7 @@ def get_sitemap(url):
     tags=["semantic-search"],
 )
 def crawl_plonerestapi_website(
-    website_url: str = "",
-    allocated_api_pool: str = "default_pool",
+    item: str = "",
     maintainer_email: str = "",
 ):
     """
@@ -81,18 +79,43 @@ def crawl_plonerestapi_website(
 
     Main task to crawl a website
     """
-    xc_urls = get_sitemap(website_url)
+    pool_name = url_to_pool(item)
+    xc_urls = get_sitemap(item)
     xc_clean_urls = get_urls_to_update(xc_urls)
-    BulkTriggerDagRunOperator(
+
+    cpo = CreatePoolOperator(
+        task_id="create_pool",
+        name=pool_name,
+        slots=2,
+    )
+
+    bt = BulkTriggerDagRunOperator(
         task_id="fetch_urls",
         items=xc_clean_urls,
         trigger_dag_id="fetch_url",
-        parent=website_url,
+        custom_pool=pool_name,
     )
 
-    #   helpers.show_dag_run_conf(
-    #        {"website_url": website_url, "maintainer_email": maintainer_email}
-    #    )
+
+#    bulk_run(pool_name, xc_clean_urls)
+#    debug_value(pool_name)
+#    debug_value(xc_clean_urls)
+
+"""     bt = BulkTriggerDagRunOperator(
+        task_id="fetch_urls",
+        items=xc_clean_urls,
+        trigger_dag_id="fetch_url",
+        custom_pool=pool_name,
+    )
+ """  #    [xc_clean_urls, cpo] >> bt
+
+
+#    xc_clean_urls >> cpo
+
+
+#   helpers.show_dag_run_conf(
+#        {"website_url": website_url, "maintainer_email": maintainer_email}
+#    )
 
 
 #    xc_sitemap_url = get_sitemap_url(website_url)

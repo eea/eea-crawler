@@ -26,7 +26,9 @@ def build_command(app_name):
     start_date=days_ago(2),
     tags=["esbootstrap"],
 )
-def esbootstrap_script(app_name: str = "global-search", command: str = "create_index"):
+def esbootstrap_script(
+    app_name: str = "global-search", command: str = "create_index"
+):
     debug_value(app_name)
     # cmd = build_command(app_name)
     # print(cmd)

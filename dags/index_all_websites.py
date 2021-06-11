@@ -6,6 +6,8 @@ from airflow.utils.dates import days_ago
 from lib.debug import hostname, pretty_id
 from lib.pool import url_to_pool
 from tasks.pool import CreatePoolOperator
+from tasks.dagrun import BulkTriggerDagRunOperator
+from tasks.debug import debug_value
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
@@ -20,7 +22,9 @@ default_args = {
     start_date=days_ago(2),
     tags=["meta_workflow"],
 )
-def index_all_websites():
+def index_all_websites(
+    websites: str = Variable.get("indexed_websites", deserialize_json=True)
+):
     """
     ### Triggers reindexing of all websites
 
@@ -30,28 +34,13 @@ def index_all_websites():
 
     # configured_websites = Variable.get("indexed_websites", deserialize_json=True)
 
-    configured_websites = ["https://eea.europa.eu"]
-    #    helpers.debug_value(configured_websites)
+    debug_value(websites)
 
-    for site_url in configured_websites:
-        task_id = "trigger_crawl_dag_" + pretty_id(site_url)
-        t = trigger_dagrun.TriggerDagRunOperator(
-            task_id=task_id,
-            trigger_dag_id="crawl_plonerestapi_website",
-            conf={
-                "website_url": site_url,
-                # TODO: read also maintainer from configuration
-                "maintainer_email": "tibi@example.com",
-                "allocated_api_pool": "api_{}".format(hostname(site_url))[:40],
-            },
-        )
-        cpo = CreatePoolOperator(
-            task_id="create_pool_" + pretty_id(site_url),
-            name=url_to_pool(site_url),
-            slots=2,
-        )
-
-        t >> cpo
+    BulkTriggerDagRunOperator(
+        task_id="crawl_plonerestapi_websites",
+        items=websites,
+        trigger_dag_id="crawl_plonerestapi_website",
+    )
 
 
 index_all_websites_dag = index_all_websites()

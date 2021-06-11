@@ -19,14 +19,14 @@ default_args = {
 def get_api_url(url):
     no_protocol_url = url.split("://")[-1]
     url_parts = no_protocol_url.split("/")
-    url_parts.insert(1, "api/SITE")
+    url_parts.insert(1, "api")
     url_with_api = "/".join(url_parts)
     print(url_with_api)
     return url_with_api
 
 
 @task
-def get_relevant_data(doc, item, parent):
+def get_relevant_data(doc, item):
     json_doc = json.loads(doc)
     print(type(json_doc))
     print(json_doc)
@@ -36,7 +36,6 @@ def get_relevant_data(doc, item, parent):
     data["modified"] = json_doc.get("modified", "not modified")
     data["UID"] = json_doc.get("UID")
     data["id"] = pretty_id(item)
-    data["cluster"] = parent
     return data
 
 
@@ -63,7 +62,7 @@ def send_to_rabbitmq(doc):
     start_date=days_ago(2),
     tags=["semantic-search"],
 )
-def fetch_url(item: str = "", parent: str = ""):
+def fetch_url(item: str = ""):
     """
     ### get info about an url
     """
@@ -79,7 +78,7 @@ def fetch_url(item: str = "", parent: str = ""):
         headers={"Accept": "application/json"},
     )
 
-    prepared_data = get_relevant_data(doc.output, item, parent)
+    prepared_data = get_relevant_data(doc.output, item)
     send_to_rabbitmq(prepared_data)
 
 
