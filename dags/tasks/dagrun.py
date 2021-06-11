@@ -4,12 +4,12 @@ from typing import Dict, List, Optional, Union
 
 from airflow.api.common.experimental.trigger_dag import trigger_dag
 from airflow.models import BaseOperator  # BaseOperatorLink,AirflowException,
-from airflow.models import DagBag, DagModel, DagRun
+from airflow.models import DagRun  # DagModel, DagBag,
 from airflow.utils import timezone
 from airflow.utils.session import provide_session
 from airflow.utils.state import State
-from lib.pool import url_to_pool
 from airflow.utils.types import DagRunType
+from lib.pool import url_to_pool
 
 # from airflow.exceptions import DagNotFound, DagRunAlreadyExists
 # from airflow.models import DagBag, DagModel, DagRun
@@ -82,7 +82,8 @@ class BulkTriggerDagRunOperator(BaseOperator):
         self.allowed_states = allowed_states or [State.SUCCESS]
         self.failed_states = failed_states or [State.FAILED]
 
-        if not isinstance(execution_date, (str, datetime.datetime, type(None))):
+        if not isinstance(execution_date,
+                          (str, datetime.datetime, type(None))):
             raise TypeError(
                 "Expected str or datetime.datetime type for execution_date."
                 "Got {}".format(type(execution_date))
@@ -93,12 +94,14 @@ class BulkTriggerDagRunOperator(BaseOperator):
 
     @provide_session
     def execute(self, context: Dict, session):
-        #        execution_date = timezone.utcnow()
-        #        self.log.info("context: %r, %r", context, self.parent)
+
+        counter = 2000
 
         for item in self.items:
-            execution_date = timezone.utcnow()
+            execution_date = timezone.utcnow() + \
+                timedelta(microseconds=counter)
             run_id = DagRun.generate_run_id(DagRunType.MANUAL, execution_date)
+
             print(item)
             dag_run = trigger_dag(
                 dag_id=self.trigger_dag_id,
@@ -107,33 +110,11 @@ class BulkTriggerDagRunOperator(BaseOperator):
                 execution_date=self.execution_date,
                 replace_microseconds=False,
             )
-        # try:
-        # except DagRunAlreadyExists as e:
-        #     if self.reset_dag_run:
-        #         self.log.info(
-        #             "Clearing %s on %s", self.trigger_dag_id,
-        #             self.execution_date
-        #         )
-        #
-        #         # Get target dag object and call clear()
-        #
-        #         dag_model = DagModel.get_current(self.trigger_dag_id)
-        #         if dag_model is None:
-        #             raise DagNotFound(
-        #                 f"Dag id {self.trigger_dag_id} not found in DagModel"
-        #             )
-        #
-        #         dag_bag = DagBag(dag_folder=dag_model.fileloc,
-        #                          read_dags_from_db=True)
-        #
-        #         dag = dag_bag.get_dag(self.trigger_dag_id)
-        #
-        #         dag.clear(start_date=self.execution_date,
-        #                   end_date=self.execution_date)
-        #
-        #         dag_run = DagRun.find(dag_id=dag.dag_id, run_id=run_id)[0]
-        #         tis = dag_run.get_task_instances()
-        #         self.log.info("tis: %s", tis)
-        #         print(dag_run)
-        #     else:
-        #         raise e
+
+            tis = dag_run.get_task_instances()
+            for ti in tis:
+                ti.pool = url_to_pool(self.parent)
+                session.add(ti)
+                self.log.info("ti: %s", ti)
+
+            counter += 1
