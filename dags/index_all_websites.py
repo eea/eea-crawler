@@ -15,6 +15,13 @@ default_args = {
     "owner": "airflow",
 }
 
+def get_indexed_websites():
+    iw = "[]"
+    try:
+        iw = Variable.get("indexed_websites", deserialize_json=True)
+    except:
+        pass
+    return iw
 
 @dag(
     default_args=default_args,
@@ -23,7 +30,7 @@ default_args = {
     tags=["meta_workflow"],
 )
 def index_all_websites(
-    websites: str = Variable.get("indexed_websites", deserialize_json=True)
+    websites: str = get_indexed_websites()
 ):
     """
     ### Triggers reindexing of all websites
