@@ -7,6 +7,7 @@ from airflow.utils.dates import days_ago
 from eea.rabbitmq.client import RabbitMQConnector
 
 from lib.debug import pretty_id
+from plone_restapi_harvester.harvester.harvester import harvest_document
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
@@ -24,12 +25,19 @@ def get_api_url(url):
     print(url_with_api)
     return url_with_api
 
+@task
+def normalize_doc(doc):
+    json_doc = json.loads(doc)
+    normalized = harvest_document(json_doc)
+    print('Original:', json_doc)
+    print('Normalized:', normalized)
 
 @task
 def get_relevant_data(doc, item):
     json_doc = json.loads(doc)
-    print(type(json_doc))
-    print(json_doc)
+    print('Type:', type(json_doc))
+    print('Doc:', json_doc)
+
     data = {}
     data["title"] = json_doc.get("title", "no title")
     data["review_state"] = json_doc.get("review_state", "no state")
@@ -79,6 +87,7 @@ def fetch_url(item: str = ""):
     )
 
     prepared_data = get_relevant_data(doc.output, item)
+    normalize_doc(doc.output)
     send_to_rabbitmq(prepared_data)
 
 
