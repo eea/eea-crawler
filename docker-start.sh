@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 
+chown 50000:50000 /custom_config
 if [[ "${DEV_ENV:-false}" == "true" ]] ; then
     cd /custom_config
 
