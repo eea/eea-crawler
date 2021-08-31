@@ -5,4 +5,6 @@ RUN apk update && apk upgrade && \
 
 ADD . /custom_config
 ADD ./docker-start.sh /
+
+# Mirrors the contents of the context folder to live Github content
 CMD /docker-start.sh
