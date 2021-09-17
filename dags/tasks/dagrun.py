@@ -99,9 +99,6 @@ class BulkTriggerDagRunOperator(BaseOperator):
 
     @provide_session
     def execute(self, context: Dict, session):
-        print("XXXXXXXXXXXXXXXXXXXXXXXXXX")
-        print(self.custom_pool)
-        print(self.items)
         counter = 2000
 
         for item in self.items:
@@ -118,7 +115,6 @@ class BulkTriggerDagRunOperator(BaseOperator):
                 replace_microseconds=False,
             )
             if self.custom_pool:
-                print("should_add_to_custom_pool")
                 tis = dag_run.get_task_instances()
                 for ti in tis:
                     ti.pool = self.custom_pool
