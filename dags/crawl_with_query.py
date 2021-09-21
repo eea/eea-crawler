@@ -8,7 +8,7 @@ from tasks.pool import CreatePoolOperator
 from tasks.debug import debug_value
 from tasks.helpers import dag_param_to_dict, build_items_list, get_params, get_item
 from lib.pool import url_to_pool
-#
+
 default_args = {
     "owner": "airflow",
 }
