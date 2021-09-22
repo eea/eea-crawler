@@ -114,4 +114,10 @@ def apply_norm_missing(doc, config):
     return clean_data
 
 def remove_duplicates(doc):
-    return doc
+    clean_data = {}
+    for key in doc.keys():
+        value = doc[key]
+        if isinstance(value, list):
+            value = list(dict.fromkeys(value))
+        clean_data[key] = value
+    return clean_data
