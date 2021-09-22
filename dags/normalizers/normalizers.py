@@ -106,6 +106,12 @@ def apply_norm_prop(doc, config):
     return clean_data
 
 def apply_norm_missing(doc, config):
-    return doc
+    norm_missing = config['normMissing']
+    clean_data = doc
+    for key in norm_missing.keys():
+        if clean_data.get(key, None) == None:
+            clean_data[key] = norm_missing[key]
+    return clean_data
+
 def remove_duplicates(doc):
     return doc
