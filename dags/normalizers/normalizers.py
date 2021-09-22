@@ -74,9 +74,37 @@ def remove_empty(doc):
     return clean_data
 
 def apply_norm_obj(doc, config):
-    return doc
+    norm_obj = config['normObj']
+    clean_data = {}
+    for key in doc.keys():
+        value = doc[key]
+        if isinstance(doc[key], list):
+            value = []
+            for val in doc[key]:
+                if norm_obj.get(val, None) != None:
+                    value.append(norm_obj[val])
+                else:
+                    value.append(val)
+        else:
+            if norm_obj.get(value, None) != None:
+                value = norm_obj[value]
+        clean_data[key] = value
+    return clean_data
+
 def apply_norm_prop(doc, config):
-    return doc
+    norm_prop = config['normProp']
+    clean_data = {}
+    for key in doc.keys():
+        value = doc[key]
+        if norm_prop.get(key, None) == None:
+            clean_data[key] = value
+        else:
+            if (not isinstance(norm_prop[key], list)):
+                norm_prop[key] = [norm_prop[key]]
+            for new_key in norm_prop[key]:
+                clean_data[new_key] = value
+    return clean_data
+
 def apply_norm_missing(doc, config):
     return doc
 def remove_duplicates(doc):
