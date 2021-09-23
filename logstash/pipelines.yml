@@ -5,3 +5,14 @@
 - pipeline.id: default
   path.config: "/usr/share/logstash/pipeline/default.conf"
 
+- pipeline.id: raw_data
+  path.config: "/usr/share/logstash/pipeline/raw_data.conf"
+
+- pipeline.id: searchui_data
+  path.config: "/usr/share/logstash/pipeline/searchui_data.conf"
+
+- pipeline.id: eea_raw
+  path.config: "/usr/share/logstash/pipeline/eea_raw.conf"
+
+- pipeline.id: eea_searchui
+  path.config: "/usr/share/logstash/pipeline/eea_searchui.conf"

@@ -20,7 +20,7 @@ def apply_black_map(doc, config):
     black_map = config['blackMap']
     clean_data = {}
     for key in doc.keys():
-        value = None
+        value = doc[key]
         if black_map.get(key, None) is None:
             value = doc[key]
         else:
@@ -67,7 +67,7 @@ def remove_empty(doc):
             if doc[key] is None:
                 ignore_attr = True
             else:
-                 if isinstance(doc[key], str) and len(doc[key]) == 0:
+                if isinstance(doc[key], str) and len(doc[key]) == 0:
                     ignore_attr = True
         if not ignore_attr:
             clean_data[key] = doc[key]
@@ -81,10 +81,13 @@ def apply_norm_obj(doc, config):
         if isinstance(doc[key], list):
             value = []
             for val in doc[key]:
-                if norm_obj.get(val, None) != None:
-                    value.append(norm_obj[val])
-                else:
+                if isinstance(val, dict):
                     value.append(val)
+                else:
+                    if norm_obj.get(val, None) != None:
+                        value.append(norm_obj[val])
+                    else:
+                        value.append(val)
         else:
             if norm_obj.get(value, None) != None:
                 value = norm_obj[value]
@@ -118,6 +121,24 @@ def remove_duplicates(doc):
     for key in doc.keys():
         value = doc[key]
         if isinstance(value, list):
-            value = list(dict.fromkeys(value))
+            try:
+                value = list(dict.fromkeys(value))
+            except:
+                value = value
         clean_data[key] = value
+    return clean_data
+
+def get_attrs_to_delete(doc, config):
+    proplist = config['proplist']
+    attrs = []
+    for key in doc.keys():
+        if key not in proplist:
+            attrs.append(key)
+    return attrs
+
+def delete_attrs(doc, attrs):
+    clean_data = {}
+    for key in doc.keys():
+        if key not in attrs:
+            clean_data[key] = doc[key]
     return clean_data

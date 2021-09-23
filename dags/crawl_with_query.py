@@ -68,7 +68,7 @@ def crawl_with_query(item = default_dag_params):
     cpo = CreatePoolOperator(
         task_id="create_pool",
         name=xc_pool_name,
-        slots=4,
+        slots=2,
     )
 
     bt = BulkTriggerDagRunOperator(

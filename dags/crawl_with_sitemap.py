@@ -58,7 +58,7 @@ def crawl_with_sitemap(item = default_dag_params):
     cpo = CreatePoolOperator(
         task_id="create_pool",
         name=xc_pool_name,
-        slots=2,
+        slots=8,
     )
 
     bt = BulkTriggerDagRunOperator(

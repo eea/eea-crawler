@@ -36,6 +36,9 @@ def rebuild(tree):
 
 @task
 def dag_param_to_dict(params, defaults={}):
+    return simple_dag_param_to_dict(params, defaults)
+
+def simple_dag_param_to_dict(params, defaults={}):
     """
     dag params with a dict format have the format:
     {

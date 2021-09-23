@@ -10,6 +10,9 @@ from tasks.helpers import dag_param_to_dict, build_items_list, get_params, get_i
 from lib.pool import url_to_pool
 from elasticsearch import Elasticsearch
 
+from normalizers.elastic_settings import settings
+from normalizers.elastic_mapping import mapping
+
 default_args = {
     "owner": "airflow",
 }
@@ -20,14 +23,17 @@ default_dag_params = {
         'elastic': {
             'host': 'elastic',
             'port': 9200,
-            'index': 'data_raw'
+            'index': 'data_raw',
+            'mapping': mapping,
+            'settings': settings,
+            'target_index': 'data_searchui'
         },
         'rabbitmq': {
             "host": "rabbitmq",
             "port": "5672",
             "username": "guest",
             "password": "guest",
-            "queue":"default"
+            "queue":"queue_searchui"
         },
         'url_api_part': 'api/SITE'
     }
@@ -90,6 +96,28 @@ def get_all_ids(config):
         scroll_size = len(data['hits']['hits'])
     return ids
 
+@task
+def create_index(config):
+    timeout = 1000
+    es = Elasticsearch(
+        [
+            {
+                'host': config['elastic']['host'],
+                'port': config['elastic']['port']
+            }
+        ],
+        timeout=timeout
+    )
+    #body = {"settings":config['elastic']['settings']}
+    body = {
+        "mappings":{
+            "properties": config['elastic']['mapping']
+        },
+        "settings": config['elastic']['settings']
+    }
+
+    es.indices.create(index=config['elastic']['target_index'], body=body)
+
 @dag(
     default_args=default_args,
     schedule_interval=None,
@@ -102,8 +130,27 @@ def get_docs_from_es(item = default_dag_params):
     xc_params = get_params(xc_dag_params)
     xc_item = get_item(xc_dag_params)
 
+    create_index(xc_params)
+
     xc_ids = get_all_ids(xc_params)
     debug_value(xc_ids)
+
+    xc_items = build_items_list(xc_ids, xc_params)
+
+    xc_pool_name = url_to_pool(xc_item)
+
+    cpo = CreatePoolOperator(
+        task_id="create_pool",
+        name=xc_pool_name,
+        slots=16,
+    )
+
+    bt = BulkTriggerDagRunOperator(
+         task_id="prepare_doc_for_search_ui",
+         items=xc_items,
+         trigger_dag_id="prepare_doc_for_search_ui",
+         custom_pool=xc_pool_name,
+    )
 
 
 get_docs_from_es_dag = get_docs_from_es()
