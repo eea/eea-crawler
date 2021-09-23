@@ -142,3 +142,9 @@ def delete_attrs(doc, attrs):
         if key not in attrs:
             clean_data[key] = doc[key]
     return clean_data
+
+def restructure_doc(doc):
+    clean_data = {}
+    clean_data['meta'] = doc
+    clean_data['id'] = doc['id']
+    return clean_data

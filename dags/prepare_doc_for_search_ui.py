@@ -15,7 +15,7 @@ from lib.pool import url_to_pool
 from lib.debug import pretty_id
 
 from normalizers.defaults import normalizers
-from normalizers.normalizers import create_doc, apply_black_map, apply_white_map, remove_empty, apply_norm_obj, apply_norm_prop, apply_norm_missing, remove_duplicates, get_attrs_to_delete, delete_attrs
+from normalizers.normalizers import create_doc, apply_black_map, apply_white_map, remove_empty, apply_norm_obj, apply_norm_prop, apply_norm_missing, remove_duplicates, get_attrs_to_delete, delete_attrs, restructure_doc
 
 default_args = {
     "owner": "airflow",
@@ -57,6 +57,8 @@ def simple_normalize_doc(doc, config):
     normalized_doc = apply_norm_missing(normalized_doc, normalizer)
     normalized_doc = remove_duplicates(normalized_doc)
     normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
+    normalized_doc = restructure_doc(normalized_doc)
+    print (normalized_doc)
     return normalized_doc
 
 @task
