@@ -15,14 +15,14 @@ default_args = {
 }
 
 default_dag_params = {
-    'item': "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500",
+    'item': "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2019/6/1&created.range=min&b_size=500",
     'params': {
         'rabbitmq': {
             "host": "rabbitmq",
             "port": "5672",
             "username": "guest",
             "password": "guest",
-            "queue": "default"
+            "queue": "queue_raw_data"
         },
         'url_api_part': 'api/SITE'
     }

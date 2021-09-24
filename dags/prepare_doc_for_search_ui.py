@@ -51,6 +51,7 @@ def simple_normalize_doc(doc, config):
     normalizer = config['normalizers']
     normalized_doc = create_doc(doc)
 
+    attrs_to_delete = get_attrs_to_delete(normalized_doc, normalizer)
     normalized_doc = apply_black_map(normalized_doc, normalizer)
     normalized_doc = apply_white_map(normalized_doc, normalizer)
     normalized_doc = remove_empty(normalized_doc)
@@ -58,9 +59,6 @@ def simple_normalize_doc(doc, config):
     normalized_doc = apply_norm_prop(normalized_doc, normalizer)
     normalized_doc = apply_norm_missing(normalized_doc, normalizer)
     normalized_doc = remove_duplicates(normalized_doc)
-
-    attrs_to_delete = get_attrs_to_delete(normalized_doc, normalizer)
-
     normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
     normalized_doc = restructure_doc(normalized_doc)
 
