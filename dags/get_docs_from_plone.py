@@ -19,10 +19,12 @@ def extract_docs_from_json(page):
     print(docs)
     return docs
 
+
 @task()
 def get_urls_from_docs(docs):
     urls = [doc["@id"] for doc in docs]
     return urls
+
 
 @dag(
     default_args=default_args,
@@ -30,29 +32,29 @@ def get_urls_from_docs(docs):
     start_date=days_ago(2),
     tags=["test"],
 )
-def get_docs_from_plone(queryurl: str="www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500"):
+def get_docs_from_plone(queryurl: str = "www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500"):
     page = SimpleHttpOperator(
         task_id="get_docs_request",
         method="GET",
         endpoint=queryurl,
         headers={"Accept": "application/json"},
-        )
+    )
 
     docs = extract_docs_from_json(page.output)
     debug_value(docs)
     urls = get_urls_from_docs(docs)
     debug_value(urls)
-    
+
 #    page = requests.get(SEARCHURL % (portal_type),  headers={'Accept': 'application/json'})
 #    docs = page.json()['items']
 #    print(len(docs))
 #    return docs
-   
 
     BulkTriggerDagRunOperator(
         task_id="fetch_urls",
         items=urls,
         trigger_dag_id="fetch_url",
     )
+
 
 get_docs_from_plone_dag = get_docs_from_plone()

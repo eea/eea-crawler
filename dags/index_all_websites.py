@@ -1,11 +1,7 @@
 from airflow.decorators import dag  # , task
 from airflow.models import Variable
-from airflow.operators import trigger_dagrun
 from airflow.utils.dates import days_ago
 
-from lib.debug import hostname, pretty_id
-from lib.pool import url_to_pool
-from tasks.pool import CreatePoolOperator
 from tasks.dagrun import BulkTriggerDagRunOperator
 from tasks.debug import debug_value
 
@@ -15,13 +11,15 @@ default_args = {
     "owner": "airflow",
 }
 
+
 def get_indexed_websites():
     iw = "[]"
     try:
         iw = Variable.get("indexed_websites", deserialize_json=True)
-    except:
+    except Exception:
         pass
     return iw
+
 
 @dag(
     default_args=default_args,
@@ -39,7 +37,8 @@ def index_all_websites(
     DAG for all of them.
     """
 
-    # configured_websites = Variable.get("indexed_websites", deserialize_json=True)
+    # configured_websites = Variable.get("indexed_websites",
+    # deserialize_json=True)
 
     debug_value(websites)
 

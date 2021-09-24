@@ -1,7 +1,8 @@
-from xml.dom import minidom
+""" Given a website URL, it reads sitemap and triggers fetch url on each link in the
+sitemap
+"""
 
 from airflow.decorators import dag, task
-from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.utils.dates import days_ago
 
 from tasks.dagrun import BulkTriggerDagRunOperator
@@ -9,7 +10,6 @@ from tasks.dagrun import BulkTriggerDagRunOperator
 from usp.tree import sitemap_tree_for_homepage
 from tasks.pool import CreatePoolOperator
 from lib.pool import url_to_pool
-from tasks.debug import debug_value
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
@@ -95,50 +95,6 @@ def crawl_plonerestapi_website(
         trigger_dag_id="fetch_url",
         custom_pool=pool_name,
     )
-
-
-#    bulk_run(pool_name, xc_clean_urls)
-#    debug_value(pool_name)
-#    debug_value(xc_clean_urls)
-
-"""     bt = BulkTriggerDagRunOperator(
-        task_id="fetch_urls",
-        items=xc_clean_urls,
-        trigger_dag_id="fetch_url",
-        custom_pool=pool_name,
-    )
- """  #    [xc_clean_urls, cpo] >> bt
-
-
-#    xc_clean_urls >> cpo
-
-
-#   helpers.show_dag_run_conf(
-#        {"website_url": website_url, "maintainer_email": maintainer_email}
-#    )
-
-
-#    xc_sitemap_url = get_sitemap_url(website_url)
-
-#    xc_sitemap = SimpleHttpOperator(
-#        task_id="get_sitemap",
-#        method="GET",
-#        endpoint=xc_sitemap_url,
-# pool="{{ti.xcom_pull('allocated_api_pool')}}"
-#    )
-
-#    helpers.debug_value(xc_sitemap.output)
-
-#    xc_urls = get_urls_from_sitemap(xc_sitemap.output)
-
-#    xc_clean_urls = get_urls_to_update(xc_urls)
-
-#    BulkTriggerDagRunOperator(
-#        task_id="fetch_urls",
-#        items=xc_clean_urls,
-#        trigger_dag_id="fetch_url",
-#        parent=website_url,
-#    )
 
 
 crawl_website_dag = crawl_plonerestapi_website()

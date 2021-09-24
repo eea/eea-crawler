@@ -1,17 +1,22 @@
-import json
+""" Get all doc ids from an ES index and triggers preprocessing for each Doc ID
+"""
+
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
-from airflow.providers.http.operators.http import SimpleHttpOperator
 from tasks.dagrun import BulkTriggerDagRunOperator
 from tasks.pool import CreatePoolOperator
 
 from tasks.debug import debug_value
-from tasks.helpers import dag_param_to_dict, build_items_list, get_params, get_item
+from tasks.helpers import (
+    dag_param_to_dict, build_items_list, get_params, get_item)
 from lib.pool import url_to_pool
 from elasticsearch import Elasticsearch
 
 from normalizers.elastic_settings import settings
 from normalizers.elastic_mapping import mapping
+
+# import json
+# from airflow.providers.http.operators.http import SimpleHttpOperator
 
 default_args = {
     "owner": "airflow",
@@ -62,7 +67,7 @@ def get_all_ids(config):
 
     def process_hits(hits):
         for item in hits:
-            #print(json.dumps(item, indent=2))
+            # print(json.dumps(item, indent=2))
             ids.append(item["_id"])
 
     # Check index exists
@@ -95,6 +100,7 @@ def get_all_ids(config):
 
         # Get the number of results that returned in the last scroll
         scroll_size = len(data['hits']['hits'])
+
     return ids
 
 
@@ -110,7 +116,7 @@ def create_index(config):
         ],
         timeout=timeout
     )
-    #body = {"settings":config['elastic']['settings']}
+    # body = {"settings":config['elastic']['settings']}
     body = {
         "mappings": {
             "properties": config['elastic']['mapping']

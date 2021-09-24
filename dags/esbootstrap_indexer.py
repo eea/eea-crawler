@@ -1,3 +1,6 @@
+"""
+Uses `eea.searchserver` scripts to index content in an ES index
+"""
 from airflow.decorators import dag, task
 from airflow.operators.bash import BashOperator
 from airflow.utils.dates import days_ago
