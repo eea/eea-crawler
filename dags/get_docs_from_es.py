@@ -18,8 +18,8 @@ default_args = {
 }
 
 default_dag_params = {
-    'item': "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500", 
-    'params':{
+    'item': "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500",
+    'params': {
         'elastic': {
             'host': 'elastic',
             'port': 9200,
@@ -33,11 +33,12 @@ default_dag_params = {
             "port": "5672",
             "username": "guest",
             "password": "guest",
-            "queue":"queue_searchui"
+            "queue": "queue_searchui"
         },
         'url_api_part': 'api/SITE'
     }
 }
+
 
 @task
 def get_all_ids(config):
@@ -58,11 +59,11 @@ def get_all_ids(config):
 
     ids = []
     # Process hits here
+
     def process_hits(hits):
         for item in hits:
             #print(json.dumps(item, indent=2))
             ids.append(item["_id"])
-
 
     # Check index exists
     if not es.indices.exists(index=config['elastic']['index']):
@@ -96,6 +97,7 @@ def get_all_ids(config):
         scroll_size = len(data['hits']['hits'])
     return ids
 
+
 @task
 def create_index(config):
     timeout = 1000
@@ -110,7 +112,7 @@ def create_index(config):
     )
     #body = {"settings":config['elastic']['settings']}
     body = {
-        "mappings":{
+        "mappings": {
             "properties": config['elastic']['mapping']
         },
         "settings": config['elastic']['settings']
@@ -118,13 +120,14 @@ def create_index(config):
 
     es.indices.create(index=config['elastic']['target_index'], body=body)
 
+
 @dag(
     default_args=default_args,
     schedule_interval=None,
     start_date=days_ago(2),
     tags=["semantic-search"],
 )
-def get_docs_from_es(item = default_dag_params):
+def get_docs_from_es(item=default_dag_params):
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 
     xc_params = get_params(xc_dag_params)
@@ -146,10 +149,10 @@ def get_docs_from_es(item = default_dag_params):
     )
 
     bt = BulkTriggerDagRunOperator(
-         task_id="prepare_doc_for_search_ui",
-         items=xc_items,
-         trigger_dag_id="prepare_doc_for_search_ui",
-         custom_pool=xc_pool_name,
+        task_id="prepare_doc_for_search_ui",
+        items=xc_items,
+        trigger_dag_id="prepare_doc_for_search_ui",
+        custom_pool=xc_pool_name,
     )
 
 

@@ -14,22 +14,24 @@ default_args = {
 }
 
 default_dag_params = {
-    'item': "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500", 
-    'params':{
+    'item': "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500",
+    'params': {
         'rabbitmq': {
             "host": "rabbitmq",
             "port": "5672",
             "username": "guest",
             "password": "guest",
-            "queue":"default"
+            "queue": "default"
         },
         'url_api_part': 'api/SITE'
     }
 }
 
+
 @task
-def get_no_protocol_url(url:str):
+def get_no_protocol_url(url: str):
     return(url.split("://")[-1])
+
 
 @task()
 def extract_docs_from_json(page):
@@ -38,13 +40,14 @@ def extract_docs_from_json(page):
     urls = [doc["@id"] for doc in docs]
     return urls
 
+
 @dag(
     default_args=default_args,
     schedule_interval=None,
     start_date=days_ago(2),
     tags=["semantic-search"],
 )
-def crawl_with_query(item = default_dag_params):
+def crawl_with_query(item=default_dag_params):
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 
     xc_params = get_params(xc_dag_params)
@@ -58,7 +61,7 @@ def crawl_with_query(item = default_dag_params):
         method="GET",
         endpoint=xc_endpoint,
         headers={"Accept": "application/json"},
-        )
+    )
     xc_urls = extract_docs_from_json(page.output)
 
     xc_items = build_items_list(xc_urls, xc_params)
@@ -72,10 +75,10 @@ def crawl_with_query(item = default_dag_params):
     )
 
     bt = BulkTriggerDagRunOperator(
-         task_id="fetch_url_raw",
-         items=xc_items,
-         trigger_dag_id="fetch_url_raw",
-         custom_pool=xc_pool_name,
+        task_id="fetch_url_raw",
+        items=xc_items,
+        trigger_dag_id="fetch_url_raw",
+        custom_pool=xc_pool_name,
     )
 
 
