@@ -1,5 +1,15 @@
 # Dataflow
 
+## Example workflows
+
+I want to index a bunch of EEA Documents (let's say highlights).
+
+1. Trigger `crawl_with_query`
+2. This triggers `fetch_url_row` for all discovered URLs
+3. This will create an index in ES, as configured in the logstash pipeline
+4. Now trigger the `get_docs_from_es`, which reads all docs created by logstash
+   and triggers `prepare_doc_for_search_ui`
+
 ## Crawling DAGs
 
 ### `crawl_plonerestapi_website`
