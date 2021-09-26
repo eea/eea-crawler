@@ -16,16 +16,17 @@ def merge(dict1, dict2):
 
     return result
 
+
 def rebuild(tree):
     clean_tree = None
     if isinstance(tree, dict):
         clean_tree = {}
-        if tree.get("__type","non_dict") == "dict":
+        if tree.get("__type", "non_dict") == "dict":
             for key in tree.get('__var').keys():
-                clean_tree[key]=rebuild(tree.get('__var')[key])
+                clean_tree[key] = rebuild(tree.get('__var')[key])
         else:
             for key in tree.keys():
-                clean_tree[key]=rebuild(tree[key])
+                clean_tree[key] = rebuild(tree[key])
     elif isinstance(tree, list):
         clean_tree = []
         for item in tree:
@@ -34,9 +35,11 @@ def rebuild(tree):
         clean_tree = tree
     return clean_tree
 
+
 @task
 def dag_param_to_dict(params, defaults={}):
     return simple_dag_param_to_dict(params, defaults)
+
 
 def simple_dag_param_to_dict(params, defaults={}):
     """
@@ -80,13 +83,16 @@ def simple_dag_param_to_dict(params, defaults={}):
 
     return final_params
 
+
 @task
 def build_items_list(items, params):
-    return [{'item':item, 'params':params} for item in items]
+    return [{'item': item, 'params': params} for item in items]
+
 
 @task
 def get_params(params):
     return params['params']
+
 
 @task
 def get_item(params):

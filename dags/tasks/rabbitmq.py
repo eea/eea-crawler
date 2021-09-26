@@ -2,9 +2,11 @@ import json
 from airflow.decorators import task
 from eea.rabbitmq.client import RabbitMQConnector
 
+
 @task
 def send_to_rabbitmq(doc, params):
     return simple_send_to_rabbitmq(doc, params)
+
 
 def simple_send_to_rabbitmq(doc, params):
     rabbit_config = {
