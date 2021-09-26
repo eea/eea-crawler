@@ -155,8 +155,8 @@ def delete_attrs(doc, attrs):
     return clean_data
 
 
-def restructure_doc(doc):
-    clean_data = {}
-    clean_data['meta'] = doc
-    clean_data['id'] = doc['id']
-    return clean_data
+# def restructure_doc(doc):
+#     clean_data = {}
+#     clean_data['meta'] = doc
+#     clean_data['id'] = doc['id']
+#     return clean_data
