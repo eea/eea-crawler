@@ -133,7 +133,7 @@ def create_index(config):
     start_date=days_ago(2),
     tags=["semantic-search"],
 )
-def get_docs_from_es(item=default_dag_params):
+def prepare_docs_for_search_ui_from_es(item=default_dag_params):
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 
     xc_params = get_params(xc_dag_params)
@@ -162,4 +162,4 @@ def get_docs_from_es(item=default_dag_params):
     )
 
 
-get_docs_from_es_dag = get_docs_from_es()
+prepare_docs_for_search_ui_from_es_dag = prepare_docs_for_search_ui_from_es()
