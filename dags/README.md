@@ -42,9 +42,9 @@ discovered URLs. For each URL, a new `fetch_url_raw` dag will be created.
     		'url_api_part': 'api/SITE'
     	}
     }
-**item** - the query for plone.restapi
-**params.rabbitmq** - the rabbitmq configuration, including the name of the **queue**, where the documents will be sent
-**params.url_api_part** - the url part, that says where the api is located; this will be injected in all urls of the documents
+- **item** - the query for plone.restapi
+- **params.rabbitmq** - the rabbitmq configuration, including the name of the **queue**, where the documents will be sent
+- **params.url_api_part** - the url part, that says where the api is located; this will be injected in all urls of the documents
 
 
 ### `crawl_with_sitemap`
@@ -67,9 +67,9 @@ instead of `fetch_url`
 		}
 	}
 
-**item** - the url of the website
-**params.rabbitmq** - the rabbitmq configuration, including the name of the **queue**, where the documents will be sent
-**params.url_api_part** - the url part, that says where the api is located; this will be injected in all urls of the documents
+- **item** - the url of the website
+- **params.rabbitmq** - the rabbitmq configuration, including the name of the **queue**, where the documents will be sent
+- **params.url_api_part** - the url part, that says where the api is located; this will be injected in all urls of the documents
 
 ### `index_all_websites` (currently not used)
 
@@ -106,14 +106,14 @@ Read all docs ids from an ES index, triggers a preprocessing dag for each one: `
 			'url_api_part': 'api/SITE'
 		}
 	}
-**item** - the url of the website, 
-**params.elastic** - the elasticsearch configuration
-**params.elastic.index** - the index from where the raw data is read
-**params.elastic.target_index** - the index from where the preprocessed data will be written. Even if the documents are sent to rabbitmq, we have to create and prepare (set the filters, analyzers, and field mapping) the elastic index before we start storing data in it. 
-**params.elastic.settings** - contains all filters and analyzers, by default we use [dags/normalizers/elastic_settings.py](https://github.com/eea/eea-crawler/blob/master/dags/normalizers/elastic_settings.py)
-**params.elastic.mapping** - contains the fields mapping, by default we use [dags/normalizers/elastic_mapping.py](https://github.com/eea/eea-crawler/blob/master/dags/normalizers/elastic_mapping.py)
-**params.rabbitmq** - the rabbitmq configuration, including the name of the **queue**, where the documents will be sent
-**params.url_api_part** - the url part, that says where the api is located; this will be injected in all urls of the documents
+- **item** - the url of the website
+- **params.elastic** - the elasticsearch configuration
+- **params.elastic.index** - the index from where the raw data is read
+- **params.elastic.target_index** - the index from where the preprocessed data will be written. Even if the documents are sent to rabbitmq, we have to create and prepare (set the filters, analyzers, and field mapping) the elastic index before we start storing data in it.
+- **params.elastic.settings** - contains all filters and analyzers, by default we use [dags/normalizers/elastic_settings.py](https://github.com/eea/eea-crawler/blob/master/dags/normalizers/elastic_settings.py)
+- **params.elastic.mapping** - contains the fields mapping, by default we use [dags/normalizers/elastic_mapping.py](https://github.com/eea/eea-crawler/blob/master/dags/normalizers/elastic_mapping.py)
+- **params.rabbitmq** - the rabbitmq configuration, including the name of the **queue**, where the documents will be sent
+- **params.url_api_part** - the url part, that says where the api is located; this will be injected in all urls of the documents
 
 ### `get_docs_from_plone` (currently not used)
 
@@ -144,12 +144,12 @@ indexed
 			'url_api_part': 'api/SITE'
 		}
 	}
-**item** - the url of the document, 
-**params.elastic** - the elasticsearch configuration
-**params.elastic.index** - the index from where the raw data is read
-**params.rabbitmq** - the rabbitmq configuration, including the name of the **queue**, where the documents will be sent
-**params.normalizers** - the configuration of normalizers: list of properties, properties normalization, white and blackmap for values, object normalization, set missing values. By default we use [dags/normalizers/edfaults.py](https://github.com/eea/eea-crawler/blob/master/dags/normalizers/defaults.py)
-**params.url_api_part** - the url part, that says where the api is located; this will be injected in all urls of the documents
+- **item** - the url of the document
+- **params.elastic** - the elasticsearch configuration
+- **params.elastic.index** - the index from where the raw data is read
+- **params.rabbitmq** - the rabbitmq configuration, including the name of the **queue**, where the documents will be sent
+- **params.normalizers** - the configuration of normalizers: list of properties, properties normalization, white and blackmap for values, object normalization, set missing values. By default we use [dags/normalizers/edfaults.py](https://github.com/eea/eea-crawler/blob/master/dags/normalizers/defaults.py)
+- **params.url_api_part** - the url part, that says where the api is located; this will be injected in all urls of the documents
 
 #### Note:
 This dag can't be used individually, only if the index was already created and the mapping was saved already.
@@ -172,9 +172,9 @@ Fetch a single URL, store it in the RAW ES index. This dag is triggered either b
 		}
 	}
 
-**item** - the url of the document
-**params.rabbitmq** - the rabbitmq configuration, including the name of the **queue**, where the documents will be sent
-**params.url_api_part** - the url part, that says where the api is located; this will be injected in all urls of the documents
+ - **item** - the url of the document
+ - **params.rabbitmq** - the rabbitmq configuration, including the name of the **queue**, where the documents will be sent
+ - **params.url_api_part** - the url part, that says where the api is located; this will be injected in all urls of the documents
 
 ### `fetch_url` (currently not used)
 
