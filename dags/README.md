@@ -152,7 +152,7 @@ indexed
 - **params.url_api_part** - the url part, that says where the api is located; this will be injected in all urls of the documents
 
 #### Note:
-This dag can't be used individually, only if the index was already created and the mapping was saved already.
+This dag can be used individually, only if the index was already created and it's mapping was properly set.
 
 ### `fetch_url_raw`
 
