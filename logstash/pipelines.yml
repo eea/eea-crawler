@@ -11,6 +11,9 @@
 - pipeline.id: searchui_data
   path.config: "/usr/share/logstash/pipeline/searchui_data.conf"
 
+- pipeline.id: nlp_data
+  path.config: "/usr/share/logstash/pipeline/nlp_data.conf"
+
 - pipeline.id: eea_raw
   path.config: "/usr/share/logstash/pipeline/eea_raw.conf"
 
