@@ -13,9 +13,16 @@ I want to index a bunch of EEA Documents (let's say highlights).
 4. Now trigger the `prepare_docs_for_search_ui_from_es`, which reads all docs created by logstash
    and triggers `prepare_doc_for_search_ui` which uses the logstash queue
    `queue_searchui`
+5. Next, trigger the `prepare_docs_for_nlp_from_es`, which reads all docs created by logstash
+   and triggers `prepare_doc_for_nlp` which uses the logstash queue
+   `queue_nlp`
 
 Check the `logstash/pipeline` folder to understand where the queue indexing
 ends up
+If the defaults are used, we will have 3 indices in elasticsearch:
+- **data_raw** - with the raw documents from plone, without any processing
+- **data_searchui** - the documents were normalized (property names, default values, etc.)
+- **data_nlp** - contains all the data from `data_searchui` but with extra preprocessing: a merged `text` field was created, the documents are split in multiple smaller documents, `embeddings` were added to each document
 
 ## Crawling DAGs
 
