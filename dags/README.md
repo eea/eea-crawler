@@ -19,6 +19,7 @@ I want to index a bunch of EEA Documents (let's say highlights).
 
 Check the `logstash/pipeline` folder to understand where the queue indexing
 ends up
+
 If the defaults are used, we will have 3 indices in elasticsearch:
 - **data_raw** - with the raw documents from plone, without any processing
 - **data_searchui** - the documents were normalized (property names, default values, etc.)
