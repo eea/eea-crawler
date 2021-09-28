@@ -10,13 +10,13 @@ def send_to_rabbitmq(doc, params):
 
 def simple_send_to_rabbitmq(doc, params):
     rabbit_config = {
-        "rabbit_host": params['rabbitmq']['host'],
-        "rabbit_port": params['rabbitmq']['port'],
-        "rabbit_username": params['rabbitmq']['username'],
-        "rabbit_password": params['rabbitmq']['password'],
+        "rabbit_host": params["rabbitmq"]["host"],
+        "rabbit_port": params["rabbitmq"]["port"],
+        "rabbit_username": params["rabbitmq"]["username"],
+        "rabbit_password": params["rabbitmq"]["password"],
     }
-    params['rabbitmq']
-    queue_name = params['rabbitmq']['queue']
+    params["rabbitmq"]
+    queue_name = params["rabbitmq"]["queue"]
 
     rabbit = RabbitMQConnector(**rabbit_config)
     rabbit.open_connection()

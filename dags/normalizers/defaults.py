@@ -9,7 +9,7 @@ normalizers = {
         "themes",
         "subject",
         "location",
-        "year"
+        "year",
     ],
     "//": "Normalise Properties, when you want to use a property instead of another",
     "normProp": {
@@ -21,7 +21,7 @@ normalizers = {
         "@type": "objectProvides",
         "about": ["id", "about"],
         "themes": "topic",
-        "description.data": "description"
+        "description.data": "description",
     },
     "//": "Do not index these values for a given properties",
     "blackMap": {
@@ -31,8 +31,7 @@ normalizers = {
         "effectiveDate": ["None", "Unknown"],
     },
     "//": "Index _only_ these values for given properties",
-    "whiteMap": {
-    },
+    "whiteMap": {},
     "//": "Normalise these following objects to a given value",
     "normObj": {
         "air": "Air pollution",
@@ -54,8 +53,7 @@ normalizers = {
         "industry": "Industry",
         "coast_sea": "Marine",
         "soil": "Soil",
-
-        "Highlight": "News"
+        "Highlight": "News",
     },
     "//": "Normalise missing properties with the given values",
     "normMissing": {
@@ -70,6 +68,6 @@ normalizers = {
         "readingTime": -1,
         "fleschReadingEaseScore": 0,
         "references": [],
-        "items_count_references": 1
-    }
+        "items_count_references": 1,
+    },
 }

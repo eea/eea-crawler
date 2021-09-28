@@ -6,25 +6,27 @@ from tasks.pool import CreatePoolOperator
 
 from tasks.debug import debug_value
 from tasks.helpers import (
-    dag_param_to_dict, build_items_list, get_params, get_item)
+    dag_param_to_dict,
+    build_items_list,
+    get_params,
+    get_item,
+)
 from lib.pool import url_to_pool
 
-default_args = {
-    "owner": "airflow",
-}
+default_args = {"owner": "airflow"}
 
 default_dag_params = {
-    'item': "http://eea.europa.eu",
-    'params': {
-        'rabbitmq': {
+    "item": "http://eea.europa.eu",
+    "params": {
+        "rabbitmq": {
             "host": "rabbitmq",
             "port": "5672",
             "username": "guest",
             "password": "guest",
-            "queue": "default"
+            "queue": "default",
         },
-        'url_api_part': 'api/SITE'
-    }
+        "url_api_part": "api/SITE",
+    },
 }
 
 
@@ -58,11 +60,7 @@ def crawl_with_sitemap(item=default_dag_params):
 
     xc_pool_name = url_to_pool(xc_item, prefix="fetch_url_raw")
 
-    cpo = CreatePoolOperator(
-        task_id="create_pool",
-        name=xc_pool_name,
-        slots=8,
-    )
+    cpo = CreatePoolOperator(task_id="create_pool", name=xc_pool_name, slots=8)
 
     bt = BulkTriggerDagRunOperator(
         task_id="fetch_url_raw",

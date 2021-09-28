@@ -13,9 +13,7 @@ from lib.pool import url_to_pool
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
-default_args = {
-    "owner": "airflow",
-}
+default_args = {"owner": "airflow"}
 
 """ @task()
 def get_sitemap_url(website_url: str):
@@ -70,10 +68,7 @@ def get_sitemap(url):
     start_date=days_ago(2),
     tags=["semantic-search"],
 )
-def crawl_plonerestapi_website(
-    item: str = "",
-    maintainer_email: str = "",
-):
+def crawl_plonerestapi_website(item: str = "", maintainer_email: str = ""):
     """
     ### Crawls a plone.restapi powered website.
 
@@ -83,11 +78,7 @@ def crawl_plonerestapi_website(
     xc_urls = get_sitemap(item)
     xc_clean_urls = get_urls_to_update(xc_urls)
 
-    cpo = CreatePoolOperator(
-        task_id="create_pool",
-        name=pool_name,
-        slots=2,
-    )
+    cpo = CreatePoolOperator(task_id="create_pool", name=pool_name, slots=2)
 
     bt = BulkTriggerDagRunOperator(
         task_id="fetch_urls",

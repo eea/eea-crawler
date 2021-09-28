@@ -8,28 +8,26 @@ from tenacity import retry, wait_exponential, stop_after_attempt
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 
-from tasks.helpers import (simple_dag_param_to_dict)
+from tasks.helpers import simple_dag_param_to_dict
 from tasks.rabbitmq import simple_send_to_rabbitmq  # , send_to_rabbitmq
 from lib.debug import pretty_id
 
 default_dag_params = {
-    'item': "https://www.eea.europa.eu/highlights/better-raw-material-sourcing-can",
+    "item": "https://www.eea.europa.eu/highlights/better-raw-material-sourcing-can",
     #    'item': "https://www.eea.europa.eu/api/SITE/highlights/walking-cycling-and-public-transport",
-    'params': {
-        'rabbitmq': {
+    "params": {
+        "rabbitmq": {
             "host": "rabbitmq",
             "port": "5672",
             "username": "guest",
             "password": "guest",
-            "queue": "default"
+            "queue": "default",
         },
-        'url_api_part': 'api/SITE'
-    }
+        "url_api_part": "api/SITE",
+    },
 }
 
-default_args = {
-    "owner": "airflow",
-}
+default_args = {"owner": "airflow"}
 
 
 @task()
@@ -39,14 +37,14 @@ def get_api_url(url, params):
 
 
 def simple_get_api_url(url, params):
-    if params['url_api_part'] in url:
+    if params["url_api_part"] in url:
         print(url)
         return url
     url_parts = url.split("/")
     if "://" in url:
-        url_parts.insert(3, params['url_api_part'])
+        url_parts.insert(3, params["url_api_part"])
     else:
-        url_parts.insert(1, params['url_api_part'])
+        url_parts.insert(1, params["url_api_part"])
     url_with_api = "/".join(url_parts)
     return url_with_api
 
@@ -63,7 +61,7 @@ def simple_add_id(doc, item):
 
 
 def simple_remove_api_url(url, params):
-    return "/".join(url.split("/"+params['url_api_part'] + '/'))
+    return "/".join(url.split("/" + params["url_api_part"] + "/"))
 
 
 def simple_add_about(doc, value):
@@ -80,13 +78,13 @@ def request_with_retry(url):
 @task
 def fetch_and_send_to_rabbitmq(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
-    url_with_api = simple_get_api_url(dag_params['item'], dag_params['params'])
+    url_with_api = simple_get_api_url(dag_params["item"], dag_params["params"])
     r = request_with_retry(url_with_api)
-    doc = simple_add_id(r, dag_params['item'])
-    url_without_api = simple_remove_api_url(url_with_api, dag_params['params'])
+    doc = simple_add_id(r, dag_params["item"])
+    url_without_api = simple_remove_api_url(url_with_api, dag_params["params"])
 
     doc = simple_add_about(doc, url_without_api)
-    simple_send_to_rabbitmq(doc, dag_params['params'])
+    simple_send_to_rabbitmq(doc, dag_params["params"])
 
 
 @dag(

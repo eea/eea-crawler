@@ -7,37 +7,39 @@ from tasks.pool import CreatePoolOperator
 
 from tasks.debug import debug_value
 from tasks.helpers import (
-    dag_param_to_dict, build_items_list, get_params, get_item)
+    dag_param_to_dict,
+    build_items_list,
+    get_params,
+    get_item,
+)
 from lib.pool import url_to_pool
 
-default_args = {
-    "owner": "airflow",
-}
+default_args = {"owner": "airflow"}
 
 default_dag_params = {
-    'item': "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2019/6/1&created.range=min&b_size=500",
-    'params': {
-        'rabbitmq': {
+    "item": "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2019/6/1&created.range=min&b_size=500",
+    "params": {
+        "rabbitmq": {
             "host": "rabbitmq",
             "port": "5672",
             "username": "guest",
             "password": "guest",
-            "queue": "queue_raw_data"
+            "queue": "queue_raw_data",
         },
-        'url_api_part': 'api/SITE'
-    }
+        "url_api_part": "api/SITE",
+    },
 }
 
 
 @task
 def get_no_protocol_url(url: str):
-    return(url.split("://")[-1])
+    return url.split("://")[-1]
 
 
 @task()
 def extract_docs_from_json(page):
     json_doc = json.loads(page)
-    docs = json_doc['items']
+    docs = json_doc["items"]
     urls = [doc["@id"] for doc in docs]
     return urls
 
@@ -69,11 +71,7 @@ def crawl_with_query(item=default_dag_params):
 
     xc_pool_name = url_to_pool(xc_item, prefix="fetch_url_raw")
 
-    cpo = CreatePoolOperator(
-        task_id="create_pool",
-        name=xc_pool_name,
-        slots=2,
-    )
+    cpo = CreatePoolOperator(task_id="create_pool", name=xc_pool_name, slots=2)
 
     bt = BulkTriggerDagRunOperator(
         task_id="fetch_url_raw",

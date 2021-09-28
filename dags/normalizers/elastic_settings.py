@@ -1,13 +1,7 @@
 settings = {
     "index": {
-        "mapping": {
-            "ignore_malformed": "true"
-        },
-        "similarity": {
-            "default": {
-                "type": "BM25"
-            }
-        },
+        "mapping": {"ignore_malformed": "true"},
+        "similarity": {"default": {"type": "BM25"}},
         "max_shingle_diff": "12",
         "analysis": {
             "filter": {
@@ -15,20 +9,14 @@ settings = {
                     "max_shingle_size": "12",
                     "min_shingle_size": "2",
                     "type": "shingle",
-                    "filler_token": ""
+                    "filler_token": "",
                 },
-                "english_stemmer": {
-                    "type": "stemmer",
-                    "language": "english"
-                }
+                "english_stemmer": {"type": "stemmer", "language": "english"},
             },
             "char_filter": {
                 "url_filter": {
                     "type": "mapping",
-                    "mappings": [
-                        "/ => \u0020",
-                        ". => \u0020"
-                    ]
+                    "mappings": ["/ => \u0020", ". => \u0020"],
                 }
             },
             "analyzer": {
@@ -37,76 +25,58 @@ settings = {
                         "lowercase",
                         "stop",
                         "asciifolding",
-                        "english_stemmer"
+                        "english_stemmer",
                     ],
                     "type": "custom",
-                    "tokenizer": "standard"
+                    "tokenizer": "standard",
                 },
-                "date2year": {
-                    "pattern": "[-](.*)",
-                    "type": "pattern"
-                },
+                "date2year": {"pattern": "[-](.*)", "type": "pattern"},
                 "didYouMean": {
-                    "filter": [
-                        "lowercase"
-                    ],
-                    "char_filter": [
-                        "html_strip"
-                    ],
+                    "filter": ["lowercase"],
+                    "char_filter": ["html_strip"],
                     "type": "custom",
-                    "tokenizer": "standard"
+                    "tokenizer": "standard",
                 },
                 "freetext": {
-                    "filter": [
-                        "lowercase"
-                    ],
-                    "char_filter": [
-                        "html_strip"
-                    ],
+                    "filter": ["lowercase"],
+                    "char_filter": ["html_strip"],
                     "type": "custom",
-                    "tokenizer": "standard"
+                    "tokenizer": "standard",
                 },
                 "autocomplete": {
                     "filter": [
                         "lowercase",
                         "stop",
                         "autocompleteFilter",
-                        "trim"
+                        "trim",
                     ],
-                    "char_filter": [
-                        "html_strip"
-                    ],
+                    "char_filter": ["html_strip"],
                     "type": "custom",
-                    "tokenizer": "standard"
+                    "tokenizer": "standard",
                 },
                 "pipe": {
                     "lowercase": "false",
                     "pattern": "\|",
-                    "type": "pattern"
+                    "type": "pattern",
                 },
-                "none": {
-                    "filter": [
-                        "lowercase"
-                    ],
-                    "type": "keyword"
-                },
+                "none": {"filter": ["lowercase"], "type": "keyword"},
                 "coma": {
                     "lowercase": "false",
                     "pattern": ", ",
-                    "type": "pattern"
+                    "type": "pattern",
                 },
                 "semicolon": {
                     "lowercase": "false",
                     "pattern": "; ",
-                    "type": "pattern"
-                }
+                    "type": "pattern",
+                },
             },
             "tokenizer": {
                 "url_tokenizer": {
                     "pattern": "[a-zA-Z0-9\.\-]*",
-                    "type": "simple_pattern"
+                    "type": "simple_pattern",
                 }
-            }
-        }
+            },
+        },
     }
 }

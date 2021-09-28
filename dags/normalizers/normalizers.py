@@ -15,11 +15,11 @@ def simplify_elements(element, element_key):
 
 
 def create_doc(doc):
-    return simplify_elements(doc, '')
+    return simplify_elements(doc, "")
 
 
 def apply_black_map(doc, config):
-    black_map = config['blackMap']
+    black_map = config["blackMap"]
     clean_data = {}
     for key in doc.keys():
         value = doc[key]
@@ -40,7 +40,7 @@ def apply_black_map(doc, config):
 
 
 def apply_white_map(doc, config):
-    white_map = config['whiteMap']
+    white_map = config["whiteMap"]
     clean_data = {}
     for key in doc.keys():
         value = None
@@ -79,7 +79,7 @@ def remove_empty(doc):
 
 
 def apply_norm_obj(doc, config):
-    norm_obj = config['normObj']
+    norm_obj = config["normObj"]
     clean_data = {}
     for key in doc.keys():
         value = doc[key]
@@ -102,14 +102,14 @@ def apply_norm_obj(doc, config):
 
 
 def apply_norm_prop(doc, config):
-    norm_prop = config['normProp']
+    norm_prop = config["normProp"]
     clean_data = {}
     for key in doc.keys():
         value = doc[key]
         if norm_prop.get(key, None) is None:
             clean_data[key] = value
         else:
-            if (not isinstance(norm_prop[key], list)):
+            if not isinstance(norm_prop[key], list):
                 norm_prop[key] = [norm_prop[key]]
             for new_key in norm_prop[key]:
                 clean_data[new_key] = value
@@ -117,7 +117,7 @@ def apply_norm_prop(doc, config):
 
 
 def apply_norm_missing(doc, config):
-    norm_missing = config['normMissing']
+    norm_missing = config["normMissing"]
     clean_data = doc
     for key in norm_missing.keys():
         if clean_data.get(key, None) is None:
@@ -139,7 +139,7 @@ def remove_duplicates(doc):
 
 
 def get_attrs_to_delete(doc, config):
-    proplist = config['proplist']
+    proplist = config["proplist"]
     attrs = []
     for key in doc.keys():
         if key not in proplist:

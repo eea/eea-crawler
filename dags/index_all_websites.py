@@ -7,9 +7,7 @@ from tasks.debug import debug_value
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
-default_args = {
-    "owner": "airflow",
-}
+default_args = {"owner": "airflow"}
 
 
 def get_indexed_websites():
@@ -27,9 +25,7 @@ def get_indexed_websites():
     start_date=days_ago(2),
     tags=["meta_workflow"],
 )
-def index_all_websites(
-    websites: str = get_indexed_websites()
-):
+def index_all_websites(websites: str = get_indexed_websites()):
     """
     ### Triggers reindexing of all websites
 

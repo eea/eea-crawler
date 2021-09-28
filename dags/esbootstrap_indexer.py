@@ -7,9 +7,7 @@ from airflow.utils.dates import days_ago
 
 from tasks.debug import debug_value
 
-default_args = {
-    "owner": "airflow",
-}
+default_args = {"owner": "airflow"}
 
 
 # TODO: run directly in the bash operator, using Jinja template

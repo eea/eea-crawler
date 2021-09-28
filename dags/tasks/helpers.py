@@ -4,7 +4,7 @@ from copy import deepcopy
 
 
 def merge(dict1, dict2):
-    ''' Return a new dictionary by merging two dictionaries recursively. '''
+    """ Return a new dictionary by merging two dictionaries recursively. """
 
     result = deepcopy(dict1)
 
@@ -22,8 +22,8 @@ def rebuild(tree):
     if isinstance(tree, dict):
         clean_tree = {}
         if tree.get("__type", "non_dict") == "dict":
-            for key in tree.get('__var').keys():
-                clean_tree[key] = rebuild(tree.get('__var')[key])
+            for key in tree.get("__var").keys():
+                clean_tree[key] = rebuild(tree.get("__var")[key])
         else:
             for key in tree.keys():
                 clean_tree[key] = rebuild(tree[key])
@@ -86,14 +86,14 @@ def simple_dag_param_to_dict(params, defaults={}):
 
 @task
 def build_items_list(items, params):
-    return [{'item': item, 'params': params} for item in items]
+    return [{"item": item, "params": params} for item in items]
 
 
 @task
 def get_params(params):
-    return params['params']
+    return params["params"]
 
 
 @task
 def get_item(params):
-    return params['item']
+    return params["item"]

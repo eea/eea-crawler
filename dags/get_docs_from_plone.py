@@ -7,15 +7,13 @@ from airflow.providers.http.operators.http import SimpleHttpOperator
 
 from tasks.debug import debug_value
 
-default_args = {
-    "owner": "airflow",
-}
+default_args = {"owner": "airflow"}
 
 
 @task()
 def extract_docs_from_json(page):
     json_doc = json.loads(page)
-    docs = json_doc['items']
+    docs = json_doc["items"]
     print(docs)
     return docs
 
@@ -32,7 +30,9 @@ def get_urls_from_docs(docs):
     start_date=days_ago(2),
     tags=["test"],
 )
-def get_docs_from_plone(queryurl: str = "www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500"):
+def get_docs_from_plone(
+    queryurl: str = "www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500"
+):
     page = SimpleHttpOperator(
         task_id="get_docs_request",
         method="GET",
@@ -45,15 +45,13 @@ def get_docs_from_plone(queryurl: str = "www.eea.europa.eu/api/@search?portal_ty
     urls = get_urls_from_docs(docs)
     debug_value(urls)
 
-#    page = requests.get(SEARCHURL % (portal_type),  headers={'Accept': 'application/json'})
-#    docs = page.json()['items']
-#    print(len(docs))
-#    return docs
+    #    page = requests.get(SEARCHURL % (portal_type),  headers={'Accept': 'application/json'})
+    #    docs = page.json()['items']
+    #    print(len(docs))
+    #    return docs
 
     BulkTriggerDagRunOperator(
-        task_id="fetch_urls",
-        items=urls,
-        trigger_dag_id="fetch_url",
+        task_id="fetch_urls", items=urls, trigger_dag_id="fetch_url"
     )
 
 

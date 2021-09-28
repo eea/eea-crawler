@@ -12,10 +12,7 @@ def get_elastic_config():
 
 
 def connect(conf):
-    es = Elasticsearch(
-        host=conf["host"],
-        port=conf["port"],
-    )
+    es = Elasticsearch(host=conf["host"], port=conf["port"])
     return es
 
 

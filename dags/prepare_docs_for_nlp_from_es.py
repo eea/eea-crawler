@@ -8,7 +8,11 @@ from tasks.pool import CreatePoolOperator
 
 from tasks.debug import debug_value
 from tasks.helpers import (
-    dag_param_to_dict, build_items_list, get_params, get_item)
+    dag_param_to_dict,
+    build_items_list,
+    get_params,
+    get_item,
+)
 from lib.pool import url_to_pool
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import RequestError
@@ -19,45 +23,42 @@ from normalizers.elastic_mapping import mapping
 # import json
 # from airflow.providers.http.operators.http import SimpleHttpOperator
 
-default_args = {
-    "owner": "airflow",
-}
+default_args = {"owner": "airflow"}
 
 default_dag_params = {
-    'item': "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500",
-    'params': {
-        'elastic': {
-            'host': 'elastic',
-            'port': 9200,
-            'index': 'data_raw',
-            'mapping': mapping,
-            'settings': settings,
-            'target_index': 'data_nlp'
+    "item": "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500",
+    "params": {
+        "elastic": {
+            "host": "elastic",
+            "port": 9200,
+            "index": "data_raw",
+            "mapping": mapping,
+            "settings": settings,
+            "target_index": "data_nlp",
         },
-        'rabbitmq': {
+        "rabbitmq": {
             "host": "rabbitmq",
             "port": "5672",
             "username": "guest",
             "password": "guest",
-            "queue": "queue_nlp"
+            "queue": "queue_nlp",
         },
-        'nlp':{
-            'services':{
-                'embedding':{
-                    'host':'nlp-embedding',
-                    'port':'8000',
-                    'path':'api/embedding'
+        "nlp": {
+            "services": {
+                "embedding": {
+                    "host": "nlp-embedding",
+                    "port": "8000",
+                    "path": "api/embedding",
                 }
-
             },
-            'text':{
-                'props':['description', 'key_message', 'summary', 'text'],
-                'blacklist':['contact', 'rights'],
-                'split_length':500
-            }
+            "text": {
+                "props": ["description", "key_message", "summary", "text"],
+                "blacklist": ["contact", "rights"],
+                "split_length": 500,
+            },
         },
-        'url_api_part': 'api/SITE'
-    }
+        "url_api_part": "api/SITE",
+    },
 }
 
 
@@ -71,11 +72,11 @@ def get_all_ids(config):
     es = Elasticsearch(
         [
             {
-                'host': config['elastic']['host'],
-                'port': config['elastic']['port']
+                "host": config["elastic"]["host"],
+                "port": config["elastic"]["port"],
             }
         ],
-        timeout=timeout
+        timeout=timeout,
     )
 
     ids = []
@@ -87,35 +88,35 @@ def get_all_ids(config):
             ids.append(item["_id"])
 
     # Check index exists
-    if not es.indices.exists(index=config['elastic']['index']):
-        print("Index " + config['elastic']['index'] + " not exists")
+    if not es.indices.exists(index=config["elastic"]["index"]):
+        print("Index " + config["elastic"]["index"] + " not exists")
         exit()
 
     # Init scroll by search
     data = es.search(
-        index=config['elastic']['index'],
-        scroll='2m',
+        index=config["elastic"]["index"],
+        scroll="2m",
         size=size,
         body=body,
         _source=["@id"],
     )
 
     # Get the scroll ID
-    sid = data['_scroll_id']
-    scroll_size = len(data['hits']['hits'])
+    sid = data["_scroll_id"]
+    scroll_size = len(data["hits"]["hits"])
 
     while scroll_size > 0:
         "Scrolling..."
 
         # Before scroll, process current batch of hits
-        process_hits(data['hits']['hits'])
-        data = es.scroll(scroll_id=sid, scroll='2m')
+        process_hits(data["hits"]["hits"])
+        data = es.scroll(scroll_id=sid, scroll="2m")
 
         # Update the scroll ID
-        sid = data['_scroll_id']
+        sid = data["_scroll_id"]
 
         # Get the number of results that returned in the last scroll
-        scroll_size = len(data['hits']['hits'])
+        scroll_size = len(data["hits"]["hits"])
 
     return ids
 
@@ -126,30 +127,29 @@ def create_index(config):
     es = Elasticsearch(
         [
             {
-                'host': config['elastic']['host'],
-                'port': config['elastic']['port']
+                "host": config["elastic"]["host"],
+                "port": config["elastic"]["port"],
             }
         ],
-        timeout=timeout
+        timeout=timeout,
     )
     # body = {"settings":config['elastic']['settings']}
-    config['elastic']['mapping']['embedding'] = {
+    config["elastic"]["mapping"]["embedding"] = {
         "type": "dense_vector",
-        "dims": 768
+        "dims": 768,
     }
     body = {
-        "mappings": {
-            "properties": config['elastic']['mapping']
-        },
-        "settings": config['elastic']['settings']
+        "mappings": {"properties": config["elastic"]["mapping"]},
+        "settings": config["elastic"]["settings"],
     }
     try:
-        es.indices.create(index=config['elastic']['target_index'], body=body)
+        es.indices.create(index=config["elastic"]["target_index"], body=body)
     except RequestError as e:
-        if e.error == 'resource_already_exists_exception':
+        if e.error == "resource_already_exists_exception":
             print("Index already exists")
         else:
-            raise(e)
+            raise (e)
+
 
 @dag(
     default_args=default_args,
@@ -173,9 +173,7 @@ def prepare_docs_for_nlp_from_es(item=default_dag_params):
     xc_pool_name = url_to_pool(xc_item, prefix="prepare_doc_for_nlp")
 
     cpo = CreatePoolOperator(
-        task_id="create_pool",
-        name=xc_pool_name,
-        slots=16,
+        task_id="create_pool", name=xc_pool_name, slots=16
     )
 
     bt = BulkTriggerDagRunOperator(
