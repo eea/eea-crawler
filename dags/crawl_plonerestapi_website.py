@@ -92,7 +92,7 @@ def crawl_plonerestapi_website(
     bt = BulkTriggerDagRunOperator(
         task_id="fetch_urls",
         items=xc_clean_urls,
-        trigger_dag_id="fetch_url",
+        trigger_dag_id="clms_fetch_url",
         custom_pool=pool_name,
     )
 
