@@ -46,7 +46,7 @@ default_dag_params = {
                 'embedding':{
                     'host':'nlp-embedding',
                     'port':'8000',
-                    'path':'/api/embedding'
+                    'path':'api/embedding'
                 }
 
             },
