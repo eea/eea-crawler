@@ -44,7 +44,11 @@ default_dag_params = {
         },
         'nlp':{
             'services':{
-                'embedding':'nlp-embedding'
+                'embedding':{
+                    'host':'nlp-embedding',
+                    'port':'8000',
+                    'path':'api/embedding'
+                }
             },
             'text':{
                 'props':['description', 'key_message', 'summary', 'text'],
@@ -185,6 +189,7 @@ def get_haystack_data(json_doc, config):
 
     return dict_doc
 
+@retry(wait=wait_exponential(), stop=stop_after_attempt(10))
 def preprocess_split_doc(doc, config):
     from haystack.preprocessor.preprocessor import PreProcessor
     preprocessor = PreProcessor(
@@ -218,7 +223,7 @@ def add_embeddings_doc(docs, nlp_service):
         data['snippets'].append(doc['text'])
     
     data = json.dumps(data)
-    r = requests.post(f"{nlp_service}/api/embedding", headers={"Accept": "application/json","Content-Type": "application/json"}, data=data)
+    r = requests.post(f"http://{nlp_service['host']}:{nlp_service['port']}/{nlp_service['path']}", headers={"Accept": "application/json","Content-Type": "application/json"}, data=data)
 
     embeddings = json.loads(r.text)['embeddings']
     for doc in docs:
