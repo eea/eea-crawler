@@ -229,7 +229,7 @@ def add_embeddings_doc(docs, nlp_service):
     for doc in docs:
         for embedding in embeddings:
             if doc['text'] == embedding['text']:
-               doc['text_embedding'] = embedding['embedding'] 
+               doc['embedding'] = embedding['embedding'] 
     return docs
 
 @task

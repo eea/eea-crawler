@@ -170,10 +170,6 @@ mapping = {
     "items_count_label": {
         "type": "long"
     },
-    "SearchableText_embeddings": {
-        "dims": 768,
-        "type": "dense_vector"
-    },
     "dataProcessor": {
         "copy_to": ["organisation", "searchable_organisation", "all_fields_for_freetext"],
         "fielddata": True,
@@ -352,9 +348,5 @@ mapping = {
         "copy_to": ["organisation", "searchable_organisation", "all_fields_for_freetext"],
         "fielddata": True,
         "type": "text"
-    },
-    "all_fields_for_freetext_embeddings": {
-        "dims": 768,
-        "type": "dense_vector"
     }
 }

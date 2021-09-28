@@ -133,7 +133,7 @@ def create_index(config):
         timeout=timeout
     )
     # body = {"settings":config['elastic']['settings']}
-    config['text_embedding'] = {
+    config['elastic']['mapping']['embedding'] = {
         "type": "dense_vector",
         "dims": 768
     }
