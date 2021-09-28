@@ -67,7 +67,7 @@ def crawl_with_query(item=default_dag_params):
 
     xc_items = build_items_list(xc_urls, xc_params)
 
-    xc_pool_name = url_to_pool(xc_item)
+    xc_pool_name = url_to_pool(xc_item, prefix="fetch_url_raw")
 
     cpo = CreatePoolOperator(
         task_id="create_pool",

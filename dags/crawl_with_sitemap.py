@@ -56,7 +56,7 @@ def crawl_with_sitemap(item=default_dag_params):
     xc_items = build_items_list(xc_urls, xc_params)
     debug_value(xc_items)
 
-    xc_pool_name = url_to_pool(xc_item)
+    xc_pool_name = url_to_pool(xc_item, prefix="fetch_url_raw")
 
     cpo = CreatePoolOperator(
         task_id="create_pool",

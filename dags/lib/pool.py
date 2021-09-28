@@ -5,5 +5,5 @@ from lib.debug import pretty_id
 
 
 @task
-def url_to_pool(url: str):
-    return "p-{}".format(pretty_id(urlparse(url).hostname))[:49]
+def url_to_pool(url: str, prefix: str = 'default'):
+    return "p-{}-{}".format(prefix, pretty_id(urlparse(url).hostname))[:49]

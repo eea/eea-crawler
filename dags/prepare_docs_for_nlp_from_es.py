@@ -11,6 +11,7 @@ from tasks.helpers import (
     dag_param_to_dict, build_items_list, get_params, get_item)
 from lib.pool import url_to_pool
 from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import RequestError
 
 from normalizers.elastic_settings import settings
 from normalizers.elastic_mapping import mapping
@@ -39,6 +40,16 @@ default_dag_params = {
             "username": "guest",
             "password": "guest",
             "queue": "queue_nlp"
+        },
+        'nlp':{
+            'services':{
+                'embedding':'nlp-embedding'
+            },
+            'text':{
+                'props':['description', 'key_message', 'summary', 'text'],
+                'blacklist':['contact', 'rights'],
+                'split_length':500
+            }
         },
         'url_api_part': 'api/SITE'
     }
@@ -117,15 +128,23 @@ def create_index(config):
         timeout=timeout
     )
     # body = {"settings":config['elastic']['settings']}
+    config['text_embedding'] = {
+        "type": "dense_vector",
+        "dims": 768
+    }
     body = {
         "mappings": {
             "properties": config['elastic']['mapping']
         },
         "settings": config['elastic']['settings']
     }
-
-    es.indices.create(index=config['elastic']['target_index'], body=body)
-
+    try:
+        es.indices.create(index=config['elastic']['target_index'], body=body)
+    except RequestError as e:
+        if e.error == 'resource_already_exists_exception':
+            print("Index already exists")
+        else:
+            raise(e)
 
 @dag(
     default_args=default_args,
@@ -146,7 +165,7 @@ def prepare_docs_for_nlp_from_es(item=default_dag_params):
 
     xc_items = build_items_list(xc_ids, xc_params)
 
-    xc_pool_name = url_to_pool(xc_item)
+    xc_pool_name = url_to_pool(xc_item, prefix="prepare_doc_for_nlp")
 
     cpo = CreatePoolOperator(
         task_id="create_pool",
