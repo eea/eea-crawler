@@ -16,8 +16,9 @@ from lib.pool import url_to_pool
 
 default_args = {"owner": "airflow"}
 
+
 default_dag_params = {
-    "item": "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2019/6/1&created.range=min&b_size=500",
+    "item": "http://www.eea.europa.eu/api/@search?b_size=100000&sort_order=reverse&sort_on=Date&portal_type=Highlight",
     "params": {
         "rabbitmq": {
             "host": "rabbitmq",
@@ -41,6 +42,8 @@ def extract_docs_from_json(page):
     json_doc = json.loads(page)
     docs = json_doc["items"]
     urls = [doc["@id"] for doc in docs]
+    print("Number of documents:")
+    print(len(urls))
     return urls
 
 

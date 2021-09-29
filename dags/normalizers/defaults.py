@@ -54,6 +54,7 @@ normalizers = {
         "coast_sea": "Marine",
         "soil": "Soil",
         "Highlight": "News",
+        "technology": "Environmental technology",
     },
     "//": "Normalise missing properties with the given values",
     "normMissing": {
