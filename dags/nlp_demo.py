@@ -40,7 +40,7 @@ def build_qr_data():
 )
 def nlp_demo():
     """
-    ### get info about an url
+    ### nlp demo call
     """
     xc_docs = dummy_get_docs()
     xc_data = build_data(xc_docs)
