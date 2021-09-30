@@ -98,7 +98,7 @@ def crawl_plonerestapi_website(item=default_dag_params):
     xc_items = build_items_list(xc_queries, {})
     xc_pool_name = url_to_pool(xc_item, prefix="crawl_with_query")
 
-    cpo = CreatePoolOperator(task_id="create_pool", name=xc_pool_name, slots=2)
+    cpo = CreatePoolOperator(task_id="create_pool", name=xc_pool_name, slots=1)
 
     bt = BulkTriggerDagRunOperator(
         task_id="crawl_with_query",
