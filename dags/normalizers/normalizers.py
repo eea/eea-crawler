@@ -1,3 +1,7 @@
+import re
+from urllib.parse import urlparse
+
+
 def simplify_elements(element, element_key):
     clean_element = {}
     if isinstance(element, dict):
@@ -155,8 +159,104 @@ def delete_attrs(doc, attrs):
     return clean_data
 
 
+def add_cluster_name(doc):
+    parsed = urlparse(doc["about"])
+
+    if parsed.hostname == "www.eea.europa.eu":
+        doc["cluster_name"] = "EEA Website (www.eea.europa.eu)"
+    return doc
+
+
+def add_reading_time(norm_doc, doc, config):
+    print(config)
+    text = join_text_fields(doc, config)
+    wc = res = len(re.findall(r"\w+", text))
+    norm_doc["readingTime"] = wc / 228
+    return norm_doc
+
+
+def cleanhtml(raw_html):
+    cleanr = re.compile("<.*?>")
+    cleantext = re.sub(cleanr, "", raw_html)
+    return cleantext
+
+
+def join_text_fields(json_doc, config):
+    # json_doc = json.loads(doc)
+    print("Type:", type(json_doc))
+    print("Doc:", json_doc)
+
+    txt_props = config.get("props", [])
+    txt_props_black = config.get("blacklist", [])
+    # start text with the document title.
+    title = json_doc.get("title", "no title")
+    text = title + ".\n\n"
+
+    # get other predefined fields first in the order defined in txt_props param
+    for prop in txt_props:
+        txt = cleanhtml(json_doc.get(prop, {}).get("data", ""))
+        if not txt.endswith("."):
+            txt = txt + "."
+        # avoid redundant text
+        if txt not in text:
+            text = text + txt + "\n\n"
+
+    # find automatically all props that have text or html in it
+    # and append to text if not already there.
+    for k, v in json_doc.items():
+        if type(v) is dict and k not in txt_props_black:
+            txt = ""
+            # print(f'%s is a dict' % k)
+            mime_type = json_doc.get(k, {}).get("content-type", "")
+            if mime_type == "text/plain":
+                # print('%s is text/plain' % k)
+                txt = json_doc.get(k, {}).get("data", "")
+            elif mime_type == "text/html":
+                # print('%s is text/html' % k)
+                txt = cleanhtml(json_doc.get(k, {}).get("data", ""))
+            # avoid redundant text
+            if txt and txt not in text:
+                if not txt.endswith("."):
+                    txt = txt + "."
+                text = text + "\n\n" + k.upper() + ": " + txt + "\n\n"
+
+    return text
+
+
+def add_places(norm_doc):
+    if norm_doc.get("spatial", None) is not None:
+        norm_doc["places"] = norm_doc["spatial"]
+    return norm_doc
+
+
 # def restructure_doc(doc):
 #     clean_data = {}
 #     clean_data['meta'] = doc
 #     clean_data['id'] = doc['id']
 #     return clean_data
+
+
+def simple_normalize_doc(doc, config):
+
+    normalizer = config["normalizers"]
+    normalized_doc = create_doc(doc)
+
+    attrs_to_delete = get_attrs_to_delete(normalized_doc, normalizer)
+    normalized_doc = add_reading_time(
+        normalized_doc, doc, config["nlp"]["text"]
+    )
+    normalized_doc = apply_black_map(normalized_doc, normalizer)
+    normalized_doc = apply_white_map(normalized_doc, normalizer)
+    normalized_doc = remove_empty(normalized_doc)
+    normalized_doc = apply_norm_obj(normalized_doc, normalizer)
+    normalized_doc = apply_norm_prop(normalized_doc, normalizer)
+    normalized_doc = add_places(normalized_doc)
+    normalized_doc = apply_norm_missing(normalized_doc, normalizer)
+    normalized_doc = remove_duplicates(normalized_doc)
+    normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
+    normalized_doc = add_cluster_name(normalized_doc)
+    # normalized_doc = restructure_doc(normalized_doc)
+
+    print(normalized_doc)
+
+    return normalized_doc

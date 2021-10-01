@@ -58,6 +58,7 @@ default_dag_params = {
             },
         },
         "url_api_part": "api/SITE",
+        "portal_type": "",
     },
 }
 
@@ -67,6 +68,16 @@ def get_all_ids(config):
     timeout = 1000
     size = 1000
     body = {}
+    if config["portal_type"] or config["portal_type"] != "":
+        body = {
+            "query": {
+                "bool": {
+                    "must": [{"match": {"@type": config["portal_type"]}}],
+                    "must_not": [],
+                    "should": [],
+                }
+            }
+        }
 
     # Init Elasticsearch instance
     es = Elasticsearch(

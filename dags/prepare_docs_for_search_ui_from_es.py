@@ -54,7 +54,7 @@ def get_all_ids(config):
     timeout = 1000
     size = 1000
     body = {}
-    if config["portal_type"] or config["portal_type"] != "":
+    if config.get("portal_type", "") != "":
         body = {
             "query": {
                 "bool": {

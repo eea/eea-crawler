@@ -5,7 +5,6 @@
 
 from elasticsearch import Elasticsearch
 import json
-from unidecode import unidecode
 import re
 import requests
 from tenacity import retry, wait_exponential, stop_after_attempt
@@ -16,18 +15,7 @@ from airflow.utils.dates import days_ago
 from lib.debug import pretty_id
 
 from normalizers.defaults import normalizers
-from normalizers.normalizers import (
-    create_doc,
-    apply_black_map,
-    apply_white_map,
-    remove_empty,
-    apply_norm_obj,
-    apply_norm_prop,
-    apply_norm_missing,
-    remove_duplicates,
-    get_attrs_to_delete,
-    delete_attrs,
-)
+from normalizers.normalizers import simple_normalize_doc
 from tasks.helpers import simple_dag_param_to_dict, merge
 from tasks.rabbitmq import simple_send_to_rabbitmq
 
@@ -77,26 +65,6 @@ def prepare_doc_for_nlp(item=default_dag_params):
 @task
 def normalize_doc(doc, config):
     return simple_normalize_doc(doc, config)
-
-
-def simple_normalize_doc(doc, config):
-    normalizer = config["normalizers"]
-    normalized_doc = create_doc(doc)
-
-    attrs_to_delete = get_attrs_to_delete(normalized_doc, normalizer)
-    normalized_doc = apply_black_map(normalized_doc, normalizer)
-    normalized_doc = apply_white_map(normalized_doc, normalizer)
-    normalized_doc = remove_empty(normalized_doc)
-    normalized_doc = apply_norm_obj(normalized_doc, normalizer)
-    normalized_doc = apply_norm_prop(normalized_doc, normalizer)
-    normalized_doc = apply_norm_missing(normalized_doc, normalizer)
-    normalized_doc = remove_duplicates(normalized_doc)
-    normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
-    # normalized_doc = restructure_doc(normalized_doc)
-
-    print(normalized_doc)
-
-    return normalized_doc
 
 
 def get_doc_from_raw_idx(item, config):
@@ -163,9 +131,9 @@ def get_haystack_data(json_doc, config):
     # TODO: further cleanup of text
     # If you're working with English text and don't have to worry about losing diacritics
     # then maybe you can preprocess your text with unidecode.
+    # text = unidecode(text)
     # https://githubmemory.com/repo/explosion/spacy-stanza/issues/68
     # https://towardsdatascience.com/cleaning-preprocessing-text-data-by-building-nlp-pipeline-853148add68a
-    text = unidecode(text)
 
     # metadata
     url = json_doc["@id"]
