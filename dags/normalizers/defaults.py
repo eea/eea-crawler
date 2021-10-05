@@ -17,6 +17,7 @@ normalizers = {
         "title": ["title", "label"],
         "expirationDate": "expires",
         "location": "spatial",
+        "effective": ["issued", "year"],
         "effectiveDate": ["issued", "year"],
         "@type": "objectProvides",
         "about": ["id", "about"],
@@ -70,5 +71,8 @@ normalizers = {
         "fleschReadingEaseScore": 0,
         "references": [],
         "items_count_references": 1,
+        "creation_date": "field:created",
+        "issued": "field:creation_date",
+        "language": "en",
     },
 }

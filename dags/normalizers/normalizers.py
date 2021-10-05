@@ -1,3 +1,4 @@
+import json
 import re
 from urllib.parse import urlparse
 
@@ -125,7 +126,14 @@ def apply_norm_missing(doc, config):
     clean_data = doc
     for key in norm_missing.keys():
         if clean_data.get(key, None) is None:
-            clean_data[key] = norm_missing[key]
+            if isinstance(norm_missing[key], str) and norm_missing[
+                key
+            ].startswith("field:"):
+                clean_data[key] = doc[
+                    norm_missing[key].split("field:")[-1].strip()
+                ]
+            else:
+                clean_data[key] = norm_missing[key]
     return clean_data
 
 
@@ -168,10 +176,20 @@ def add_cluster_name(doc):
 
 
 def add_reading_time(norm_doc, doc, config):
-    print(config)
     text = join_text_fields(doc, config)
     wc = res = len(re.findall(r"\w+", text))
     norm_doc["readingTime"] = wc / 228
+    return norm_doc
+
+
+def update_locations(norm_doc):
+    try:
+        json_location = json.loads(norm_doc.get("location", ""))
+        norm_doc["location"] = [
+            loc["properties"]["title"] for loc in json_location["features"]
+        ]
+    except:
+        pass
     return norm_doc
 
 
@@ -183,9 +201,6 @@ def cleanhtml(raw_html):
 
 def join_text_fields(json_doc, config):
     # json_doc = json.loads(doc)
-    print("Type:", type(json_doc))
-    print("Doc:", json_doc)
-
     txt_props = config.get("props", [])
     txt_props_black = config.get("blacklist", [])
     # start text with the document title.
@@ -194,7 +209,11 @@ def join_text_fields(json_doc, config):
 
     # get other predefined fields first in the order defined in txt_props param
     for prop in txt_props:
-        txt = cleanhtml(json_doc.get(prop, {}).get("data", ""))
+        prop_v = json_doc.get(prop, {})
+        if type(prop_v) is dict:
+            txt = cleanhtml(prop_v.get("data", ""))
+        else:
+            txt = cleanhtml(prop_v)
         if not txt.endswith("."):
             txt = txt + "."
         # avoid redundant text
@@ -220,6 +239,9 @@ def join_text_fields(json_doc, config):
                     txt = txt + "."
                 text = text + "\n\n" + k.upper() + ": " + txt + "\n\n"
 
+    # TODO: for volto based content types with blocks, the above would not work,
+    # a better approach would need to grab the rendered html page and strip the html. could be done for all content types.
+
     return text
 
 
@@ -240,7 +262,7 @@ def simple_normalize_doc(doc, config):
 
     normalizer = config["normalizers"]
     normalized_doc = create_doc(doc)
-
+    normalized_doc = update_locations(normalized_doc)
     attrs_to_delete = get_attrs_to_delete(normalized_doc, normalizer)
     normalized_doc = add_reading_time(
         normalized_doc, doc, config["nlp"]["text"]
@@ -257,6 +279,6 @@ def simple_normalize_doc(doc, config):
     normalized_doc = add_cluster_name(normalized_doc)
     # normalized_doc = restructure_doc(normalized_doc)
 
-    print(normalized_doc)
+    # print(normalized_doc)
 
     return normalized_doc

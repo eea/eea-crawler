@@ -7,6 +7,7 @@ from elasticsearch import Elasticsearch
 import json
 import re
 import requests
+from urllib.parse import urlparse
 from tenacity import retry, wait_exponential, stop_after_attempt
 
 
@@ -15,7 +16,7 @@ from airflow.utils.dates import days_ago
 from lib.debug import pretty_id
 
 from normalizers.defaults import normalizers
-from normalizers.normalizers import simple_normalize_doc
+from normalizers.normalizers import simple_normalize_doc, join_text_fields
 from tasks.helpers import simple_dag_param_to_dict, merge
 from tasks.rabbitmq import simple_send_to_rabbitmq
 
@@ -89,59 +90,25 @@ def cleanhtml(raw_html):
 
 
 def get_haystack_data(json_doc, config):
-    # json_doc = json.loads(doc)
-    print("Type:", type(json_doc))
-    print("Doc:", json_doc)
-
-    txt_props = config["props"]
-    txt_props_black = config["blacklist"]
-
-    # start text with the document title.
-    title = json_doc.get("title", "no title")
-    text = title + ".\n\n"
-
-    # get other predefined fields first in the order defined in txt_props param
-    for prop in txt_props:
-        txt = cleanhtml(json_doc.get(prop, {}).get("data", ""))
-        if not txt.endswith("."):
-            txt = txt + "."
-        # avoid redundant text
-        if txt not in text:
-            text = text + txt + "\n\n"
-
-    # find automatically all props that have text or html in it
-    # and append to text if not already there.
-    for k, v in json_doc.items():
-        if type(v) is dict and k not in txt_props_black:
-            txt = ""
-            # print(f'%s is a dict' % k)
-            mime_type = json_doc.get(k, {}).get("content-type", "")
-            if mime_type == "text/plain":
-                # print('%s is text/plain' % k)
-                txt = json_doc.get(k, {}).get("data", "")
-            elif mime_type == "text/html":
-                # print('%s is text/html' % k)
-                txt = cleanhtml(json_doc.get(k, {}).get("data", ""))
-            # avoid redundant text
-            if txt and txt not in text:
-                if not txt.endswith("."):
-                    txt = txt + "."
-                text = text + "\n\n" + k.upper() + ": " + txt + "\n\n"
-
-    # TODO: further cleanup of text
-    # If you're working with English text and don't have to worry about losing diacritics
-    # then maybe you can preprocess your text with unidecode.
-    # text = unidecode(text)
-    # https://githubmemory.com/repo/explosion/spacy-stanza/issues/68
-    # https://towardsdatascience.com/cleaning-preprocessing-text-data-by-building-nlp-pipeline-853148add68a
-
+    text = join_text_fields(json_doc, config)
+    title = json_doc["title"]
     # metadata
     url = json_doc["@id"]
     uid = json_doc["UID"]
     content_type = json_doc["@type"]
-    creation_date = json_doc["creation_date"]
-    publishing_date = json_doc.get("effectiveDate", "")
-    expiration_date = json_doc.get("expirationDate", "")
+    source_domain = urlparse(url).netloc
+
+    # Archetype DC dates
+    if "creation_date" in json_doc:
+        creation_date = json_doc["creation_date"]
+        publishing_date = json_doc.get("effectiveDate", "")
+        expiration_date = json_doc.get("expirationDate", "")
+    # Dexterity DC dates
+    elif "created" in json_doc:
+        creation_date = json_doc["created"]
+        publishing_date = json_doc.get("effective", "")
+        expiration_date = json_doc.get("expires", "")
+
     review_state = json_doc.get("review_state", "")
 
     # build haystack dict
@@ -156,6 +123,7 @@ def get_haystack_data(json_doc, config):
             "publishing_date": publishing_date,
             "expiration_date": expiration_date,
             "review_state": review_state,
+            "source_domain": source_domain,
         },
     }
 
@@ -215,7 +183,6 @@ def add_embeddings_doc(docs, nlp_service):
 @task
 def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
-
     # get a single document from elasticsearch
     doc = get_doc_from_raw_idx(dag_params["item"], dag_params["params"])
 
@@ -238,7 +205,7 @@ def transform_doc(full_config):
         splitted_docs, dag_params["params"]["nlp"]["services"]["embedding"]
     )
 
-    print(docs_with_embedding)
+    # print(docs_with_embedding)
 
     for doc in docs_with_embedding:
         simple_send_to_rabbitmq(doc, dag_params["params"])
