@@ -2,7 +2,7 @@
 
 (via Logstash)
 """
-
+import json
 from elasticsearch import Elasticsearch
 
 from airflow.decorators import dag, task
