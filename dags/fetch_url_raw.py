@@ -69,6 +69,14 @@ def simple_add_about(doc, value):
     return doc
 
 
+def doc_to_raw(doc):
+    raw_doc = {}
+    raw_doc["id"] = doc["id"]
+    raw_doc["@type"] = doc["@type"]
+    raw_doc["raw_value"] = json.dumps(doc)
+    return raw_doc
+
+
 @retry(wait=wait_exponential(), stop=stop_after_attempt(10))
 def request_with_retry(url):
     r = requests.get(url, headers={"Accept": "application/json"})
@@ -84,7 +92,8 @@ def fetch_and_send_to_rabbitmq(full_config):
     url_without_api = simple_remove_api_url(url_with_api, dag_params["params"])
 
     doc = simple_add_about(doc, url_without_api)
-    simple_send_to_rabbitmq(doc, dag_params["params"])
+    raw_doc = doc_to_raw(doc)
+    simple_send_to_rabbitmq(raw_doc, dag_params["params"])
 
 
 @dag(

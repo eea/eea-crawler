@@ -65,7 +65,7 @@ def get_doc_from_raw_idx(item, config):
         timeout=timeout,
     )
     res = es.get(index=config["elastic"]["index"], id=pretty_id(item))
-    return res["_source"]
+    return json.loads(res["_source"]["raw_value"])
 
 
 @task
