@@ -58,7 +58,7 @@ default_dag_params = {
 @task
 def build_queries_list(url, params):
     queries = [
-        f"{url}/api/@search?b_size={params['query_size']}&metadata_fields=modified&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
+        f"{url}/api/@search?b_size={params['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
         for portal_type in params["portal_types"]
     ]
     print(queries)
