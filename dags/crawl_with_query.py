@@ -1,4 +1,7 @@
 import json
+from urllib import robotparser
+from urllib.parse import urlparse
+
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 from airflow.providers.http.operators.http import SimpleHttpOperator
@@ -98,6 +101,28 @@ def check_trigger_nlp(params):
     return params
 
 
+def remove_api_url(url, params):
+    return "/".join(url.split("/" + params["url_api_part"] + "/"))
+
+
+@task()
+def check_robots_txt(url, items, params):
+    allowed_items = []
+    robots_url = (
+        f"{urlparse(url).scheme}://{urlparse(url).hostname}/robots.txt"
+    )
+    print(robots_url)
+    rp = robotparser.RobotFileParser()
+    rp.set_url(robots_url)
+    rp.read()
+    for item in items:
+        item_url = remove_api_url(item, params)
+        if rp.can_fetch("*", item_url):
+            allowed_items.append(item)
+
+    return allowed_items
+
+
 @dag(
     default_args=default_args,
     schedule_interval=None,
@@ -110,7 +135,6 @@ def crawl_with_query(item=default_dag_params):
     xc_params = check_trigger_searchui(xc_params)
     xc_params = check_trigger_nlp(xc_params)
     xc_item = get_item(xc_dag_params)
-
     xc_endpoint = get_no_protocol_url(xc_item)
 
     debug_value(xc_dag_params)
@@ -122,7 +146,9 @@ def crawl_with_query(item=default_dag_params):
     )
     xc_urls = extract_docs_from_json(page.output)
 
-    xc_items = build_items_list(xc_urls, xc_params)
+    xc_allowed_urls = check_robots_txt(xc_item, xc_urls, xc_params)
+
+    xc_items = build_items_list(xc_allowed_urls, xc_params)
 
     xc_pool_name = url_to_pool(xc_item, prefix="fetch_url_raw")
 
