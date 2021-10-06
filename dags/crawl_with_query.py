@@ -25,7 +25,7 @@ default_args = {"owner": "airflow"}
 
 
 default_dag_params = {
-    "item": "http://www.eea.europa.eu/api/@search?b_size=10&sort_order=reverse&sort_on=Date&portal_type=Highlight",
+    "item": "http://www.eea.europa.eu/api/@search?b_size=10&metadata_fields=modified&sort_order=reverse&sort_on=Date&portal_type=Highlight",
     "params": {
         "trigger_searchui": True,
         "trigger_nlp": True,
