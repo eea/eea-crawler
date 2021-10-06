@@ -194,8 +194,11 @@ def update_locations(norm_doc):
 
 
 def cleanhtml(raw_html):
-    cleanr = re.compile("<.*?>")
-    cleantext = re.sub(cleanr, "", raw_html)
+    cleantext = ""
+    if isinstance(raw_html, str):
+        cleanr = re.compile("<.*?>")
+        cleantext = re.sub(cleanr, "", raw_html)
+
     return cleantext
 
 
