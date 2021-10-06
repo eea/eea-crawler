@@ -179,14 +179,13 @@ def transform_doc(full_config):
     )
 
     # add the embeddings
-#    docs_with_embedding = add_embeddings_doc(
-#        splitted_docs, dag_params["params"]["nlp"]["services"]["embedding"]
-#    )
+    docs_with_embedding = add_embeddings_doc(
+        splitted_docs, dag_params["params"]["nlp"]["services"]["embedding"]
+    )
 
     # print(docs_with_embedding)
 
-#    for doc in docs_with_embedding:
-    for doc in splitted_docs:
+    for doc in docs_with_embedding:
         simple_send_to_rabbitmq(doc, dag_params["params"])
 
 

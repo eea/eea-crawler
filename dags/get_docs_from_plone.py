@@ -31,7 +31,7 @@ def get_urls_from_docs(docs):
     tags=["test"],
 )
 def get_docs_from_plone(
-    queryurl: str = "www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500"
+    queryurl: str = "www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500",
 ):
     page = SimpleHttpOperator(
         task_id="get_docs_request",

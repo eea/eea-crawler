@@ -122,26 +122,3 @@ class BulkTriggerDagRunOperator(BaseOperator):
                     self.log.info("ti: %s", ti)
 
             counter += 1
-
-
-@provide_session
-def custom_trigger_dag(trigger_dag_id, item, pool_name, session):
-    delay=2000
-    execution_date = timezone.utcnow() + timedelta(
-        microseconds=delay
-    )
-    run_id = DagRun.generate_run_id(DagRunType.MANUAL, execution_date)
-
-    dag_run = trigger_dag(
-        dag_id=trigger_dag_id,
-        run_id=run_id,
-        conf={"item": item},
-        execution_date=execution_date,
-        replace_microseconds=False,
-    )
-   
-    tis = dag_run.get_task_instances()
-    for ti in tis:
-        ti.pool = pool_name
-        session.add(ti)
-        print("ti: %s", ti)

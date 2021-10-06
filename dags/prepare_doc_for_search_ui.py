@@ -11,7 +11,7 @@ from normalizers.defaults import normalizers
 from normalizers.normalizers import simple_normalize_doc
 from tasks.helpers import simple_dag_param_to_dict
 from tasks.rabbitmq import simple_send_to_rabbitmq
-from tasks.elastic import (get_doc_from_raw_idx)
+from tasks.elastic import get_doc_from_raw_idx
 
 default_args = {"owner": "airflow"}
 

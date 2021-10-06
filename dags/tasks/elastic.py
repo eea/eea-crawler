@@ -27,9 +27,11 @@ def index_doc(doc):
     es = connect(conf)
     es.index(index=conf["index"], id=doc["id"], body=doc)
 
+
 @task
 def create_index(config, add_embedding=False):
     return simple_create_index(config, add_embedding)
+
 
 def simple_create_index(config, add_embedding=False):
     timeout = 1000
@@ -60,6 +62,7 @@ def simple_create_index(config, add_embedding=False):
             print("Index already exists")
         else:
             raise (e)
+
 
 @task
 def get_all_ids(config):
@@ -128,6 +131,7 @@ def get_all_ids(config):
         scroll_size = len(data["hits"]["hits"])
 
     return ids
+
 
 def get_doc_from_raw_idx(item, config):
     timeout = 1000

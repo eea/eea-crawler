@@ -24,8 +24,8 @@ default_args = {"owner": "airflow"}
 default_dag_params = {
     "item": "http://www.eea.europa.eu/api/@search?b_size=10&sort_order=reverse&sort_on=Date&portal_type=Highlight",
     "params": {
-        "trigger_searchui":True,
-        "trigger_nlp":True,
+        "trigger_searchui": True,
+        "trigger_nlp": True,
         "rabbitmq": {
             "host": "rabbitmq",
             "port": "5672",
@@ -47,7 +47,7 @@ default_dag_params = {
         "nlp": {
             "services": {
                 "embedding": {
-                    "host": "nlp-embedding",
+                    "host": "nlp-searchlib",
                     "port": "8000",
                     "path": "api/embedding",
                 }
@@ -59,7 +59,6 @@ default_dag_params = {
             },
         },
         "normalizers": normalizers,
-
     },
 }
 
@@ -78,19 +77,26 @@ def extract_docs_from_json(page):
     print(len(urls))
     return urls
 
+
 @task()
 def check_trigger_searchui(params):
-    if params.get('trigger_searchui',False):
-        params["elastic"]["target_index"] = params["elastic"]["searchui_target_index"]
+    if params.get("trigger_searchui", False):
+        params["elastic"]["target_index"] = params["elastic"][
+            "searchui_target_index"
+        ]
         simple_create_index(params)
     return params
 
+
 @task()
 def check_trigger_nlp(params):
-    if params.get('trigger_nlp',False):
-        params["elastic"]["target_index"] = params["elastic"]["nlp_target_index"]
+    if params.get("trigger_nlp", False):
+        params["elastic"]["target_index"] = params["elastic"][
+            "nlp_target_index"
+        ]
         simple_create_index(params, add_embedding=True)
     return params
+
 
 @dag(
     default_args=default_args,
@@ -120,7 +126,7 @@ def crawl_with_query(item=default_dag_params):
 
     xc_pool_name = url_to_pool(xc_item, prefix="fetch_url_raw")
 
-    cpo = CreatePoolOperator(task_id="create_pool", name=xc_pool_name, slots=2)
+    cpo = CreatePoolOperator(task_id="create_pool", name=xc_pool_name, slots=4)
 
     bt = BulkTriggerDagRunOperator(
         task_id="fetch_url_raw",

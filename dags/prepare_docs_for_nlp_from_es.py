@@ -17,7 +17,7 @@ from lib.pool import url_to_pool
 
 from normalizers.elastic_settings import settings
 from normalizers.elastic_mapping import mapping
-from tasks.elastic import (create_index, get_all_ids)
+from tasks.elastic import create_index, get_all_ids
 
 # import json
 # from airflow.providers.http.operators.http import SimpleHttpOperator
