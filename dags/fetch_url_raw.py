@@ -90,7 +90,14 @@ def doc_to_raw(doc):
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(10))
 def request_with_retry(url):
+    print("check")
+    print(url)
     r = requests.get(url, headers={"Accept": "application/json"})
+    print("response")
+    print(r.text)
+    # test if response is json
+    json.loads(r.text)
+    print("it's ok")
     return r.text
 
 
