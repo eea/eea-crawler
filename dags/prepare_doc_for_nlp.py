@@ -19,6 +19,7 @@ from normalizers.defaults import normalizers
 from normalizers.normalizers import simple_normalize_doc, join_text_fields
 from tasks.helpers import simple_dag_param_to_dict, merge
 from tasks.rabbitmq import simple_send_to_rabbitmq
+from tasks.elastic import get_doc_from_raw_idx
 
 default_args = {"owner": "airflow"}
 
@@ -61,32 +62,6 @@ default_dag_params = {
 )
 def prepare_doc_for_nlp(item=default_dag_params):
     transform_doc(item)
-
-
-@task
-def normalize_doc(doc, config):
-    return simple_normalize_doc(doc, config)
-
-
-def get_doc_from_raw_idx(item, config):
-    timeout = 1000
-    es = Elasticsearch(
-        [
-            {
-                "host": config["elastic"]["host"],
-                "port": config["elastic"]["port"],
-            }
-        ],
-        timeout=timeout,
-    )
-    res = es.get(index=config["elastic"]["index"], id=pretty_id(item))
-    return json.loads(res["_source"]["raw_value"])
-
-
-def cleanhtml(raw_html):
-    cleanr = re.compile("<.*?>")
-    cleantext = re.sub(cleanr, "", raw_html)
-    return cleantext
 
 
 def get_haystack_data(json_doc, config):
@@ -183,8 +158,11 @@ def add_embeddings_doc(docs, nlp_service):
 @task
 def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
-    # get a single document from elasticsearch
-    doc = get_doc_from_raw_idx(dag_params["item"], dag_params["params"])
+    # get a single document from elasticsearch or from the params
+    if dag_params["params"].get("raw_doc", None):
+        doc = dag_params["params"].get("raw_doc")
+    else:
+        doc = get_doc_from_raw_idx(dag_params["item"], dag_params["params"])
 
     # do the same normalization as we do for searchlib, so we can use the same filters
     normalized_doc = simple_normalize_doc(doc, dag_params["params"])
@@ -201,13 +179,14 @@ def transform_doc(full_config):
     )
 
     # add the embeddings
-    docs_with_embedding = add_embeddings_doc(
-        splitted_docs, dag_params["params"]["nlp"]["services"]["embedding"]
-    )
+#    docs_with_embedding = add_embeddings_doc(
+#        splitted_docs, dag_params["params"]["nlp"]["services"]["embedding"]
+#    )
 
     # print(docs_with_embedding)
 
-    for doc in docs_with_embedding:
+#    for doc in docs_with_embedding:
+    for doc in splitted_docs:
         simple_send_to_rabbitmq(doc, dag_params["params"])
 
 

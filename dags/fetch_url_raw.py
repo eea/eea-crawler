@@ -12,16 +12,27 @@ from tasks.helpers import simple_dag_param_to_dict
 from tasks.rabbitmq import simple_send_to_rabbitmq  # , send_to_rabbitmq
 from lib.debug import pretty_id
 
+from datetime import timedelta
+from normalizers.elastic_settings import settings
+from normalizers.elastic_mapping import mapping
+from tasks.pool import custom_create_pool
+from tasks.dagrun import custom_trigger_dag
+from lib.pool import simple_url_to_pool
+
 default_dag_params = {
     "item": "https://www.eea.europa.eu/highlights/better-raw-material-sourcing-can",
     #    'item': "https://www.eea.europa.eu/api/SITE/highlights/walking-cycling-and-public-transport",
     "params": {
+        "trigger_searchui":False,
+        "trigger_nlp":False,
         "rabbitmq": {
             "host": "rabbitmq",
             "port": "5672",
             "username": "guest",
             "password": "guest",
-            "queue": "default",
+            "queue": "queue_raw_data",
+            "nlp_queue":"queue_nlp",
+            "searchui_queue":"queue_searchui"
         },
         "url_api_part": "api/SITE",
     },
@@ -83,6 +94,9 @@ def request_with_retry(url):
     return r.text
 
 
+
+
+
 @task
 def fetch_and_send_to_rabbitmq(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
@@ -94,6 +108,23 @@ def fetch_and_send_to_rabbitmq(full_config):
     doc = simple_add_about(doc, url_without_api)
     raw_doc = doc_to_raw(doc)
     simple_send_to_rabbitmq(raw_doc, dag_params["params"])
+    if dag_params["params"].get("trigger_searchui", False):
+        pool_name = simple_url_to_pool(url_with_api, prefix="prepare_doc_for_searchui")
+        print("searchui enabled")
+        custom_create_pool(pool_name, 16)
+        trigger_dag_id='prepare_doc_for_search_ui'
+        dag_params["params"]["raw_doc"] = doc
+        dag_params["params"]["rabbitmq"]["queue"] = dag_params["params"]["rabbitmq"]["searchui_queue"]
+        custom_trigger_dag(trigger_dag_id, dag_params, pool_name)
+
+    if dag_params["params"].get("trigger_nlp", False):
+        pool_name = simple_url_to_pool(url_with_api, prefix="prepare_doc_for_nlp")
+        print("nlp enabled")
+        custom_create_pool(pool_name, 16)
+        trigger_dag_id='prepare_doc_for_nlp'
+        dag_params["params"]["raw_doc"] = doc
+        dag_params["params"]["rabbitmq"]["queue"] = dag_params["params"]["rabbitmq"]["nlp_queue"]
+        custom_trigger_dag(trigger_dag_id, dag_params, pool_name)
 
 
 @dag(

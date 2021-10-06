@@ -23,7 +23,7 @@ default_args = {"owner": "airflow"}
 default_dag_params = {
     "item": "http://www.eea.europa.eu",
     "params": {
-        "query_size": 100,
+        "query_size": 10,
         "portal_types": [
             "Highlight",
             "Topic",

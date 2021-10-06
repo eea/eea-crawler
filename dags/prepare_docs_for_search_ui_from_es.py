@@ -1,7 +1,7 @@
 """ Get all doc ids from an ES index and triggers preprocessing for each Doc ID
 """
 
-from airflow.decorators import dag, task
+from airflow.decorators import dag
 from airflow.utils.dates import days_ago
 from tasks.dagrun import BulkTriggerDagRunOperator
 from tasks.pool import CreatePoolOperator
@@ -14,12 +14,11 @@ from tasks.helpers import (
     get_item,
 )
 from lib.pool import url_to_pool
-from elasticsearch import Elasticsearch
-from elasticsearch.exceptions import RequestError
 
 from normalizers.elastic_settings import settings
 from normalizers.elastic_mapping import mapping
 
+from tasks.elastic import (create_index, get_all_ids)
 # import json
 # from airflow.providers.http.operators.http import SimpleHttpOperator
 
@@ -47,102 +46,6 @@ default_dag_params = {
         "portal_type": "",
     },
 }
-
-
-@task
-def get_all_ids(config):
-    timeout = 1000
-    size = 1000
-    body = {}
-    if config.get("portal_type", "") != "":
-        body = {
-            "query": {
-                "bool": {
-                    "must": [{"match": {"@type": config["portal_type"]}}],
-                    "must_not": [],
-                    "should": [],
-                }
-            }
-        }
-
-    # Init Elasticsearch instance
-    es = Elasticsearch(
-        [
-            {
-                "host": config["elastic"]["host"],
-                "port": config["elastic"]["port"],
-            }
-        ],
-        timeout=timeout,
-    )
-
-    ids = []
-    # Process hits here
-
-    def process_hits(hits):
-        for item in hits:
-            # print(json.dumps(item, indent=2))
-            ids.append(item["_id"])
-
-    # Check index exists
-    if not es.indices.exists(index=config["elastic"]["index"]):
-        print("Index " + config["elastic"]["index"] + " not exists")
-        exit()
-
-    # Init scroll by search
-    data = es.search(
-        index=config["elastic"]["index"],
-        scroll="2m",
-        size=size,
-        body=body,
-        _source=["@id"],
-    )
-
-    # Get the scroll ID
-    sid = data["_scroll_id"]
-    scroll_size = len(data["hits"]["hits"])
-
-    while scroll_size > 0:
-        "Scrolling..."
-
-        # Before scroll, process current batch of hits
-        process_hits(data["hits"]["hits"])
-        data = es.scroll(scroll_id=sid, scroll="2m")
-
-        # Update the scroll ID
-        sid = data["_scroll_id"]
-
-        # Get the number of results that returned in the last scroll
-        scroll_size = len(data["hits"]["hits"])
-
-    return ids
-
-
-@task
-def create_index(config):
-    timeout = 1000
-    es = Elasticsearch(
-        [
-            {
-                "host": config["elastic"]["host"],
-                "port": config["elastic"]["port"],
-            }
-        ],
-        timeout=timeout,
-    )
-    # body = {"settings":config['elastic']['settings']}
-    body = {
-        "mappings": {"properties": config["elastic"]["mapping"]},
-        "settings": config["elastic"]["settings"],
-    }
-
-    try:
-        es.indices.create(index=config["elastic"]["target_index"], body=body)
-    except RequestError as e:
-        if e.error == "resource_already_exists_exception":
-            print("Index already exists")
-        else:
-            raise (e)
 
 
 @dag(

@@ -13,21 +13,53 @@ from tasks.helpers import (
     get_item,
 )
 from lib.pool import url_to_pool
+from normalizers.elastic_settings import settings
+from normalizers.elastic_mapping import mapping
+from tasks.elastic import simple_create_index
+from normalizers.defaults import normalizers
 
 default_args = {"owner": "airflow"}
 
 
 default_dag_params = {
-    "item": "http://www.eea.europa.eu/api/@search?b_size=100000&sort_order=reverse&sort_on=Date&portal_type=Highlight",
+    "item": "http://www.eea.europa.eu/api/@search?b_size=10&sort_order=reverse&sort_on=Date&portal_type=Highlight",
     "params": {
+        "trigger_searchui":True,
+        "trigger_nlp":True,
         "rabbitmq": {
             "host": "rabbitmq",
             "port": "5672",
             "username": "guest",
             "password": "guest",
             "queue": "queue_raw_data",
+            "searchui_queue": "queue_searchui",
+            "nlp_queue": "queue_nlp",
+        },
+        "elastic": {
+            "host": "elastic",
+            "port": 9200,
+            "mapping": mapping,
+            "settings": settings,
+            "searchui_target_index": "data_searchui",
+            "nlp_target_index": "data_nlp",
         },
         "url_api_part": "api/SITE",
+        "nlp": {
+            "services": {
+                "embedding": {
+                    "host": "nlp-embedding",
+                    "port": "8000",
+                    "path": "api/embedding",
+                }
+            },
+            "text": {
+                "props": ["description", "key_message", "summary", "text"],
+                "blacklist": ["contact", "rights"],
+                "split_length": 500,
+            },
+        },
+        "normalizers": normalizers,
+
     },
 }
 
@@ -46,6 +78,19 @@ def extract_docs_from_json(page):
     print(len(urls))
     return urls
 
+@task()
+def check_trigger_searchui(params):
+    if params.get('trigger_searchui',False):
+        params["elastic"]["target_index"] = params["elastic"]["searchui_target_index"]
+        simple_create_index(params)
+    return params
+
+@task()
+def check_trigger_nlp(params):
+    if params.get('trigger_nlp',False):
+        params["elastic"]["target_index"] = params["elastic"]["nlp_target_index"]
+        simple_create_index(params, add_embedding=True)
+    return params
 
 @dag(
     default_args=default_args,
@@ -55,8 +100,9 @@ def extract_docs_from_json(page):
 )
 def crawl_with_query(item=default_dag_params):
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
-
     xc_params = get_params(xc_dag_params)
+    xc_params = check_trigger_searchui(xc_params)
+    xc_params = check_trigger_nlp(xc_params)
     xc_item = get_item(xc_dag_params)
 
     xc_endpoint = get_no_protocol_url(xc_item)

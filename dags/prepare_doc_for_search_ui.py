@@ -3,16 +3,15 @@
 (via Logstash)
 """
 import json
-from elasticsearch import Elasticsearch
 
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
-from lib.debug import pretty_id
 
 from normalizers.defaults import normalizers
 from normalizers.normalizers import simple_normalize_doc
 from tasks.helpers import simple_dag_param_to_dict
 from tasks.rabbitmq import simple_send_to_rabbitmq
+from tasks.elastic import (get_doc_from_raw_idx)
 
 default_args = {"owner": "airflow"}
 
@@ -53,25 +52,13 @@ def normalize_doc(doc, config):
     return simple_normalize_doc(doc, config)
 
 
-def get_doc_from_raw_idx(item, config):
-    timeout = 1000
-    es = Elasticsearch(
-        [
-            {
-                "host": config["elastic"]["host"],
-                "port": config["elastic"]["port"],
-            }
-        ],
-        timeout=timeout,
-    )
-    res = es.get(index=config["elastic"]["index"], id=pretty_id(item))
-    return json.loads(res["_source"]["raw_value"])
-
-
 @task
 def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
-    doc = get_doc_from_raw_idx(dag_params["item"], dag_params["params"])
+    if dag_params["params"].get("raw_doc", None):
+        doc = dag_params["params"].get("raw_doc")
+    else:
+        doc = get_doc_from_raw_idx(dag_params["item"], dag_params["params"])
     normalized_doc = simple_normalize_doc(doc, dag_params["params"])
     simple_send_to_rabbitmq(normalized_doc, dag_params["params"])
 
