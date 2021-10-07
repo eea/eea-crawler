@@ -24,6 +24,7 @@ default_dag_params = {
     "item": "http://www.eea.europa.eu",
     "params": {
         "query_size": 10,
+        "trigger_next_bulk": False,
         "portal_types": [
             "Highlight",
             "Topic",

@@ -5,6 +5,8 @@ from urllib.parse import urlparse
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 from airflow.providers.http.operators.http import SimpleHttpOperator
+from airflow.operators.python_operator import BranchPythonOperator
+
 from tasks.dagrun import BulkTriggerDagRunOperator
 from tasks.pool import CreatePoolOperator
 
@@ -29,6 +31,7 @@ default_dag_params = {
     "params": {
         "trigger_searchui": True,
         "trigger_nlp": True,
+        "trigger_next_bulk": False,
         "rabbitmq": {
             "host": "rabbitmq",
             "port": "5672",
@@ -71,7 +74,7 @@ def get_no_protocol_url(url: str):
     return url.split("://")[-1]
 
 
-@task()
+@task
 def extract_docs_from_json(page):
     json_doc = json.loads(page)
     docs = json_doc["items"]
@@ -81,7 +84,17 @@ def extract_docs_from_json(page):
     return urls
 
 
-@task()
+@task
+def extract_next_from_json(page, params):
+    if params.get("trigger_next_bulk", False):
+        json_doc = json.loads(page)
+        if json_doc.get("batching", {}).get("next", False):
+            return [json_doc.get("batching", {}).get("next")]
+
+    return []
+
+
+@task
 def check_trigger_searchui(params):
     if params.get("trigger_searchui", False):
         params["elastic"]["target_index"] = params["elastic"][
@@ -91,7 +104,7 @@ def check_trigger_searchui(params):
     return params
 
 
-@task()
+@task
 def check_trigger_nlp(params):
     if params.get("trigger_nlp", False):
         params["elastic"]["target_index"] = params["elastic"][
@@ -105,7 +118,7 @@ def remove_api_url(url, params):
     return "/".join(url.split("/" + params["url_api_part"] + "/"))
 
 
-@task()
+@task
 def check_robots_txt(url, items, params):
     allowed_items = []
     robots_url = (
@@ -159,6 +172,23 @@ def crawl_with_query(item=default_dag_params):
         items=xc_items,
         trigger_dag_id="fetch_url_raw",
         custom_pool=xc_pool_name,
+    )
+
+    xc_next = extract_next_from_json(page.output, xc_params)
+    debug_value(xc_next)
+
+    xc_pool_name_next = url_to_pool(xc_item, prefix="crawl_with_query")
+    cpo_next = CreatePoolOperator(
+        task_id="create_pool_next", name=xc_pool_name_next, slots=1
+    )
+
+    xc_items_next = build_items_list(xc_next, xc_params)
+
+    bt = BulkTriggerDagRunOperator(
+        task_id="crawl_with_query",
+        items=xc_items_next,
+        trigger_dag_id="crawl_with_query",
+        custom_pool=xc_pool_name_next,
     )
 
 

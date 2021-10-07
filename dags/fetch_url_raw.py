@@ -88,7 +88,7 @@ def doc_to_raw(doc):
     return raw_doc
 
 
-@retry(wait=wait_exponential(), stop=stop_after_attempt(10))
+@retry(wait=wait_exponential(), stop=stop_after_attempt(5))
 def request_with_retry(url):
     print("check")
     print(url)

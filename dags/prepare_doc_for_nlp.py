@@ -105,7 +105,7 @@ def get_haystack_data(json_doc, config):
     return dict_doc
 
 
-@retry(wait=wait_exponential(), stop=stop_after_attempt(10))
+@retry(wait=wait_exponential(), stop=stop_after_attempt(5))
 def preprocess_split_doc(doc, config):
     from haystack.preprocessor.preprocessor import PreProcessor
 
@@ -128,7 +128,7 @@ def preprocess_split_doc(doc, config):
     return docs
 
 
-@retry(wait=wait_exponential(), stop=stop_after_attempt(10))
+@retry(wait=wait_exponential(), stop=stop_after_attempt(5))
 def add_embeddings_doc(docs, nlp_service):
     # data = {'snippets':[doc['text']], "is_passage": True}
 

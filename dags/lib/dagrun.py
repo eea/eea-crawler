@@ -10,7 +10,7 @@ from airflow.api.common.experimental.trigger_dag import (
 )
 
 
-@retry(wait=wait_exponential(), stop=stop_after_attempt(10))
+@retry(wait=wait_exponential(), stop=stop_after_attempt(5))
 def trigger_dag_with_retry(trigger_dag_id, item, pool_name, session):
     delay = 2000
     execution_date = timezone.utcnow() + timedelta(microseconds=delay)
