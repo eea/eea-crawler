@@ -23,8 +23,10 @@ default_args = {"owner": "airflow"}
 default_dag_params = {
     "item": "http://www.eea.europa.eu",
     "params": {
-        "query_size": 10,
-        "trigger_next_bulk": False,
+        "query_size": 500,
+        "trigger_next_bulk": True,
+        "trigger_nlp": True,
+        "trigger_searchui": True,
         "portal_types": [
             "Highlight",
             "Topic",
@@ -85,7 +87,7 @@ def crawl_plonerestapi_website(item=default_dag_params):
 
     xc_queries = build_queries_list(xc_item, xc_params)
 
-    xc_items = build_items_list(xc_queries, {})
+    xc_items = build_items_list(xc_queries, xc_params)
     xc_pool_name = url_to_pool(xc_item, prefix="crawl_with_query")
 
     cpo = CreatePoolOperator(task_id="create_pool", name=xc_pool_name, slots=1)
