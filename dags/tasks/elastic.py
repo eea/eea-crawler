@@ -6,6 +6,7 @@ from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import RequestError
 
 from lib.debug import pretty_id
+from lib.dagrun import trigger_dag
 
 
 def get_elastic_config():
@@ -34,7 +35,7 @@ def create_index(config, add_embedding=False):
 
 
 def simple_create_index(config, add_embedding=False):
-    timeout = 1000
+    timeout = 100
     es = Elasticsearch(
         [
             {
@@ -65,9 +66,10 @@ def simple_create_index(config, add_embedding=False):
 
 
 @task
-def get_all_ids(config):
+def get_all_ids(dag_params, pool_name, dag_id):
+    config = dag_params["params"]
     timeout = 1000
-    size = 1000
+    size = 500
     body = {}
     if config.get("portal_type", "") != "":
         body = {
@@ -91,13 +93,17 @@ def get_all_ids(config):
         timeout=timeout,
     )
 
-    ids = []
+    #    ids = []
     # Process hits here
 
     def process_hits(hits):
         for item in hits:
             # print(json.dumps(item, indent=2))
-            ids.append(item["_id"])
+            # ids.append(item["_id"])
+            print(item)
+            dag_params["item"] = item["_id"]
+            #            dag_params["params"]["raw_d = item["_source"]["raw_value"]
+            trigger_dag(dag_id, dag_params, pool_name)
 
     # Check index exists
     if not es.indices.exists(index=config["elastic"]["index"]):
@@ -107,7 +113,7 @@ def get_all_ids(config):
     # Init scroll by search
     data = es.search(
         index=config["elastic"]["index"],
-        scroll="2m",
+        scroll="60m",
         size=size,
         body=body,
         _source=["@id"],
@@ -122,7 +128,7 @@ def get_all_ids(config):
 
         # Before scroll, process current batch of hits
         process_hits(data["hits"]["hits"])
-        data = es.scroll(scroll_id=sid, scroll="2m")
+        data = es.scroll(scroll_id=sid, scroll="60m")
 
         # Update the scroll ID
         sid = data["_scroll_id"]
@@ -130,7 +136,8 @@ def get_all_ids(config):
         # Get the number of results that returned in the last scroll
         scroll_size = len(data["hits"]["hits"])
 
-    return ids
+
+#   return ids
 
 
 def get_doc_from_raw_idx(item, config):
