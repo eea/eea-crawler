@@ -1,30 +1,8 @@
 import json
 import re
-from urllib.parse import urlparse
 
 
-def simplify_elements(element, element_key):
-    clean_element = {}
-    if isinstance(element, dict):
-        for key in element.keys():
-            new_elements = simplify_elements(element[key], key)
-            for new_key in new_elements.keys():
-
-                new_element_key = new_key
-                if len(element_key) > 0:
-                    new_element_key = element_key + "." + new_key
-                clean_element[new_element_key] = new_elements[new_key]
-    else:
-        clean_element[element_key] = element
-    return clean_element
-
-
-def create_doc(doc):
-    return simplify_elements(doc, "")
-
-
-def apply_black_map(doc, config):
-    black_map = config["blackMap"]
+def apply_black_map(doc, black_map):
     clean_data = {}
     for key in doc.keys():
         value = doc[key]
@@ -44,8 +22,7 @@ def apply_black_map(doc, config):
     return clean_data
 
 
-def apply_white_map(doc, config):
-    white_map = config["whiteMap"]
+def apply_white_map(doc, white_map):
     clean_data = {}
     for key in doc.keys():
         value = None
@@ -65,26 +42,7 @@ def apply_white_map(doc, config):
     return clean_data
 
 
-def remove_empty(doc):
-    clean_data = {}
-    for key in doc.keys():
-        ignore_attr = False
-        if isinstance(doc[key], list):
-            if len(doc[key]) == 0:
-                ignore_attr = True
-        else:
-            if doc[key] is None:
-                ignore_attr = True
-            else:
-                if isinstance(doc[key], str) and len(doc[key]) == 0:
-                    ignore_attr = True
-        if not ignore_attr:
-            clean_data[key] = doc[key]
-    return clean_data
-
-
-def apply_norm_obj(doc, config):
-    norm_obj = config["normObj"]
+def apply_norm_obj(doc, norm_obj):
     clean_data = {}
     for key in doc.keys():
         value = doc[key]
@@ -106,8 +64,7 @@ def apply_norm_obj(doc, config):
     return clean_data
 
 
-def apply_norm_prop(doc, config):
-    norm_prop = config["normProp"]
+def apply_norm_prop(doc, norm_prop):
     clean_data = {}
     for key in doc.keys():
         value = doc[key]
@@ -121,8 +78,7 @@ def apply_norm_prop(doc, config):
     return clean_data
 
 
-def apply_norm_missing(doc, config):
-    norm_missing = config["normMissing"]
+def apply_norm_missing(doc, norm_missing):
     clean_data = doc
     for key in norm_missing.keys():
         if clean_data.get(key, None) is None:
@@ -150,62 +106,32 @@ def remove_duplicates(doc):
     return clean_data
 
 
-def get_attrs_to_delete(doc, config):
-    proplist = config["proplist"]
-    attrs = []
-    for key in doc.keys():
-        if key not in proplist:
-            attrs.append(key)
-    return attrs
-
-
-def delete_attrs(doc, attrs):
+def remove_empty(doc):
     clean_data = {}
     for key in doc.keys():
-        if key not in attrs:
+        ignore_attr = False
+        if isinstance(doc[key], list):
+            if len(doc[key]) == 0:
+                ignore_attr = True
+        else:
+            if doc[key] is None:
+                ignore_attr = True
+            else:
+                if isinstance(doc[key], str) and len(doc[key]) == 0:
+                    ignore_attr = True
+        if not ignore_attr:
             clean_data[key] = doc[key]
     return clean_data
 
 
-def add_cluster_name(doc):
-    parsed = urlparse(doc["about"])
-
-    if parsed.hostname == "www.eea.europa.eu":
-        doc["cluster_name"] = "EEA Website (www.eea.europa.eu)"
-    return doc
-
-
-def add_reading_time(norm_doc, doc, config):
-    text = join_text_fields(doc, config)
-    wc = res = len(re.findall(r"\w+", text))
-    norm_doc["readingTime"] = wc / 228
+def add_places(norm_doc):
+    if norm_doc.get("spatial", None) is not None:
+        norm_doc["places"] = norm_doc["spatial"]
     return norm_doc
 
 
-def update_locations(norm_doc):
-    try:
-        json_location = json.loads(norm_doc.get("location", ""))
-        norm_doc["location"] = [
-            loc["properties"]["title"] for loc in json_location["features"]
-        ]
-    except:
-        pass
-    return norm_doc
-
-
-def cleanhtml(raw_html):
-    cleantext = ""
-    if isinstance(raw_html, str):
-        cleanr = re.compile("<.*?>")
-        cleantext = re.sub(cleanr, "", raw_html)
-
-    return cleantext
-
-
-def join_text_fields(json_doc, config):
+def join_text_fields(json_doc, txt_props, txt_props_black):
     # json_doc = json.loads(doc)
-    txt_props = config.get("props", [])
-    txt_props_black = config.get("blacklist", [])
     # start text with the document title.
     title = json_doc.get("title", "no title")
     text = title + ".\n\n"
@@ -248,40 +174,64 @@ def join_text_fields(json_doc, config):
     return text
 
 
-def add_places(norm_doc):
-    if norm_doc.get("spatial", None) is not None:
-        norm_doc["places"] = norm_doc["spatial"]
+def cleanhtml(raw_html):
+    cleantext = ""
+    if isinstance(raw_html, str):
+        cleanr = re.compile("<.*?>")
+        cleantext = re.sub(cleanr, "", raw_html)
+
+    return cleantext
+
+
+def simplify_elements(element, element_key):
+    clean_element = {}
+    if isinstance(element, dict):
+        for key in element.keys():
+            new_elements = simplify_elements(element[key], key)
+            for new_key in new_elements.keys():
+
+                new_element_key = new_key
+                if len(element_key) > 0:
+                    new_element_key = element_key + "." + new_key
+                clean_element[new_element_key] = new_elements[new_key]
+    else:
+        clean_element[element_key] = element
+    return clean_element
+
+
+def create_doc(doc):
+    return simplify_elements(doc, "")
+
+
+def get_attrs_to_delete(doc, proplist):
+    attrs = []
+    for key in doc.keys():
+        if key not in proplist:
+            attrs.append(key)
+    return attrs
+
+
+def delete_attrs(doc, attrs):
+    clean_data = {}
+    for key in doc.keys():
+        if key not in attrs:
+            clean_data[key] = doc[key]
+    return clean_data
+
+
+def add_reading_time(norm_doc, doc, txt_props, txt_props_black):
+    text = join_text_fields(doc, txt_props, txt_props_black)
+    wc = res = len(re.findall(r"\w+", text))
+    norm_doc["readingTime"] = wc / 228
     return norm_doc
 
 
-# def restructure_doc(doc):
-#     clean_data = {}
-#     clean_data['meta'] = doc
-#     clean_data['id'] = doc['id']
-#     return clean_data
-
-
-def simple_normalize_doc(doc, config):
-
-    normalizer = config["normalizers"]
-    normalized_doc = create_doc(doc)
-    normalized_doc = update_locations(normalized_doc)
-    attrs_to_delete = get_attrs_to_delete(normalized_doc, normalizer)
-    normalized_doc = add_reading_time(
-        normalized_doc, doc, config["nlp"]["text"]
-    )
-    normalized_doc = apply_black_map(normalized_doc, normalizer)
-    normalized_doc = apply_white_map(normalized_doc, normalizer)
-    normalized_doc = remove_empty(normalized_doc)
-    normalized_doc = apply_norm_obj(normalized_doc, normalizer)
-    normalized_doc = apply_norm_prop(normalized_doc, normalizer)
-    normalized_doc = add_places(normalized_doc)
-    normalized_doc = apply_norm_missing(normalized_doc, normalizer)
-    normalized_doc = remove_duplicates(normalized_doc)
-    normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
-    normalized_doc = add_cluster_name(normalized_doc)
-    # normalized_doc = restructure_doc(normalized_doc)
-
-    # print(normalized_doc)
-
-    return normalized_doc
+def update_locations(norm_doc):
+    try:
+        json_location = json.loads(norm_doc.get("location", ""))
+        norm_doc["location"] = [
+            loc["properties"]["title"] for loc in json_location["features"]
+        ]
+    except:
+        pass
+    return norm_doc

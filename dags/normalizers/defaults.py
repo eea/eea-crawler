@@ -10,6 +10,9 @@ normalizers = {
         "subject",
         "location",
         "year",
+        "modified",
+        "site",
+        "indexed_at",
     ],
     "//": "Normalise Properties, when you want to use a property instead of another",
     "normProp": {

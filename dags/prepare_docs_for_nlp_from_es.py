@@ -6,10 +6,8 @@ from airflow.utils.dates import days_ago
 from tasks.dagrun import BulkTriggerDagRunOperator
 from tasks.pool import CreatePoolOperator
 
-from tasks.debug import debug_value
 from tasks.helpers import (
     dag_param_to_dict,
-    build_items_list,
     get_params,
     get_item,
 )
@@ -17,7 +15,7 @@ from lib.pool import url_to_pool
 
 from normalizers.elastic_settings import settings
 from normalizers.elastic_mapping import mapping
-from tasks.elastic import create_index, get_all_ids
+from tasks.elastic import create_index, handle_all_ids
 
 # import json
 # from airflow.providers.http.operators.http import SimpleHttpOperator
@@ -81,24 +79,7 @@ def prepare_docs_for_nlp_from_es(item=default_dag_params):
         task_id="create_pool", name=xc_pool_name, slots=16
     )
 
-    get_all_ids(xc_dag_params, xc_pool_name, "prepare_doc_for_nlp")
-    # xc_ids = get_all_ids(xc_params)
-    # debug_value(xc_ids)
-
-    # xc_items = build_items_list(xc_ids, xc_params)
-
-    # xc_pool_name = url_to_pool(xc_item, prefix="prepare_doc_for_nlp")
-
-    # cpo = CreatePoolOperator(
-    #     task_id="create_pool", name=xc_pool_name, slots=16
-    # )
-
-    # bt = BulkTriggerDagRunOperator(
-    #     task_id="prepare_doc_for_nlp",
-    #     items=xc_items,
-    #     trigger_dag_id="prepare_doc_for_nlp",
-    #     custom_pool=xc_pool_name,
-    # )
+    handle_all_ids(xc_dag_params, xc_pool_name, "prepare_doc_for_nlp")
 
 
 prepare_docs_for_nlp_from_es_dag = prepare_docs_for_nlp_from_es()

@@ -32,6 +32,7 @@ default_dag_params = {
         "trigger_searchui": True,
         "trigger_nlp": True,
         "trigger_next_bulk": False,
+        "url_api_part": "api/SITE",
         "rabbitmq": {
             "host": "rabbitmq",
             "port": "5672",
@@ -49,7 +50,6 @@ default_dag_params = {
             "searchui_target_index": "data_searchui",
             "nlp_target_index": "data_nlp",
         },
-        "url_api_part": "api/SITE",
         "nlp": {
             "services": {
                 "embedding": {

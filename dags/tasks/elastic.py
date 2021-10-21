@@ -66,7 +66,7 @@ def simple_create_index(config, add_embedding=False):
 
 
 @task
-def get_all_ids(dag_params, pool_name, dag_id):
+def handle_all_ids(dag_params, pool_name, dag_id):
     config = dag_params["params"]
     timeout = 1000
     size = 500
@@ -151,5 +151,10 @@ def get_doc_from_raw_idx(item, config):
         ],
         timeout=timeout,
     )
-    res = es.get(index=config["elastic"]["index"], id=pretty_id(item))
-    return json.loads(res["_source"]["raw_value"])
+    res = es.get(index=config["elastic"]["index"], id=item)
+    doc = {
+        "raw_value": json.loads(res["_source"]["raw_value"]),
+        "web_text": res["_source"].get("web_text", None),
+    }
+
+    return doc

@@ -1,12 +1,17 @@
 """
 """
-
+from datetime import datetime
 import json
+import magic
 import requests
+from urllib.parse import urlparse
+
 from tenacity import retry, wait_exponential, stop_after_attempt
 
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
+
+import trafilatura
 
 from tasks.helpers import simple_dag_param_to_dict
 from tasks.rabbitmq import simple_send_to_rabbitmq  # , send_to_rabbitmq
@@ -67,7 +72,7 @@ def add_id(doc, item):
 
 def simple_add_id(doc, item):
     data = json.loads(doc)
-    data["id"] = pretty_id(item)
+    data["id"] = item
     return data
 
 
@@ -80,11 +85,13 @@ def simple_add_about(doc, value):
     return doc
 
 
-def doc_to_raw(doc):
+def doc_to_raw(doc, web_text):
     raw_doc = {}
     raw_doc["id"] = doc["id"]
     raw_doc["@type"] = doc["@type"]
     raw_doc["raw_value"] = json.dumps(doc)
+    if web_text:
+        raw_doc["web_text"] = json.dumps(web_text)
     return raw_doc
 
 
@@ -101,6 +108,17 @@ def request_with_retry(url):
     return r.text
 
 
+@retry(wait=wait_exponential(), stop=stop_after_attempt(5))
+def trafilatura_with_retry(url):
+    print("trafilatura:")
+    print(url)
+    downloaded = trafilatura.fetch_url(url)
+    print(downloaded)
+    if magic.from_buffer(downloaded) == "data":
+        return None
+    return trafilatura.extract(downloaded)
+
+
 @task
 def fetch_and_send_to_rabbitmq(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
@@ -108,9 +126,15 @@ def fetch_and_send_to_rabbitmq(full_config):
     r = request_with_retry(url_with_api)
     doc = simple_add_id(r, dag_params["item"])
     url_without_api = simple_remove_api_url(url_with_api, dag_params["params"])
+    web_text = trafilatura_with_retry(url_without_api)
 
     doc = simple_add_about(doc, url_without_api)
-    raw_doc = doc_to_raw(doc)
+    raw_doc = doc_to_raw(doc, web_text)
+    raw_doc["modified"] = doc.get(
+        "modified", doc.get("modification_date", None)
+    )
+    raw_doc["site"] = urlparse(url_without_api).netloc
+    raw_doc["indexed_at"] = datetime.now().isoformat()
     simple_send_to_rabbitmq(raw_doc, dag_params["params"])
     if dag_params["params"].get("trigger_searchui", False):
         pool_name = simple_url_to_pool(
@@ -120,6 +144,7 @@ def fetch_and_send_to_rabbitmq(full_config):
         create_pool(pool_name, 16)
         trigger_dag_id = "prepare_doc_for_search_ui"
         dag_params["params"]["raw_doc"] = doc
+        dag_params["params"]["web_text"] = web_text
         dag_params["params"]["rabbitmq"]["queue"] = dag_params["params"][
             "rabbitmq"
         ]["searchui_queue"]
@@ -133,6 +158,7 @@ def fetch_and_send_to_rabbitmq(full_config):
         create_pool(pool_name, 16)
         trigger_dag_id = "prepare_doc_for_nlp"
         dag_params["params"]["raw_doc"] = doc
+        dag_params["params"]["web_text"] = web_text
         dag_params["params"]["rabbitmq"]["queue"] = dag_params["params"][
             "rabbitmq"
         ]["nlp_queue"]

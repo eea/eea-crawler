@@ -16,7 +16,9 @@ from airflow.utils.dates import days_ago
 from lib.debug import pretty_id
 
 from normalizers.defaults import normalizers
-from normalizers.normalizers import simple_normalize_doc, join_text_fields
+
+from normalizers.registry import get_facets_normalizer, get_nlp_preprocessor
+
 from tasks.helpers import simple_dag_param_to_dict, merge
 from tasks.rabbitmq import simple_send_to_rabbitmq
 from tasks.elastic import get_doc_from_raw_idx
@@ -62,47 +64,6 @@ default_dag_params = {
 )
 def prepare_doc_for_nlp(item=default_dag_params):
     transform_doc(item)
-
-
-def get_haystack_data(json_doc, config):
-    text = join_text_fields(json_doc, config)
-    title = json_doc["title"]
-    # metadata
-    url = json_doc["@id"]
-    uid = json_doc["UID"]
-    content_type = json_doc["@type"]
-    source_domain = urlparse(url).netloc
-
-    # Archetype DC dates
-    if "creation_date" in json_doc:
-        creation_date = json_doc["creation_date"]
-        publishing_date = json_doc.get("effectiveDate", "")
-        expiration_date = json_doc.get("expirationDate", "")
-    # Dexterity DC dates
-    elif "created" in json_doc:
-        creation_date = json_doc["created"]
-        publishing_date = json_doc.get("effective", "")
-        expiration_date = json_doc.get("expires", "")
-
-    review_state = json_doc.get("review_state", "")
-
-    # build haystack dict
-    dict_doc = {
-        "text": text,
-        "meta": {
-            "name": title,
-            "url": url,
-            "uid": uid,
-            "content_type": content_type,
-            "creation_date": creation_date,
-            "publishing_date": publishing_date,
-            "expiration_date": expiration_date,
-            "review_state": review_state,
-            "source_domain": source_domain,
-        },
-    }
-
-    return dict_doc
 
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
@@ -160,15 +121,22 @@ def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
     # get a single document from elasticsearch or from the params
     if dag_params["params"].get("raw_doc", None):
-        doc = dag_params["params"].get("raw_doc")
+        doc = {
+            "raw_value": dag_params["params"].get("raw_doc"),
+            "web_text": dag_params["params"].get("web_text", None),
+        }
     else:
         doc = get_doc_from_raw_idx(dag_params["item"], dag_params["params"])
 
     # do the same normalization as we do for searchlib, so we can use the same filters
-    normalized_doc = simple_normalize_doc(doc, dag_params["params"])
+    normalize = get_facets_normalizer(dag_params["item"])
+    normalized_doc = normalize(doc, dag_params["params"])
+
+    preprocess = get_nlp_preprocessor(dag_params["item"])
+    haystack_data = preprocess(doc, dag_params["params"])
 
     # build the haystack document with text field and meta information
-    haystack_data = get_haystack_data(doc, dag_params["params"]["nlp"]["text"])
+    #    haystack_data = get_haystack_data(doc, dag_params["params"]["nlp"]["text"])
 
     # merge the normalized document and the haystack document
     haystack_data = merge(normalized_doc, haystack_data)

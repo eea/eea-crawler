@@ -8,10 +8,11 @@ from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 
 from normalizers.defaults import normalizers
-from normalizers.normalizers import simple_normalize_doc
+from normalizers.registry import get_facets_normalizer
 from tasks.helpers import simple_dag_param_to_dict
 from tasks.rabbitmq import simple_send_to_rabbitmq
 from tasks.elastic import get_doc_from_raw_idx
+
 
 default_args = {"owner": "airflow"}
 
@@ -48,24 +49,20 @@ def prepare_doc_for_search_ui(item=default_dag_params):
 
 
 @task
-def normalize_doc(doc, config):
-    return simple_normalize_doc(doc, config)
-
-
-@task
 def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
     if dag_params["params"].get("raw_doc", None):
-        doc = dag_params["params"].get("raw_doc")
+        doc = {
+            "raw_value": dag_params["params"].get("raw_doc"),
+            "web_text": dag_params["params"].get("web_text", None),
+        }
     else:
         doc = get_doc_from_raw_idx(dag_params["item"], dag_params["params"])
-    normalized_doc = simple_normalize_doc(doc, dag_params["params"])
+
+    normalize = get_facets_normalizer(dag_params["item"])
+    normalized_doc = normalize(doc, dag_params["params"])
+
     simple_send_to_rabbitmq(normalized_doc, dag_params["params"])
 
 
 prepare_doc_for_search_ui_dag = prepare_doc_for_search_ui()
-
-
-# @task
-# def get_doc_from_raw_idx(item, config):
-#     return simple_get_doc_from_raw_idx(item, config)
