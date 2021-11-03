@@ -54,9 +54,14 @@ def normalize_eea_europa_eu(doc, config):
     normalized_doc = apply_norm_missing(
         normalized_doc, normalizer.get("normMissing", {})
     )
+    
+    #TODO e.g. File -> Corporate document if it contains xyz
+    #normalized_doc = apply_types_detection(normalized_doc)
+        
     normalized_doc = remove_duplicates(normalized_doc)
+    
     normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
-
+    
     normalized_doc["cluster_name"] = "EEA Website (www.eea.europa.eu)"
 
     return normalized_doc
