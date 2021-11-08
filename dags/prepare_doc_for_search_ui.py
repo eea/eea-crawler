@@ -45,10 +45,9 @@ default_dag_params = {
     tags=["semantic-search"],
 )
 def prepare_doc_for_search_ui(item=default_dag_params):
-    transform_doc(item)
+    task_transform_doc(item)
 
 
-@task
 def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
     if dag_params["params"].get("raw_doc", None):
@@ -63,6 +62,11 @@ def transform_doc(full_config):
     normalized_doc = normalize(doc, dag_params["params"])
 
     simple_send_to_rabbitmq(normalized_doc, dag_params["params"])
+
+
+@task
+def task_transform_doc(full_config):
+    transform_doc(full_config)
 
 
 prepare_doc_for_search_ui_dag = prepare_doc_for_search_ui()

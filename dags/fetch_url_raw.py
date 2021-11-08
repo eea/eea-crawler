@@ -126,7 +126,9 @@ def fetch_and_send_to_rabbitmq(full_config):
     r = request_with_retry(url_with_api)
     doc = simple_add_id(r, dag_params["item"])
     url_without_api = simple_remove_api_url(url_with_api, dag_params["params"])
-    web_text = trafilatura_with_retry(url_without_api)
+    web_text = ""
+    if dag_params["params"].get("scrape_pages", False):
+        web_text = trafilatura_with_retry(url_without_api)
 
     doc = simple_add_about(doc, url_without_api)
     raw_doc = doc_to_raw(doc, web_text)

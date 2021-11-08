@@ -66,7 +66,7 @@ def simple_create_index(config, add_embedding=False):
 
 
 @task
-def handle_all_ids(dag_params, pool_name, dag_id):
+def handle_all_ids(dag_params, pool_name, dag_id, handler=None):
     config = dag_params["params"]
     timeout = 1000
     size = 500
@@ -103,7 +103,12 @@ def handle_all_ids(dag_params, pool_name, dag_id):
             print(item)
             dag_params["item"] = item["_id"]
             #            dag_params["params"]["raw_d = item["_source"]["raw_value"]
-            trigger_dag(dag_id, dag_params, pool_name)
+            if not config.get("fast", False):
+                print("NOT FAST")
+                trigger_dag(dag_id, dag_params, pool_name)
+            else:
+                print("FAST")
+                handler(dag_params)
 
     # Check index exists
     if not es.indices.exists(index=config["elastic"]["index"]):

@@ -18,6 +18,7 @@ from normalizers.elastic_settings import settings
 from normalizers.elastic_mapping import mapping
 
 from tasks.elastic import create_index, handle_all_ids
+from prepare_doc_for_search_ui import transform_doc
 
 # import json
 # from airflow.providers.http.operators.http import SimpleHttpOperator
@@ -27,6 +28,7 @@ default_args = {"owner": "airflow"}
 default_dag_params = {
     "item": "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500",
     "params": {
+        "fast": False,
         "elastic": {
             "bulk_size": 10,
             "bulk_from": 0,
@@ -70,7 +72,12 @@ def prepare_docs_for_search_ui_from_es(item=default_dag_params):
         task_id="create_pool", name=xc_pool_name, slots=16
     )
 
-    handle_all_ids(xc_dag_params, xc_pool_name, "prepare_doc_for_search_ui")
+    handle_all_ids(
+        xc_dag_params,
+        xc_pool_name,
+        "prepare_doc_for_search_ui",
+        handler=transform_doc,
+    )
 
 
 prepare_docs_for_search_ui_from_es_dag = prepare_docs_for_search_ui_from_es()

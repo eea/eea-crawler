@@ -27,6 +27,7 @@ default_dag_params = {
         "trigger_next_bulk": True,
         "trigger_nlp": True,
         "trigger_searchui": True,
+        "scrape_pages": False,
         "portal_types": [
             "Highlight",
             "Dashboard",
