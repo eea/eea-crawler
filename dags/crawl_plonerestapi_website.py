@@ -29,8 +29,6 @@ default_dag_params = {
         "trigger_searchui": True,
         "portal_types": [
             "Highlight",
-            "Topic",
-            "Collection",
             "Dashboard",
             "CloudVideo",
             "GIS%20Application",
