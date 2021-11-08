@@ -27,9 +27,9 @@ from normalizers.sites import *
 
 def get_facets_normalizer(url):
     name = urlparse(url).netloc
-    return FACETS_SITE_RULES.get(name, FACETS_SITE_RULES["default"])
+    return FACETS_SITE_RULES.get(name, FACETS_SITE_RULES["www.eea.europa.eu"])
 
 
 def get_nlp_preprocessor(url):
     name = urlparse(url).netloc
-    return NLP_SITE_RULES.get(name, NLP_SITE_RULES["default"])
+    return NLP_SITE_RULES.get(name, NLP_SITE_RULES["www.eea.europa.eu"])
