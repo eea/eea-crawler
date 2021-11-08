@@ -16,6 +16,7 @@ from lib.pool import url_to_pool
 from normalizers.elastic_settings import settings
 from normalizers.elastic_mapping import mapping
 from tasks.elastic import create_index, handle_all_ids
+from prepare_doc_for_nlp import transform_doc
 
 # import json
 # from airflow.providers.http.operators.http import SimpleHttpOperator
@@ -25,6 +26,7 @@ default_args = {"owner": "airflow"}
 default_dag_params = {
     "item": "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500",
     "params": {
+        "fast": False,
         "portal_type": "",
         "elastic": {
             "host": "elastic",
@@ -79,7 +81,12 @@ def prepare_docs_for_nlp_from_es(item=default_dag_params):
         task_id="create_pool", name=xc_pool_name, slots=16
     )
 
-    handle_all_ids(xc_dag_params, xc_pool_name, "prepare_doc_for_nlp")
+    handle_all_ids(
+        xc_dag_params,
+        xc_pool_name,
+        "prepare_doc_for_nlp",
+        handler=transform_doc,
+    )
 
 
 prepare_docs_for_nlp_from_es_dag = prepare_docs_for_nlp_from_es()

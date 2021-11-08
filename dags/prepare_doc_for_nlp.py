@@ -63,7 +63,7 @@ default_dag_params = {
     tags=["semantic-search"],
 )
 def prepare_doc_for_nlp(item=default_dag_params):
-    transform_doc(item)
+    task_transform_doc(item)
 
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
@@ -117,6 +117,10 @@ def add_embeddings_doc(docs, nlp_service):
 
 
 @task
+def task_transform_doc(full_config):
+    transform_doc(full_config)
+
+
 def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
     # get a single document from elasticsearch or from the params
