@@ -78,7 +78,7 @@ normalizers = {
         "Dashboard": "Data dashboard",
         "Assessment": "Indicator",
         "helpcenter_faq": "FAQ",
-        "GIS%20Application": "Map (interactive)",
+        "GIS Application": "Map (interactive)",
         "map_interactive": "Map (interactive)",
         "CloudVideo": "Video",
         "CallForTender": "Contract opportunity",
