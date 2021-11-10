@@ -54,14 +54,14 @@ def normalize_eea_europa_eu(doc, config):
     normalized_doc = apply_norm_missing(
         normalized_doc, normalizer.get("normMissing", {})
     )
-    
-    #TODO e.g. File -> Corporate document if it contains xyz
-    #normalized_doc = apply_types_detection(normalized_doc)
-        
+
+    # TODO e.g. File -> Corporate document if it contains xyz
+    # normalized_doc = apply_types_detection(normalized_doc)
+
     normalized_doc = remove_duplicates(normalized_doc)
-    
+
     normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
-    
+
     normalized_doc["cluster_name"] = "EEA Website (www.eea.europa.eu)"
 
     return normalized_doc
@@ -74,11 +74,13 @@ def preprocess_eea_europa_eu(doc, config):
     print(doc)
     print("web_text")
     print(doc["web_text"])
-    text = join_text_fields(
-        raw_doc,
-        config["nlp"]["text"].get("blacklist", []),
-        config["nlp"]["text"].get("whitelist", []),
-    )
+    text = doc.get("web_text", "")
+    if len(text) == 0:
+        text = join_text_fields(
+            raw_doc,
+            config["nlp"]["text"].get("blacklist", []),
+            config["nlp"]["text"].get("whitelist", []),
+        )
     title = raw_doc["title"]
     # metadata
     url = raw_doc["@id"]
