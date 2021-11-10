@@ -30,6 +30,7 @@ default_dag_params = {
     "params": {
         "fast": False,
         "portal_type": "",
+        "site": "",
         "elastic": {
             "bulk_size": 10,
             "bulk_from": 0,

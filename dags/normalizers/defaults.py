@@ -85,6 +85,7 @@ normalizers = {
         "CallForInterest": "Contract opportunity",
         "CallForProposal": "Contract opportunity",
         "country_profile": "Country fact sheet",
+        "en-gb": "en",
     },
     "//": "Normalise missing properties with the given values",
     "normMissing": {

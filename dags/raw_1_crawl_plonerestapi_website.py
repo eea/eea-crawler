@@ -16,6 +16,9 @@ from tasks.helpers import (
     get_item,
 )
 from lib.pool import url_to_pool
+from airflow.models import Variable
+
+xx1 = Variable.get("Sites", deserialize_json=True)
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
@@ -58,11 +61,24 @@ default_dag_params = {
 
 
 @task
+def get_variables():
+    x1 = Variable.get("Sites")
+    print(x1)
+    x2 = Variable.get("Sites", deserialize_json=True)
+    print(x2)
+
+
+@task
 def build_queries_list(url, params):
-    queries = [
-        f"{url}/api/@search?b_size={params['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
-        for portal_type in params["portal_types"]
-    ]
+    if params["portal_types"]:
+        queries = [
+            f"{url}/api/@search?b_size={params['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
+            for portal_type in params["portal_types"]
+        ]
+    else:
+        queries = [
+            f"{url}/api/@search?b_size={params['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date"
+        ]
     print(queries)
     return queries
 
@@ -80,6 +96,7 @@ def raw_1_crawl_plonerestapi_website(item=default_dag_params):
 
     Main task to crawl a website
     """
+    # get_variables()
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 
     xc_params = get_params(xc_dag_params)

@@ -49,7 +49,7 @@ def apply_norm_obj(doc, norm_obj):
         if isinstance(doc[key], list):
             value = []
             for val in doc[key]:
-                if isinstance(val, dict):
+                if isinstance(val, dict) or isinstance(val, list):
                     value.append(val)
                 else:
                     if norm_obj.get(val, None) is not None:
@@ -220,7 +220,9 @@ def delete_attrs(doc, attrs):
 
 
 def add_reading_time(norm_doc, doc, txt_props, txt_props_black):
-    text = join_text_fields(doc, txt_props, txt_props_black)
+    text = doc.get("web_text", "")
+    if len(text) == 0:
+        text = join_text_fields(doc, txt_props, txt_props_black)
     wc = res = len(re.findall(r"\w+", text))
     norm_doc["readingTime"] = wc / 228
     return norm_doc

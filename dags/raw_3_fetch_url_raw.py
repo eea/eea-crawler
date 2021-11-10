@@ -112,7 +112,13 @@ def request_with_retry(url):
 def trafilatura_with_retry(url):
     print("trafilatura:")
     print(url)
-    downloaded = trafilatura.fetch_url(url)
+    r = requests.post(
+        "http://headless-chrome-api:3000/content",
+        headers={"Content-Type": "application/json"},
+        data=f'{{"url":"{url}", "js":true,"raw":true}}',
+    )
+    downloaded = r.text
+    # downloaded = trafilatura.fetch_url(url)
     print(downloaded)
     if magic.from_buffer(downloaded) == "data":
         return None

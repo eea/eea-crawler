@@ -70,17 +70,17 @@ def handle_all_ids(dag_params, pool_name, dag_id, handler=None):
     config = dag_params["params"]
     timeout = 1000
     size = 500
-    body = {}
+    body = {"query": {"bool": {"must": [], "must_not": [], "should": []}}}
+
     if config.get("portal_type", "") != "":
-        body = {
-            "query": {
-                "bool": {
-                    "must": [{"match": {"@type": config["portal_type"]}}],
-                    "must_not": [],
-                    "should": [],
-                }
-            }
-        }
+        body["query"]["bool"]["must"].append(
+            {"match": {"@type": config["portal_type"]}}
+        )
+
+    if config.get("site", "") != "":
+        body["query"]["bool"]["must"].append(
+            {"match": {"site": config["site"]}}
+        )
 
     # Init Elasticsearch instance
     es = Elasticsearch(
