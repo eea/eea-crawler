@@ -1,0 +1,15 @@
+{
+    "Sites": {
+        "bise": "config_bise",
+        "eea": "config_eea"
+    },
+    "config_bise": "{\r\n\"url\":\"https://biodiversity.europa.eu\"\r\n\"url_api_part\": \"api\",\r\n\"scrape_pages\": false\r\n}",
+    "config_eea": "{\r\n\"url\":\"http://www.eea.europa.eu\",\r\n\"url_api_part\": \"api/SITE\",\r\n\"scrape_pages\": false,\r\n\"portal_types\":[\r\n            \"Highlight\",\r\n            \"Dashboard\",\r\n            \"CloudVideo\",\r\n            \"GIS%20Application\",\r\n            \"Article\",\r\n            \"CallForInterest\",\r\n            \"CallForProposal\",\r\n            \"CallForTender\",\r\n            \"ExternalDataSpec\",\r\n            \"Data\",\r\n            \"DavizVisualization\",\r\n            \"Document\",\r\n            \"Fiche\",\r\n            \"EEAFigure\",\r\n            \"File\",\r\n            \"Folder\",\r\n            \"Assessment\",\r\n            \"AssessmentPart\",\r\n            \"Infographic\",\r\n            \"Report\",\r\n            \"Term\",\r\n            \"Organisation\",\r\n            \"helpcenter_faq\",\r\n        ]\r\n}",
+    "elastic": {
+        "host": "elastic",
+        "nlp_target_index": "data_nlp",
+        "port": 9200,
+        "searchui_target_index": "data_searchui"
+    },
+    "rabbitmq": "{\r\n\t\"host\": \"rabbitmq\",\r\n\t\"port\": \"5672\",\r\n\t\"username\": \"guest\",\r\n\t\"password\": \"guest\",\r\n\t\"queue\": \"queue_raw_data\",\r\n\t\"searchui_queue\": \"queue_searchui\",\r\n\t\"nlp_queue\": \"queue_nlp\",\r\n}"
+}
