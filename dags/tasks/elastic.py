@@ -35,6 +35,7 @@ def create_index(config, add_embedding=False):
 
 
 def simple_create_index(config, add_embedding=False):
+    # TODO: check if index already exists
     timeout = 100
     es = Elasticsearch(
         [
