@@ -26,7 +26,6 @@ from lib.pool import simple_url_to_pool
 
 default_dag_params = {
     "item": "https://www.eea.europa.eu/highlights/better-raw-material-sourcing-can",
-    #    'item': "https://www.eea.europa.eu/api/SITE/highlights/walking-cycling-and-public-transport",
     "params": {
         "trigger_searchui": False,
         "trigger_nlp": False,

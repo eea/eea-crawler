@@ -1,6 +1,7 @@
-from airflow.decorators import task
 import collections
 from copy import deepcopy
+from airflow.decorators import task
+from airflow.models import Variable
 
 
 def merge(dict1, dict2):
@@ -97,3 +98,19 @@ def get_params(params):
 @task
 def get_item(params):
     return params["item"]
+
+
+@task
+def get_attr(params, attr):
+    return params.get(attr, None)
+
+
+@task
+def set_attr(params, attr, val):
+    params[attr] = val
+    return params
+
+
+@task
+def get_variable(variable):
+    return Variable.get(variable, deserialize_json=True)

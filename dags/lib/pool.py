@@ -19,6 +19,15 @@ def simple_url_to_pool(url: str, prefix: str = "default"):
     return "p-{}-{}".format(prefix, pretty_id(urlparse(url).hostname))[:49]
 
 
+@task
+def val_to_pool(val: str, prefix: str = "default"):
+    return simple_val_to_pool(val, prefix)
+
+
+def simple_val_to_pool(val: str, prefix: str = "default"):
+    return "p-{}-{}".format(prefix, val)[:49]
+
+
 def create_pool(name, slots, description=""):
     try:
         pool = get_pool(name=name)

@@ -16,56 +16,23 @@ from tasks.helpers import (
     build_items_list,
     get_params,
     get_item,
+    get_attr,
+    set_attr,
+    get_variable,
 )
 from lib.pool import url_to_pool
-from normalizers.elastic_settings import settings
-from normalizers.elastic_mapping import mapping
+from airflow.models import Variable
+
+# from normalizers.elastic_settings import settings
+# from normalizers.elastic_mapping import mapping
 from tasks.elastic import simple_create_index
-from normalizers.defaults import normalizers
 
 default_args = {"owner": "airflow"}
 
 
 default_dag_params = {
     "item": "http://www.eea.europa.eu/api/@search?b_size=10&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type=Highlight",
-    "params": {
-        "trigger_searchui": True,
-        "trigger_nlp": True,
-        "trigger_next_bulk": False,
-        "url_api_part": "api/SITE",
-        "rabbitmq": {
-            "host": "rabbitmq",
-            "port": "5672",
-            "username": "guest",
-            "password": "guest",
-            "queue": "queue_raw_data",
-            "searchui_queue": "queue_searchui",
-            "nlp_queue": "queue_nlp",
-        },
-        "elastic": {
-            "host": "elastic",
-            "port": 9200,
-            "mapping": mapping,
-            "settings": settings,
-            "searchui_target_index": "data_searchui",
-            "nlp_target_index": "data_nlp",
-        },
-        "nlp": {
-            "services": {
-                "embedding": {
-                    "host": "nlp-searchlib",
-                    "port": "8000",
-                    "path": "api/embedding",
-                }
-            },
-            "text": {
-                "props": ["description", "key_message", "summary", "text"],
-                "blacklist": ["contact", "rights"],
-                "split_length": 500,
-            },
-        },
-        "normalizers": normalizers,
-    },
+    "params": {"site": "eea"},
 }
 
 
@@ -95,22 +62,19 @@ def extract_next_from_json(page, params):
 
 
 @task
-def check_trigger_searchui(params):
+def check_trigger_searchui(params, es):
+    print(es)
     if params.get("trigger_searchui", False):
-        params["elastic"]["target_index"] = params["elastic"][
-            "searchui_target_index"
-        ]
-        simple_create_index(params)
+        es["target_index"] = es["searchui_target_index"]
+        simple_create_index(es)
     return params
 
 
 @task
-def check_trigger_nlp(params):
+def check_trigger_nlp(params, es):
     if params.get("trigger_nlp", False):
-        params["elastic"]["target_index"] = params["elastic"][
-            "nlp_target_index"
-        ]
-        simple_create_index(params, add_embedding=True)
+        es["target_index"] = es["nlp_target_index"]
+        simple_create_index(es, add_embedding=True)
     return params
 
 
@@ -120,6 +84,13 @@ def remove_api_url(url, params):
 
 @task
 def check_robots_txt(url, items, params):
+    print(url)
+    print(items)
+    print(params)
+    site_config_variable = Variable.get("Sites", deserialize_json=True).get(
+        params["site"], None
+    )
+    site_config = Variable.get(site_config_variable, deserialize_json=True)
     allowed_items = []
     robots_url = (
         f"{urlparse(url).scheme}://{urlparse(url).hostname}/robots.txt"
@@ -129,7 +100,7 @@ def check_robots_txt(url, items, params):
     rp.set_url(robots_url)
     rp.read()
     for item in items:
-        item_url = remove_api_url(item, params)
+        item_url = remove_api_url(item, site_config)
         if rp.can_fetch("*", item_url):
             allowed_items.append(item)
 
@@ -145,9 +116,20 @@ def check_robots_txt(url, items, params):
 )
 def raw_2_crawl_with_query(item=default_dag_params):
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
+
     xc_params = get_params(xc_dag_params)
-    xc_params = check_trigger_searchui(xc_params)
-    xc_params = check_trigger_nlp(xc_params)
+    xc_site = get_attr(xc_params, "site")
+
+    xc_es = get_variable("elastic")
+    xc_es_mapping = get_variable("elastic_mapping")
+    xc_es_settings = get_variable("elastic_settings")
+
+    xc_es = set_attr(xc_es, "mapping", xc_es_mapping)
+    xc_es = set_attr(xc_es, "settings", xc_es_settings)
+
+    xc_params = check_trigger_searchui(xc_params, xc_es)
+    xc_params = check_trigger_nlp(xc_params, xc_es)
+
     xc_item = get_item(xc_dag_params)
     xc_endpoint = get_no_protocol_url(xc_item)
 

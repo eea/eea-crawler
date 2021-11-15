@@ -40,25 +40,25 @@ def simple_create_index(config, add_embedding=False):
     es = Elasticsearch(
         [
             {
-                "host": config["elastic"]["host"],
-                "port": config["elastic"]["port"],
+                "host": config["host"],
+                "port": config["port"],
             }
         ],
         timeout=timeout,
     )
     if add_embedding:
-        config["elastic"]["mapping"]["embedding"] = {
+        config["mapping"]["embedding"] = {
             "type": "dense_vector",
             "dims": 768,
         }
     # body = {"settings":config['elastic']['settings']}
     body = {
-        "mappings": {"properties": config["elastic"]["mapping"]},
-        "settings": config["elastic"]["settings"],
+        "mappings": {"properties": config["mapping"]},
+        "settings": config["settings"],
     }
 
     try:
-        es.indices.create(index=config["elastic"]["target_index"], body=body)
+        es.indices.create(index=config["target_index"], body=body)
     except RequestError as e:
         if e.error == "resource_already_exists_exception":
             print("Index already exists")

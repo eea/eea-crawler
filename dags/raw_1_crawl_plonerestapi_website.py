@@ -14,73 +14,70 @@ from tasks.helpers import (
     build_items_list,
     get_params,
     get_item,
+    set_attr,
 )
-from lib.pool import url_to_pool
+from lib.pool import val_to_pool
 from airflow.models import Variable
 
-xx1 = Variable.get("Sites", deserialize_json=True)
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
 default_args = {"owner": "airflow"}
 default_dag_params = {
-    "item": "http://www.eea.europa.eu",
+    "item": "eea",
     "params": {
         "query_size": 500,
         "trigger_next_bulk": True,
         "trigger_nlp": True,
         "trigger_searchui": True,
-        "scrape_pages": False,
-        "portal_types": [
-            "Highlight",
-            "Dashboard",
-            "CloudVideo",
-            "GIS%20Application",
-            "Article",
-            "CallForInterest",
-            "CallForProposal",
-            "CallForTender",
-            "ExternalDataSpec",
-            "Data",
-            "DavizVisualization",
-            "Document",
-            "Fiche",
-            "EEAFigure",
-            "File",
-            "Folder",
-            "Assessment",
-            "AssessmentPart",
-            "Infographic",
-            "Report",
-            "Term",
-            "Organisation",
-            "helpcenter_faq",
-        ],
     },
 }
 
 
 @task
-def get_variables():
-    x1 = Variable.get("Sites")
-    print(x1)
-    x2 = Variable.get("Sites", deserialize_json=True)
-    print(x2)
-
-
-@task
-def build_queries_list(url, params):
-    if params["portal_types"]:
+def build_queries_list(config):
+    url = config["site"]["url"]
+    if config["site"].get("portal_types", None):
         queries = [
-            f"{url}/api/@search?b_size={params['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
-            for portal_type in params["portal_types"]
+            f"{url}/api/@search?b_size={config['params']['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
+            for portal_type in config["site"]["portal_types"]
         ]
     else:
         queries = [
-            f"{url}/api/@search?b_size={params['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date"
+            f"{url}/api/@search?b_size={config['params']['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date"
         ]
     print(queries)
     return queries
+
+
+@task
+def get_site_config(params):
+    site = params.get("item", None)
+    config = {}
+    sites = Variable.get("Sites", deserialize_json=True)
+    site_config_variable = sites.get(site, None)
+    if site_config_variable:
+        site_config = Variable.get(site_config_variable, deserialize_json=True)
+        normalizers_config_variable = site_config.get(
+            "normalizers_variable", "default_normalizers"
+        )
+        normalizers_config = Variable.get(
+            normalizers_config_variable, deserialize_json=True
+        )
+        config["site"] = site_config
+        if params["params"].get("portal_types", None):
+            config["site"]["portal_types"] = params["params"]["portal_types"]
+        config["normalizers"] = normalizers_config
+
+        config["nlp_services"] = Variable.get(
+            "nlp_services", deserialize_json=True
+        )
+        config["elastic"] = Variable.get("nlp_services", deserialize_json=True)
+        config["rabbitmq"] = Variable.get("rabbitmq", deserialize_json=True)
+        config["params"] = params["params"]
+        config["params"]["site"] = site
+    print(config)
+    return config
 
 
 @dag(
@@ -99,13 +96,17 @@ def raw_1_crawl_plonerestapi_website(item=default_dag_params):
     # get_variables()
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 
-    xc_params = get_params(xc_dag_params)
-    xc_item = get_item(xc_dag_params)
+    xc_site_config = get_site_config(xc_dag_params)
 
-    xc_queries = build_queries_list(xc_item, xc_params)
+    xc_item = get_item(xc_dag_params)
+    xc_params = get_params(xc_dag_params)
+    xc_params = set_attr(xc_params, "site", xc_item)
+
+    xc_queries = build_queries_list(xc_site_config)
 
     xc_items = build_items_list(xc_queries, xc_params)
-    xc_pool_name = url_to_pool(xc_item, prefix="crawl_with_query")
+
+    xc_pool_name = val_to_pool(xc_item, prefix="crawl_with_query")
 
     cpo = CreatePoolOperator(task_id="create_pool", name=xc_pool_name, slots=1)
 
