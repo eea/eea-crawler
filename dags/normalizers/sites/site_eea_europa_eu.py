@@ -70,10 +70,6 @@ def normalize_eea_europa_eu(doc, config):
 @register_nlp_preprocessor("www.eea.europa.eu")
 def preprocess_eea_europa_eu(doc, config):
     raw_doc = doc["raw_value"]
-    print("DOC:")
-    print(doc)
-    print("web_text")
-    print(doc["web_text"])
     text = doc.get("web_text", "")
     if len(text) == 0:
         text = join_text_fields(

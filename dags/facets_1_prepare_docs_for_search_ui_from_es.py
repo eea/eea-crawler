@@ -9,7 +9,6 @@ from tasks.pool import CreatePoolOperator
 from tasks.debug import debug_value
 from tasks.helpers import (
     dag_param_to_dict,
-    get_params,
     get_item,
     set_attr,
     get_variable,
@@ -60,8 +59,6 @@ def get_rabbitmq_config():
 def facets_1_prepare_docs_for_search_ui_from_es(item=default_dag_params):
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 
-    xc_params = get_params(xc_dag_params)
-    debug_value(xc_params)
     xc_item = get_item(xc_dag_params)
     xc_es = get_es_config()
     xc_es_mapping = get_variable("elastic_mapping")

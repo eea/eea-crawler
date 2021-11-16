@@ -19,6 +19,7 @@ default_args = {"owner": "airflow"}
 default_dag_params = {
     "item": "https://www.eea.europa.eu/api/SITE/highlights/water-stress-is-a-major",
     "params": {},
+    "site": "",
 }
 
 

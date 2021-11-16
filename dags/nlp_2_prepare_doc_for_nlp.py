@@ -15,44 +15,19 @@ from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 from lib.debug import pretty_id
 
-from normalizers.defaults import normalizers
-
 from normalizers.registry import get_facets_normalizer, get_nlp_preprocessor
 
-from tasks.helpers import simple_dag_param_to_dict, merge
+from tasks.helpers import simple_dag_param_to_dict, merge, find_site_by_url
 from tasks.rabbitmq import simple_send_to_rabbitmq
 from tasks.elastic import get_doc_from_raw_idx
+from airflow.models import Variable
 
 default_args = {"owner": "airflow"}
 
 default_dag_params = {
-    "item": "https://www.eea.europa.eu/api/SITE/highlights/better-raw-material-sourcing-can",
-    "params": {
-        "elastic": {"host": "elastic", "port": 9200, "index": "data_raw"},
-        "rabbitmq": {
-            "host": "rabbitmq",
-            "port": "5672",
-            "username": "guest",
-            "password": "guest",
-            "queue": "queue_nlp",
-        },
-        "nlp": {
-            "services": {
-                "embedding": {
-                    "host": "nlp-embedding",
-                    "port": "8000",
-                    "path": "api/embedding",
-                }
-            },
-            "text": {
-                "props": ["description", "key_message", "summary", "text"],
-                "blacklist": ["contact", "rights"],
-                "split_length": 500,
-            },
-        },
-        "normalizers": normalizers,
-        "url_api_part": "api/SITE",
-    },
+    "item": "https://www.eea.europa.eu/api/SITE/highlights/water-stress-is-a-major",
+    "params": {},
+    "site": "",
 }
 
 
@@ -123,6 +98,12 @@ def task_transform_doc(full_config):
 
 def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
+    site = find_site_by_url(dag_params["item"])
+
+    es = Variable.get("elastic", deserialize_json=True)
+    rabbitmq = Variable.get("rabbitmq", deserialize_json=True)
+    rabbitmq["queue"] = rabbitmq["nlp_queue"]
+
     # get a single document from elasticsearch or from the params
     if dag_params["params"].get("raw_doc", None):
         doc = {
@@ -130,14 +111,24 @@ def transform_doc(full_config):
             "web_text": dag_params["params"].get("web_text", None),
         }
     else:
-        doc = get_doc_from_raw_idx(dag_params["item"], dag_params["params"])
+        doc = get_doc_from_raw_idx(dag_params["item"], es)
 
     # do the same normalization as we do for searchlib, so we can use the same filters
+    sites = Variable.get("Sites", deserialize_json=True)
+
+    site_config = Variable.get(sites[site], deserialize_json=True)
+    normalizers_config = Variable.get(
+        site_config["normalizers_variable"], deserialize_json=True
+    )
     normalize = get_facets_normalizer(dag_params["item"])
-    normalized_doc = normalize(doc, dag_params["params"])
+    config = {
+        "normalizers": normalizers_config,
+        "nlp": site_config.get("nlp_preprocessing", None),
+    }
+    normalized_doc = normalize(doc, config)
 
     preprocess = get_nlp_preprocessor(dag_params["item"])
-    haystack_data = preprocess(doc, dag_params["params"])
+    haystack_data = preprocess(doc, config)
 
     # build the haystack document with text field and meta information
     #    haystack_data = get_haystack_data(doc, dag_params["params"]["nlp"]["text"])
@@ -146,19 +137,18 @@ def transform_doc(full_config):
     haystack_data = merge(normalized_doc, haystack_data)
 
     # split the document
-    splitted_docs = preprocess_split_doc(
-        haystack_data, dag_params["params"]["nlp"]["text"]
-    )
+    splitted_docs = preprocess_split_doc(haystack_data, config["nlp"]["text"])
 
+    nlp_services = Variable.get("nlp_services", deserialize_json=True)
     # add the embeddings
     docs_with_embedding = add_embeddings_doc(
-        splitted_docs, dag_params["params"]["nlp"]["services"]["embedding"]
+        splitted_docs, nlp_services["embedding"]
     )
 
     # print(docs_with_embedding)
 
     for doc in docs_with_embedding:
-        simple_send_to_rabbitmq(doc, dag_params["params"])
+        simple_send_to_rabbitmq(doc, rabbitmq)
 
 
 prepare_doc_for_nlp_dag = nlp_2_prepare_doc_for_nlp()
