@@ -31,12 +31,7 @@ def normalize_biodiversity_europa_eu(doc, config):
     attrs_to_delete = get_attrs_to_delete(
         normalized_doc, normalizer.get("proplist", [])
     )
-    normalized_doc = add_reading_time(
-        normalized_doc,
-        doc,
-        config["nlp"]["text"].get("blacklist", []),
-        config["nlp"]["text"].get("whitelist", []),
-    )
+    normalized_doc = add_reading_time(normalized_doc, doc)
     normalized_doc = apply_black_map(
         normalized_doc, normalizer.get("blackMap", {})
     )
@@ -71,10 +66,6 @@ def normalize_biodiversity_europa_eu(doc, config):
 @register_nlp_preprocessor("biodiversity.europa.eu")
 def preprocess_biodiversity_europa_eu(doc, config):
     raw_doc = doc["raw_value"]
-    print("DOC:")
-    print(doc)
-    print("web_text")
-    print(doc["web_text"])
     text = doc.get("web_text", "")
     if len(text) == 0:
         text = join_text_fields(

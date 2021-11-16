@@ -84,9 +84,6 @@ def remove_api_url(url, params):
 
 @task
 def check_robots_txt(url, items, params):
-    print(url)
-    print(items)
-    print(params)
     site_config_variable = Variable.get("Sites", deserialize_json=True).get(
         params["site"], None
     )
@@ -118,7 +115,6 @@ def raw_2_crawl_with_query(item=default_dag_params):
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 
     xc_params = get_params(xc_dag_params)
-    xc_site = get_attr(xc_params, "site")
 
     xc_es = get_variable("elastic")
     xc_es_mapping = get_variable("elastic_mapping")

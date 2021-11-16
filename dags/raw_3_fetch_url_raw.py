@@ -18,27 +18,16 @@ from tasks.rabbitmq import simple_send_to_rabbitmq  # , send_to_rabbitmq
 from lib.debug import pretty_id
 
 from datetime import timedelta
-from normalizers.elastic_settings import settings
-from normalizers.elastic_mapping import mapping
 from lib.pool import create_pool
 from lib.dagrun import trigger_dag
 from lib.pool import simple_url_to_pool
+from airflow.models import Variable
 
 default_dag_params = {
     "item": "https://www.eea.europa.eu/highlights/better-raw-material-sourcing-can",
     "params": {
         "trigger_searchui": False,
         "trigger_nlp": False,
-        "rabbitmq": {
-            "host": "rabbitmq",
-            "port": "5672",
-            "username": "guest",
-            "password": "guest",
-            "queue": "queue_raw_data",
-            "nlp_queue": "queue_nlp",
-            "searchui_queue": "queue_searchui",
-        },
-        "url_api_part": "api/SITE",
     },
 }
 
@@ -108,17 +97,17 @@ def request_with_retry(url):
 
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
-def trafilatura_with_retry(url):
-    print("trafilatura:")
-    print(url)
-    r = requests.post(
-        "http://headless-chrome-api:3000/content",
-        headers={"Content-Type": "application/json"},
-        data=f'{{"url":"{url}", "js":true,"raw":true}}',
-    )
-    downloaded = r.text
-    # downloaded = trafilatura.fetch_url(url)
-    print(downloaded)
+def trafilatura_with_retry(url, js=False):
+    if js:
+        r = requests.post(
+            "http://headless-chrome-api:3000/content",
+            headers={"Content-Type": "application/json"},
+            data=f'{{"url":"{url}", "js":true,"raw":true}}',
+        )
+        downloaded = r.text
+    else:
+        downloaded = trafilatura.fetch_url(url)
+
     if magic.from_buffer(downloaded) == "data":
         return None
     return trafilatura.extract(downloaded)
@@ -127,13 +116,23 @@ def trafilatura_with_retry(url):
 @task
 def fetch_and_send_to_rabbitmq(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
-    url_with_api = simple_get_api_url(dag_params["item"], dag_params["params"])
+
+    site_config_variable = Variable.get("Sites", deserialize_json=True).get(
+        dag_params["params"]["site"], None
+    )
+    site_config = Variable.get(site_config_variable, deserialize_json=True)
+
+    url_with_api = simple_get_api_url(dag_params["item"], site_config)
     r = request_with_retry(url_with_api)
     doc = simple_add_id(r, dag_params["item"])
-    url_without_api = simple_remove_api_url(url_with_api, dag_params["params"])
+    url_without_api = simple_remove_api_url(url_with_api, site_config)
+
     web_text = ""
-    if dag_params["params"].get("scrape_pages", False):
-        web_text = trafilatura_with_retry(url_without_api)
+
+    if site_config.get("scrape_pages", False):
+        web_text = trafilatura_with_retry(
+            url_without_api, site_config.get("scrape_with_js", False)
+        )
 
     doc = simple_add_about(doc, url_without_api)
     raw_doc = doc_to_raw(doc, web_text)
@@ -142,7 +141,11 @@ def fetch_and_send_to_rabbitmq(full_config):
     )
     raw_doc["site"] = urlparse(url_without_api).netloc
     raw_doc["indexed_at"] = datetime.now().isoformat()
-    simple_send_to_rabbitmq(raw_doc, dag_params["params"])
+    rabbitmq_config = Variable.get("rabbitmq", deserialize_json=True)
+
+    simple_send_to_rabbitmq(raw_doc, rabbitmq_config)
+
+    # TODO: check update searchui & nlp triggers
     if dag_params["params"].get("trigger_searchui", False):
         pool_name = simple_url_to_pool(
             url_with_api, prefix="prepare_doc_for_searchui"
@@ -152,9 +155,6 @@ def fetch_and_send_to_rabbitmq(full_config):
         trigger_dag_id = "facets_2_prepare_doc_for_search_ui"
         dag_params["params"]["raw_doc"] = doc
         dag_params["params"]["web_text"] = web_text
-        dag_params["params"]["rabbitmq"]["queue"] = dag_params["params"][
-            "rabbitmq"
-        ]["searchui_queue"]
         trigger_dag(trigger_dag_id, dag_params, pool_name)
 
     if dag_params["params"].get("trigger_nlp", False):
@@ -166,9 +166,6 @@ def fetch_and_send_to_rabbitmq(full_config):
         trigger_dag_id = "nlp_2_prepare_doc_for_nlp"
         dag_params["params"]["raw_doc"] = doc
         dag_params["params"]["web_text"] = web_text
-        dag_params["params"]["rabbitmq"]["queue"] = dag_params["params"][
-            "rabbitmq"
-        ]["nlp_queue"]
         trigger_dag(trigger_dag_id, dag_params, pool_name)
 
 

@@ -219,9 +219,9 @@ def delete_attrs(doc, attrs):
     return clean_data
 
 
-def add_reading_time(norm_doc, doc, txt_props, txt_props_black):
+def add_reading_time(norm_doc, doc, txt_props=[], txt_props_black=[]):
     text = doc.get("web_text", "")
-    if len(text) == 0:
+    if not text or len(text) == 0:
         text = join_text_fields(doc, txt_props, txt_props_black)
     wc = res = len(re.findall(r"\w+", text))
     norm_doc["readingTime"] = wc / 228

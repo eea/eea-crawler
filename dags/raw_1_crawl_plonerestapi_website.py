@@ -26,10 +26,10 @@ default_args = {"owner": "airflow"}
 default_dag_params = {
     "item": "eea",
     "params": {
-        "query_size": 500,
-        "trigger_next_bulk": True,
-        "trigger_nlp": True,
-        "trigger_searchui": True,
+        "query_size": 10,
+        "trigger_next_bulk": False,
+        "trigger_nlp": False,
+        "trigger_searchui": False,
     },
 }
 

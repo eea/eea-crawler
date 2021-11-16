@@ -1,4 +1,5 @@
 import json
+from urllib.parse import urlparse
 
 from airflow.decorators import task
 from airflow.models import Variable
@@ -67,28 +68,29 @@ def simple_create_index(config, add_embedding=False):
 
 
 @task
-def handle_all_ids(dag_params, pool_name, dag_id, handler=None):
-    config = dag_params["params"]
+def handle_all_ids(config, dag_params, pool_name, dag_id, handler=None):
     timeout = 1000
     size = 500
     body = {"query": {"bool": {"must": [], "must_not": [], "should": []}}}
 
-    if config.get("portal_type", "") != "":
+    if dag_params["params"].get("portal_type", "") != "":
         body["query"]["bool"]["must"].append(
-            {"match": {"@type": config["portal_type"]}}
+            {"match": {"@type": dag_params["params"]["portal_type"]}}
         )
 
-    if config.get("site", "") != "":
-        body["query"]["bool"]["must"].append(
-            {"match": {"site": config["site"]}}
-        )
+    if dag_params["params"].get("site", "") != "":
+        site = dag_params["params"].get("site", "")
 
+        sites = Variable.get("Sites", deserialize_json=True)
+        site_config = Variable.get(sites[site], deserialize_json=True)
+        site_loc = urlparse(site_config["url"]).netloc
+        body["query"]["bool"]["must"].append({"match": {"site": site_loc}})
     # Init Elasticsearch instance
     es = Elasticsearch(
         [
             {
-                "host": config["elastic"]["host"],
-                "port": config["elastic"]["port"],
+                "host": config["host"],
+                "port": config["port"],
             }
         ],
         timeout=timeout,
@@ -99,26 +101,24 @@ def handle_all_ids(dag_params, pool_name, dag_id, handler=None):
 
     def process_hits(hits):
         for item in hits:
-            # print(json.dumps(item, indent=2))
             # ids.append(item["_id"])
             print(item)
-            dag_params["item"] = item["_id"]
+            params = {"item": item}
+            params["item"] = item["_id"]
             #            dag_params["params"]["raw_d = item["_source"]["raw_value"]
-            if not config.get("fast", False):
-                print("NOT FAST")
-                trigger_dag(dag_id, dag_params, pool_name)
+            if not dag_params["params"].get("fast", False):
+                trigger_dag(dag_id, params, pool_name)
             else:
-                print("FAST")
-                handler(dag_params)
+                handler(params)
 
     # Check index exists
-    if not es.indices.exists(index=config["elastic"]["index"]):
-        print("Index " + config["elastic"]["index"] + " not exists")
+    if not es.indices.exists(index=config["raw_index"]):
+        print("Index " + config["raw_index"] + " not exists")
         exit()
 
     # Init scroll by search
     data = es.search(
-        index=config["elastic"]["index"],
+        index=config["raw_index"],
         scroll="60m",
         size=size,
         body=body,
@@ -151,16 +151,16 @@ def get_doc_from_raw_idx(item, config):
     es = Elasticsearch(
         [
             {
-                "host": config["elastic"]["host"],
-                "port": config["elastic"]["port"],
+                "host": config["host"],
+                "port": config["port"],
             }
         ],
         timeout=timeout,
     )
-    res = es.get(index=config["elastic"]["index"], id=item)
+    res = es.get(index=config["raw_index"], id=item)
     doc = {
         "raw_value": json.loads(res["_source"]["raw_value"]),
-        "web_text": res["_source"].get("web_text", None),
+        "web_text": res["_source"].get("web_text", ""),
     }
 
     return doc

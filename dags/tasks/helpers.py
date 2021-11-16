@@ -2,6 +2,7 @@ import collections
 from copy import deepcopy
 from airflow.decorators import task
 from airflow.models import Variable
+from urllib.parse import urlparse
 
 
 def merge(dict1, dict2):
@@ -114,3 +115,14 @@ def set_attr(params, attr, val):
 @task
 def get_variable(variable):
     return Variable.get(variable, deserialize_json=True)
+
+
+def find_site_by_url(url):
+    name = urlparse(url).netloc
+    sites = Variable.get("Sites", deserialize_json=True)
+    site_name = ""
+    for site in sites.keys():
+        site_config = Variable.get(sites[site], deserialize_json=True)
+        if name == urlparse(site_config["url"]).netloc:
+            site_name = site
+    return site_name

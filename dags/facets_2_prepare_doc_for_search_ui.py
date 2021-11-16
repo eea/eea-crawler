@@ -7,34 +7,18 @@ import json
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 
-from normalizers.defaults import normalizers
 from normalizers.registry import get_facets_normalizer
-from tasks.helpers import simple_dag_param_to_dict
+from tasks.helpers import simple_dag_param_to_dict, find_site_by_url
 from tasks.rabbitmq import simple_send_to_rabbitmq
 from tasks.elastic import get_doc_from_raw_idx
+from airflow.models import Variable
 
 
 default_args = {"owner": "airflow"}
 
 default_dag_params = {
-    "item": "https://www.eea.europa.eu/api/SITE/highlights/better-raw-material-sourcing-can",
-    "params": {
-        "elastic": {"host": "elastic", "port": 9200, "index": "data_raw"},
-        "rabbitmq": {
-            "host": "rabbitmq",
-            "port": "5672",
-            "username": "guest",
-            "password": "guest",
-            "queue": "queue_searchui",
-        },
-        "nlp": {
-            "text": {
-                "blacklist": ["contact", "rights"],
-            },
-        },
-        "normalizers": normalizers,
-        "url_api_part": "api/SITE",
-    },
+    "item": "https://www.eea.europa.eu/api/SITE/highlights/water-stress-is-a-major",
+    "params": {},
 }
 
 
@@ -50,18 +34,34 @@ def facets_2_prepare_doc_for_search_ui(item=default_dag_params):
 
 def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
+
+    site = find_site_by_url(dag_params["item"])
+
+    es = Variable.get("elastic", deserialize_json=True)
+    rabbitmq = Variable.get("rabbitmq", deserialize_json=True)
+    rabbitmq["queue"] = rabbitmq["searchui_queue"]
     if dag_params["params"].get("raw_doc", None):
         doc = {
             "raw_value": dag_params["params"].get("raw_doc"),
-            "web_text": dag_params["params"].get("web_text", None),
+            "web_text": dag_params["params"].get("web_text", ""),
         }
     else:
-        doc = get_doc_from_raw_idx(dag_params["item"], dag_params["params"])
+        doc = get_doc_from_raw_idx(dag_params["item"], es)
 
+    sites = Variable.get("Sites", deserialize_json=True)
+
+    site_config = Variable.get(sites[site], deserialize_json=True)
+    normalizers_config = Variable.get(
+        site_config["normalizers_variable"], deserialize_json=True
+    )
     normalize = get_facets_normalizer(dag_params["item"])
-    normalized_doc = normalize(doc, dag_params["params"])
+    config = {
+        "normalizers": normalizers_config,
+        "nlp": site_config.get("nlp_preprocessing", None),
+    }
+    normalized_doc = normalize(doc, config)
 
-    simple_send_to_rabbitmq(normalized_doc, dag_params["params"])
+    simple_send_to_rabbitmq(normalized_doc, rabbitmq)
 
 
 @task
