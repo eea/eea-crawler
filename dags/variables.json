@@ -1,15 +1,792 @@
 {
     "Sites": {
         "bise": "config_bise",
-        "eea": "config_eea"
+        "eea": "config_eea_tmp",
+        "energy": "config_energy"
     },
-    "config_bise": "{\r\n\"url\":\"https://biodiversity.europa.eu\"\r\n\"url_api_part\": \"api\",\r\n\"scrape_pages\": false\r\n}",
-    "config_eea": "{\r\n\"url\":\"http://www.eea.europa.eu\",\r\n\"url_api_part\": \"api/SITE\",\r\n\"scrape_pages\": false,\r\n\"portal_types\":[\r\n            \"Highlight\",\r\n            \"Dashboard\",\r\n            \"CloudVideo\",\r\n            \"GIS%20Application\",\r\n            \"Article\",\r\n            \"CallForInterest\",\r\n            \"CallForProposal\",\r\n            \"CallForTender\",\r\n            \"ExternalDataSpec\",\r\n            \"Data\",\r\n            \"DavizVisualization\",\r\n            \"Document\",\r\n            \"Fiche\",\r\n            \"EEAFigure\",\r\n            \"File\",\r\n            \"Folder\",\r\n            \"Assessment\",\r\n            \"AssessmentPart\",\r\n            \"Infographic\",\r\n            \"Report\",\r\n            \"Term\",\r\n            \"Organisation\",\r\n            \"helpcenter_faq\",\r\n        ]\r\n}",
+    "config_bise": {
+        "nlp_preprocessing": {
+            "text": {
+                "split_length": 500
+            }
+        },
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": false,
+        "url": "https://biodiversity.europa.eu",
+        "url_api_part": "api"
+    },
+    "config_eea": {
+        "nlp_preprocessing": {
+            "text": {
+                "blacklist": [
+                    "contact",
+                    "rights"
+                ],
+                "props": [
+                    "description",
+                    "key_message",
+                    "summary",
+                    "text"
+                ],
+                "split_length": 500
+            }
+        },
+        "normalizers_variable": "default_normalizers",
+        "portal_types": [
+            "Highlight",
+            "Dashboard",
+            "CloudVideo",
+            "GIS%20Application",
+            "Article",
+            "CallForInterest",
+            "CallForProposal",
+            "CallForTender",
+            "ExternalDataSpec",
+            "Data",
+            "DavizVisualization",
+            "Document",
+            "Fiche",
+            "EEAFigure",
+            "File",
+            "Folder",
+            "Assessment",
+            "AssessmentPart",
+            "Infographic",
+            "Report",
+            "Term",
+            "Organisation",
+            "helpcenter_faq"
+        ],
+        "scrape_pages": false,
+        "url": "http://www.eea.europa.eu",
+        "url_api_part": "api/SITE"
+    },
+    "config_eea_tmp": {
+        "nlp_preprocessing": {
+            "text": {
+                "blacklist": [
+                    "contact",
+                    "rights"
+                ],
+                "props": [
+                    "description",
+                    "key_message",
+                    "summary",
+                    "text"
+                ],
+                "split_length": 500
+            }
+        },
+        "normalizers_variable": "default_normalizers",
+        "portal_types": [
+            "Highlight"
+        ],
+        "scrape_pages": false,
+        "url": "http://www.eea.europa.eu",
+        "url_api_part": "api/SITE"
+    },
+    "config_energy": {
+        "scrape_pages": false,
+        "url": "https://climate-energy.eea.europa.eu/",
+        "url_api_part": "api"
+    },
+    "default_normalizers": {
+        "//": "Normalise missing properties with the given values",
+        "blackMap": {
+            "effectiveDate": [
+                "None",
+                "Unknown"
+            ],
+            "expires": [
+                "None",
+                "Unknown"
+            ],
+            "temporalCoverage": [
+                "-1"
+            ],
+            "year": [
+                "None",
+                "Unknown"
+            ]
+        },
+        "normMissing": {
+            "creation_date": "field:created",
+            "creator": "European Environment Agency (EEA)",
+            "fleschReadingEaseScore": 0,
+            "format": "text/html",
+            "hasWorkflowState": "published",
+            "issued": "field:creation_date",
+            "items_count_references": 1,
+            "language": "en",
+            "organisation": "European Environment Agency (EEA)",
+            "places": "unknown",
+            "readingTime": -1,
+            "references": [],
+            "spatial": "Other",
+            "title": "Title n/a",
+            "topic": "Various other issues"
+        },
+        "normObj": {
+            "Article": "Article",
+            "Assessment": "Indicator",
+            "AssessmentPart": "Indicator",
+            "CallForInterest": "Contract opportunity",
+            "CallForProposal": "Contract opportunity",
+            "CallForTender": "Contract opportunity",
+            "CloudVideo": "Video",
+            "Dashboard": "Data dashboard",
+            "Data": "Data set",
+            "DavizVisualization": "Chart (interactive)",
+            "Document": "Webpage",
+            "EEAFigure": "Figure (chart/map)",
+            "ExternalDataSpec": "External data reference",
+            "Fiche": "Briefing",
+            "File": "File",
+            "Folder": "Webpage",
+            "GIS Application": "Map (interactive)",
+            "Highlight": "News",
+            "Infographic": "Infographic",
+            "News": "News",
+            "Organisation": "Organisation",
+            "Page": "Webpage",
+            "Report": "Report",
+            "Term": "Glossary term",
+            "agriculture": "Agriculture",
+            "air": "Air pollution",
+            "biodiversity": "Biodiversity - Ecosystems",
+            "chemicals": "Chemicals",
+            "climate": "Climate change mitigation",
+            "climate-change-adaptation": "Climate change adaptation",
+            "coast_sea": "Marine",
+            "country_profile": "Country fact sheet",
+            "default": "Various other issues",
+            "en-gb": "en",
+            "energy": "Energy",
+            "helpcenter_faq": "FAQ",
+            "human": "Environment and health ",
+            "industry": "Industry",
+            "landuse": "Land use",
+            "map_interactive": "Map (interactive)",
+            "policy": "Policy instruments",
+            "regions": "Specific regions",
+            "soil": "Soil",
+            "sustainability-transitions": "Sustainability transitions",
+            "technology": "Environmental technology",
+            "transport": "Transport",
+            "waste": "Resource efficiency and waste",
+            "water": "Water and marine environment"
+        },
+        "normProp": {
+            "@type": "objectProvides",
+            "about": [
+                "id",
+                "about"
+            ],
+            "description.data": "description",
+            "effective": [
+                "issued",
+                "year"
+            ],
+            "effectiveDate": [
+                "issued",
+                "year"
+            ],
+            "expirationDate": "expires",
+            "image.scales.icon.download": "image_icon",
+            "image.scales.large.download": "image_large",
+            "image.scales.listing.download": "image_listing",
+            "image.scales.mini.download": "image_mini",
+            "image.scales.panoramic.download": "image_panoramic",
+            "image.scales.preview.download": "image_preview",
+            "image.scales.thumb.download": "image_thumb",
+            "image.scales.tile.download": "image_tile",
+            "location": "spatial",
+            "temporalCoverage": [
+                "time_coverage"
+            ],
+            "themes": "topic",
+            "title": [
+                "title",
+                "label"
+            ]
+        },
+        "proplist": [
+            "id",
+            "about",
+            "language",
+            "title",
+            "description",
+            "themes",
+            "subject",
+            "location",
+            "year",
+            "modified",
+            "site",
+            "indexed_at"
+        ],
+        "whiteMap": {}
+    },
     "elastic": {
         "host": "elastic",
         "nlp_target_index": "data_nlp",
         "port": 9200,
+        "raw_index": "data_raw",
         "searchui_target_index": "data_searchui"
     },
-    "rabbitmq": "{\r\n\t\"host\": \"rabbitmq\",\r\n\t\"port\": \"5672\",\r\n\t\"username\": \"guest\",\r\n\t\"password\": \"guest\",\r\n\t\"queue\": \"queue_raw_data\",\r\n\t\"searchui_queue\": \"queue_searchui\",\r\n\t\"nlp_queue\": \"queue_nlp\",\r\n}"
+    "elastic_mapping": {
+        "SearchableText": {
+            "copy_to": [
+                "did_you_mean",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "about": {
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "fields": {
+                "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                }
+            },
+            "type": "text"
+        },
+        "all_fields_for_freetext": {
+            "analyzer": "freetext",
+            "copy_to": [
+                "text"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "autocomplete": {
+            "analyzer": "autocomplete",
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "cluster_id": {
+            "analyzer": "none",
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "cluster_name": {
+            "analyzer": "none",
+            "copy_to": [
+                "did_you_mean",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "creator": {
+            "fields": {
+                "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                }
+            },
+            "type": "text"
+        },
+        "creator_cms": {
+            "analyzer": "none",
+            "copy_to": [
+                "did_you_mean",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "dataProcessor": {
+            "copy_to": [
+                "organisation",
+                "searchable_organisation",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "dataProvider": {
+            "copy_to": [
+                "organisation",
+                "searchable_organisation",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "description": {
+            "fields": {
+                "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                }
+            },
+            "type": "text"
+        },
+        "did_you_mean": {
+            "analyzer": "didYouMean",
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "expires": {
+            "type": "date"
+        },
+        "fleschReadingEaseScore": {
+            "type": "double"
+        },
+        "format": {
+            "analyzer": "none",
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "hasWorkflowState": {
+            "analyzer": "none",
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "issued": {
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "fields": {
+                "date": {
+                    "type": "date"
+                },
+                "index": {
+                    "type": "keyword"
+                },
+                "toindex": {
+                    "fielddata": true,
+                    "type": "text"
+                }
+            },
+            "type": "text"
+        },
+        "items_count_SearchableText": {
+            "type": "long"
+        },
+        "items_count_cluster_id": {
+            "type": "long"
+        },
+        "items_count_cluster_name": {
+            "type": "long"
+        },
+        "items_count_creator": {
+            "type": "long"
+        },
+        "items_count_creator_cms": {
+            "type": "long"
+        },
+        "items_count_dataProcessor": {
+            "type": "long"
+        },
+        "items_count_dataProvider": {
+            "type": "long"
+        },
+        "items_count_description": {
+            "type": "long"
+        },
+        "items_count_expires": {
+            "type": "long"
+        },
+        "items_count_fleschReadingEaseScore": {
+            "type": "long"
+        },
+        "items_count_format": {
+            "type": "long"
+        },
+        "items_count_hasWorkflowState": {
+            "type": "long"
+        },
+        "items_count_issued": {
+            "type": "long"
+        },
+        "items_count_label": {
+            "type": "long"
+        },
+        "items_count_language": {
+            "type": "long"
+        },
+        "items_count_modified": {
+            "type": "long"
+        },
+        "items_count_objectProvides": {
+            "type": "long"
+        },
+        "items_count_organisation": {
+            "type": "long"
+        },
+        "items_count_places": {
+            "type": "long"
+        },
+        "items_count_rdf_lastRefreshed": {
+            "type": "long"
+        },
+        "items_count_readingTime": {
+            "type": "long"
+        },
+        "items_count_references": {
+            "type": "long"
+        },
+        "items_count_spatial": {
+            "type": "long"
+        },
+        "items_count_subject": {
+            "type": "long"
+        },
+        "items_count_text": {
+            "type": "long"
+        },
+        "items_count_time_coverage": {
+            "type": "long"
+        },
+        "items_count_title": {
+            "type": "long"
+        },
+        "items_count_topic": {
+            "type": "long"
+        },
+        "items_count_type": {
+            "type": "long"
+        },
+        "items_count_year": {
+            "type": "long"
+        },
+        "label": {
+            "copy_to": [
+                "did_you_mean",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "fields": {
+                "index": {
+                    "type": "keyword"
+                },
+                "label": {
+                    "type": "keyword"
+                },
+                "toindex": {
+                    "fielddata": true,
+                    "type": "text"
+                }
+            },
+            "type": "text"
+        },
+        "language": {
+            "null_value": "en",
+            "type": "keyword"
+        },
+        "modified": {
+            "type": "date"
+        },
+        "objectProvides": {
+            "copy_to": [
+                "did_you_mean",
+                "searchable_objectProvides"
+            ],
+            "null_value": "Other",
+            "type": "keyword"
+        },
+        "organisation": {
+            "analyzer": "none",
+            "copy_to": [
+                "did_you_mean",
+                "searchable_organisation",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "places": {
+            "analyzer": "none",
+            "copy_to": [
+                "did_you_mean",
+                "searchable_places",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "rdf_lastRefreshed": {
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "readingTime": {
+            "type": "double"
+        },
+        "references": {
+            "analyzer": "none",
+            "copy_to": [
+                "did_you_mean",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "searchable_objectProvides": {
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "searchable_organisation": {
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "searchable_places": {
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "searchable_spatial": {
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "searchable_time_coverage": {
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "searchable_topics": {
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "spatial": {
+            "analyzer": "none",
+            "copy_to": [
+                "did_you_mean",
+                "searchable_spatial",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "subject": {
+            "fields": {
+                "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                }
+            },
+            "type": "text"
+        },
+        "text": {
+            "copy_to": [
+                "did_you_mean",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "time_coverage": {
+            "analyzer": "date2year",
+            "copy_to": [
+                "searchable_time_coverage",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "title": {
+            "copy_to": [
+                "did_you_mean",
+                "autocomplete",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "fields": {
+                "eea_title": {
+                    "type": "keyword"
+                },
+                "index": {
+                    "type": "keyword"
+                },
+                "toindex": {
+                    "fielddata": true,
+                    "type": "text"
+                }
+            },
+            "type": "text"
+        },
+        "topic": {
+            "copy_to": [
+                "did_you_mean",
+                "searchable_topics"
+            ],
+            "null_value": "Various other issues",
+            "type": "keyword"
+        },
+        "type": {
+            "analyzer": "none",
+            "copy_to": [
+                "did_you_mean",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "year": {
+            "analyzer": "date2year",
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        }
+    },
+    "elastic_settings": {
+        "index": {
+            "analysis": {
+                "analyzer": {
+                    "autocomplete": {
+                        "char_filter": [
+                            "html_strip"
+                        ],
+                        "filter": [
+                            "lowercase",
+                            "stop",
+                            "autocompleteFilter",
+                            "trim"
+                        ],
+                        "tokenizer": "standard",
+                        "type": "custom"
+                    },
+                    "comma": {
+                        "lowercase": "false",
+                        "pattern": ", ",
+                        "type": "pattern"
+                    },
+                    "date2year": {
+                        "pattern": "[-](.*)",
+                        "type": "pattern"
+                    },
+                    "default": {
+                        "filter": [
+                            "lowercase",
+                            "stop",
+                            "asciifolding",
+                            "english_stemmer"
+                        ],
+                        "tokenizer": "standard",
+                        "type": "custom"
+                    },
+                    "didYouMean": {
+                        "char_filter": [
+                            "html_strip"
+                        ],
+                        "filter": [
+                            "lowercase"
+                        ],
+                        "tokenizer": "standard",
+                        "type": "custom"
+                    },
+                    "freetext": {
+                        "char_filter": [
+                            "html_strip"
+                        ],
+                        "filter": [
+                            "lowercase"
+                        ],
+                        "tokenizer": "standard",
+                        "type": "custom"
+                    },
+                    "none": {
+                        "filter": [
+                            "lowercase"
+                        ],
+                        "type": "keyword"
+                    },
+                    "semicolon": {
+                        "lowercase": "false",
+                        "pattern": "; ",
+                        "type": "pattern"
+                    }
+                },
+                "char_filter": {
+                    "url_filter": {
+                        "mappings": [
+                            "/ =>  ",
+                            ". =>  "
+                        ],
+                        "type": "mapping"
+                    }
+                },
+                "filter": {
+                    "autocompleteFilter": {
+                        "filler_token": "",
+                        "max_shingle_size": "12",
+                        "min_shingle_size": "2",
+                        "type": "shingle"
+                    },
+                    "english_stemmer": {
+                        "language": "english",
+                        "type": "stemmer"
+                    }
+                }
+            },
+            "mapping": {
+                "ignore_malformed": "true"
+            },
+            "max_shingle_diff": "12",
+            "similarity": {
+                "default": {
+                    "type": "BM25"
+                }
+            }
+        }
+    },
+    "nlp_services": {
+        "embedding": {
+            "host": "nlp-searchlib",
+            "path": "api/embedding",
+            "port": "8000"
+        }
+    },
+    "rabbitmq": {
+        "host": "rabbitmq",
+        "nlp_queue": "queue_nlp",
+        "password": "guest",
+        "port": "5672",
+        "queue": "queue_raw_data",
+        "searchui_queue": "queue_searchui",
+        "username": "guest"
+    }
 }
