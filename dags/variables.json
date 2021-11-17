@@ -2,7 +2,11 @@
     "Sites": {
         "bise": "config_bise",
         "eea": "config_eea_tmp",
-        "energy": "config_energy"
+        "eionet": "config_eionet",
+        "energy": "config_energy",
+        "fise": "config_fise",
+        "industry": "config_industry",
+        "water_marine": "config_water_marine"
     },
     "config_bise": {
         "nlp_preprocessing": {
@@ -12,7 +16,7 @@
         },
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
-        "scrape_with_js": false,
+        "scrape_with_js": true,
         "url": "https://biodiversity.europa.eu",
         "url_api_part": "api"
     },
@@ -86,10 +90,37 @@
         "url": "http://www.eea.europa.eu",
         "url_api_part": "api/SITE"
     },
-    "config_energy": {
+    "config_eionet": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
         "scrape_pages": false,
-        "url": "https://climate-energy.eea.europa.eu/",
+        "scrape_with_js": true,
+        "url": "https://www.eionet.europa.eu",
+        "url_api_part": ""
+    },
+    "config_energy": {
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "url": "https://climate-energy.eea.europa.eu",
         "url_api_part": "api"
+    },
+    "config_fise": {
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "url": "https://forest.eea.europa.eu",
+        "url_api_part": "api"
+    },
+    "config_industry": {
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "url": "https://industry.eea.europa.eu",
+        "url_api_part": "api"
+    },
+    "config_water_marine": {
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "url": "https://water.europa.eu/marine",
+        "url_api_part": ""
     },
     "default_normalizers": {
         "//": "Normalise missing properties with the given values",

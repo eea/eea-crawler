@@ -44,6 +44,8 @@ def get_no_protocol_url(url: str):
 @task
 def extract_docs_from_json(page):
     json_doc = json.loads(page)
+    print("EXTRACT_DOCS_FROM_JSON")
+    print(json_doc)
     docs = json_doc["items"]
     urls = [doc["@id"] for doc in docs]
     print("Number of documents:")

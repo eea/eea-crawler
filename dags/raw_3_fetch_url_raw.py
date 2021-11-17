@@ -41,6 +41,8 @@ def get_api_url(url, params):
 
 
 def simple_get_api_url(url, params):
+    if params["url_api_part"].strip("/") == "":
+        return url
     if params["url_api_part"] in url:
         print(url)
         return url
@@ -65,6 +67,8 @@ def simple_add_id(doc, item):
 
 
 def simple_remove_api_url(url, params):
+    if params["url_api_part"].strip("/") == "":
+        return url
     return "/".join(url.split("/" + params["url_api_part"] + "/"))
 
 
@@ -98,6 +102,8 @@ def request_with_retry(url):
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
 def trafilatura_with_retry(url, js=False):
+    print("TRAFILATURA")
+    print(url)
     if js:
         r = requests.post(
             "http://headless-chrome-api:3000/content",
@@ -110,11 +116,13 @@ def trafilatura_with_retry(url, js=False):
 
     if magic.from_buffer(downloaded) == "data":
         return None
+    print(downloaded)
     return trafilatura.extract(downloaded)
 
 
 @task
 def fetch_and_send_to_rabbitmq(full_config):
+
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
 
     site_config_variable = Variable.get("Sites", deserialize_json=True).get(
@@ -123,15 +131,24 @@ def fetch_and_send_to_rabbitmq(full_config):
     site_config = Variable.get(site_config_variable, deserialize_json=True)
 
     url_with_api = simple_get_api_url(dag_params["item"], site_config)
-    r = request_with_retry(url_with_api)
+
+    r_url = url_with_api
+    if site_config.get("avoid_cache_api", False):
+        r_url = f"{url_with_api}?crawler=true"
+
+    r = request_with_retry(r_url)
     doc = simple_add_id(r, dag_params["item"])
     url_without_api = simple_remove_api_url(url_with_api, site_config)
 
     web_text = ""
 
     if site_config.get("scrape_pages", False):
+        s_url = url_without_api
+        if site_config.get("avoid_cache_web", False):
+            s_url = f"{url_without_api}?scrape=true"
         web_text = trafilatura_with_retry(
-            url_without_api, site_config.get("scrape_with_js", False)
+            s_url,
+            site_config.get("scrape_with_js", False),
         )
 
     doc = simple_add_about(doc, url_without_api)
