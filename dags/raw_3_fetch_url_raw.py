@@ -13,7 +13,7 @@ from airflow.utils.dates import days_ago
 
 import trafilatura
 
-from tasks.helpers import simple_dag_param_to_dict
+from tasks.helpers import simple_dag_param_to_dict, find_site_by_url
 from tasks.rabbitmq import simple_send_to_rabbitmq  # , send_to_rabbitmq
 from lib.debug import pretty_id
 
@@ -125,8 +125,10 @@ def fetch_and_send_to_rabbitmq(full_config):
 
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
 
+    site = find_site_by_url(dag_params["item"])
+
     site_config_variable = Variable.get("Sites", deserialize_json=True).get(
-        dag_params["params"]["site"], None
+        site, None
     )
     site_config = Variable.get(site_config_variable, deserialize_json=True)
 
@@ -162,7 +164,6 @@ def fetch_and_send_to_rabbitmq(full_config):
 
     simple_send_to_rabbitmq(raw_doc, rabbitmq_config)
 
-    # TODO: check update searchui & nlp triggers
     if dag_params["params"].get("trigger_searchui", False):
         pool_name = simple_url_to_pool(
             url_with_api, prefix="prepare_doc_for_searchui"

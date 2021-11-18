@@ -19,8 +19,9 @@ from tasks.helpers import (
     get_attr,
     set_attr,
     get_variable,
+    find_site_by_url,
 )
-from lib.pool import url_to_pool
+from lib.pool import url_to_pool, val_to_pool
 from airflow.models import Variable
 
 # from normalizers.elastic_settings import settings
@@ -106,6 +107,22 @@ def check_robots_txt(url, items, params):
     return allowed_items
 
 
+@task
+def get_concurrency(params):
+    site_config_variable = Variable.get("Sites", deserialize_json=True).get(
+        params["site"], None
+    )
+    site_config = Variable.get(site_config_variable, deserialize_json=True)
+    return site_config.get("concurrency", 4)
+
+
+@task
+def find_site(url):
+    site = find_site_by_url(url)
+    print(site)
+    return site
+
+
 @dag(
     default_args=default_args,
     schedule_interval=None,
@@ -143,10 +160,16 @@ def raw_2_crawl_with_query(item=default_dag_params):
     xc_allowed_urls = check_robots_txt(xc_item, xc_urls, xc_params)
 
     xc_items = build_items_list(xc_allowed_urls, xc_params)
+    xc_site = find_site(xc_item)
+    # xc_pool_name = url_to_pool(xc_item, prefix="fetch_url_raw")
 
-    xc_pool_name = url_to_pool(xc_item, prefix="fetch_url_raw")
+    xc_pool_name = val_to_pool(xc_site, prefix="fetch_url_raw")
 
-    cpo = CreatePoolOperator(task_id="create_pool", name=xc_pool_name, slots=4)
+    xc_concurrency = get_concurrency(xc_params)
+
+    cpo = CreatePoolOperator(
+        task_id="create_pool", name=xc_pool_name, slots=xc_concurrency
+    )
 
     bt = BulkTriggerDagRunOperator(
         task_id="fetch_url_raw",
@@ -158,7 +181,8 @@ def raw_2_crawl_with_query(item=default_dag_params):
     xc_next = extract_next_from_json(page.output, xc_params)
     debug_value(xc_next)
 
-    xc_pool_name_next = url_to_pool(xc_item, prefix="crawl_with_query")
+    # xc_pool_name_next = url_to_pool(xc_item, prefix="crawl_with_query")
+    xc_pool_name_next = val_to_pool(xc_site, prefix="crawl_with_query")
     cpo_next = CreatePoolOperator(
         task_id="create_pool_next", name=xc_pool_name_next, slots=1
     )

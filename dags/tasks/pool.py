@@ -6,7 +6,7 @@ from airflow.models import BaseOperator
 class CreatePoolOperator(BaseOperator):
     # its pool blue, get it?
     ui_color = "#b8e9ee"
-    template_fields = ["name"]
+    template_fields = ["name", "slots"]
 
     # @apply_defaults
     def __init__(self, name, slots, description="", *args, **kwargs):
@@ -16,6 +16,10 @@ class CreatePoolOperator(BaseOperator):
         self.name = name
 
     def execute(self, context):
+        print("SELF:")
+        print(self.description)
+        print(self.slots)
+        print(self.name)
         try:
             pool = get_pool(name=self.name)
             if pool:

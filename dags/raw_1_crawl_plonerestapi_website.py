@@ -24,7 +24,7 @@ from airflow.models import Variable
 # You can override them on a per-task basis during operator initialization
 default_args = {"owner": "airflow"}
 default_dag_params = {
-    "item": "water_marine",
+    "item": "bise",
     "params": {
         "query_size": 10,
         "trigger_next_bulk": False,
