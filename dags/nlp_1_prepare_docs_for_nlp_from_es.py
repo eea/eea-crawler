@@ -61,15 +61,14 @@ def nlp_1_prepare_docs_for_nlp_from_es(item=default_dag_params):
 
     create_index(xc_es, add_embedding=True)
 
-    xc_pool_name = url_to_pool(xc_item, prefix="prepare_doc_for_nlp")
     cpo = CreatePoolOperator(
-        task_id="create_pool", name=xc_pool_name, slots=16
+        task_id="create_pool", name="prepare_doc_for_nlp", slots=16
     )
 
     handle_all_ids(
         xc_es,
         xc_dag_params,
-        xc_pool_name,
+        "prepare_doc_for_nlp",
         "nlp_2_prepare_doc_for_nlp",
         handler=transform_doc,
     )

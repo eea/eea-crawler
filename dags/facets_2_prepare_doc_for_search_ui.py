@@ -61,8 +61,8 @@ def transform_doc(full_config):
         "nlp": site_config.get("nlp_preprocessing", None),
     }
     normalized_doc = normalize(doc, config)
-
-    simple_send_to_rabbitmq(normalized_doc, rabbitmq)
+    if normalized_doc:
+        simple_send_to_rabbitmq(normalized_doc, rabbitmq)
 
 
 @task

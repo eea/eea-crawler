@@ -19,7 +19,7 @@ from tasks.rabbitmq import simple_send_to_rabbitmq  # , send_to_rabbitmq
 
 from lib.pool import create_pool
 from lib.dagrun import trigger_dag
-from lib.pool import simple_url_to_pool
+from lib.pool import simple_val_to_pool
 from airflow.models import Variable
 import logging
 
@@ -255,7 +255,7 @@ def fetch_and_send_to_rabbitmq(full_config):
     raw_doc["modified"] = doc.get(
         "modified", doc.get("modification_date", None)
     )
-    raw_doc["site"] = urlparse(url_without_api).netloc
+    raw_doc["site"] = site_config["url"]
     raw_doc["indexed_at"] = datetime.now().isoformat()
 
     extract_attachments(raw_doc, r_url, nlp_service_params)
@@ -265,26 +265,20 @@ def fetch_and_send_to_rabbitmq(full_config):
     simple_send_to_rabbitmq(raw_doc, rabbitmq_config)
 
     if dag_params["params"].get("trigger_searchui", False):
-        pool_name = simple_url_to_pool(
-            url_with_api, prefix="prepare_doc_for_searchui"
-        )
         logger.info("searchui enabled")
-        create_pool(pool_name, 16)
+        create_pool("prepare_doc_for_searchui", 16)
         trigger_dag_id = "facets_2_prepare_doc_for_search_ui"
         dag_params["params"]["raw_doc"] = doc
         dag_params["params"]["web_text"] = web_text
-        trigger_dag(trigger_dag_id, dag_params, pool_name)
+        trigger_dag(trigger_dag_id, dag_params, "prepare_doc_for_searchui")
 
     if dag_params["params"].get("trigger_nlp", False):
-        pool_name = simple_url_to_pool(
-            url_with_api, prefix="prepare_doc_for_nlp"
-        )
         logger.info("nlp enabled")
-        create_pool(pool_name, 16)
+        create_pool("prepare_doc_for_nlp", 16)
         trigger_dag_id = "nlp_2_prepare_doc_for_nlp"
         dag_params["params"]["raw_doc"] = doc
         dag_params["params"]["web_text"] = web_text
-        trigger_dag(trigger_dag_id, dag_params, pool_name)
+        trigger_dag(trigger_dag_id, dag_params, "prepare_doc_for_nlp")
 
 
 @dag(

@@ -237,3 +237,45 @@ def update_locations(norm_doc):
     except:
         pass
     return norm_doc
+
+
+def common_normalizer(doc, config):
+    normalizer = config["normalizers"]
+
+    normalized_doc = create_doc(doc["raw_value"])
+    normalized_doc = update_locations(normalized_doc)
+    attrs_to_delete = get_attrs_to_delete(
+        normalized_doc, normalizer.get("proplist", [])
+    )
+    normalized_doc = add_reading_time(
+        normalized_doc,
+        doc,
+        config["nlp"]["text"].get("blacklist", []),
+        config["nlp"]["text"].get("whitelist", []),
+    )
+    normalized_doc = apply_black_map(
+        normalized_doc, normalizer.get("blackMap", {})
+    )
+    normalized_doc = apply_white_map(
+        normalized_doc, normalizer.get("whiteMap", {})
+    )
+    normalized_doc = remove_empty(normalized_doc)
+    normalized_doc = apply_norm_obj(
+        normalized_doc, normalizer.get("normObj", {})
+    )
+    normalized_doc = apply_norm_prop(
+        normalized_doc, normalizer.get("normProp", {})
+    )
+    normalized_doc = add_places(normalized_doc)
+    normalized_doc = apply_norm_missing(
+        normalized_doc, normalizer.get("normMissing", {})
+    )
+
+    # TODO e.g. File -> Corporate document if it contains xyz
+    # normalized_doc = apply_types_detection(normalized_doc)
+
+    normalized_doc = remove_duplicates(normalized_doc)
+
+    normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
+
+    return normalized_doc

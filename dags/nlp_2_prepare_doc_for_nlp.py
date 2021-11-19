@@ -137,6 +137,8 @@ def transform_doc(full_config):
     haystack_data = merge(normalized_doc, haystack_data)
 
     # split the document
+    print("TRANSFORM_NLP")
+    print(haystack_data)
     splitted_docs = preprocess_split_doc(haystack_data, config["nlp"]["text"])
 
     nlp_services = Variable.get("nlp_services", deserialize_json=True)

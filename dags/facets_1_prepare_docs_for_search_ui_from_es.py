@@ -12,8 +12,9 @@ from tasks.helpers import (
     get_item,
     set_attr,
     get_variable,
+    find_site_by_url,
 )
-from lib.pool import url_to_pool
+from lib.pool import val_to_pool
 
 
 from tasks.elastic import create_index, handle_all_ids
@@ -69,15 +70,14 @@ def facets_1_prepare_docs_for_search_ui_from_es(item=default_dag_params):
 
     create_index(xc_es)
 
-    xc_pool_name = url_to_pool(xc_item, prefix="prepare_doc_for_search_ui")
     cpo = CreatePoolOperator(
-        task_id="create_pool", name=xc_pool_name, slots=16
+        task_id="create_pool", name="prepare_doc_for_search_ui", slots=16
     )
 
     handle_all_ids(
         xc_es,
         xc_dag_params,
-        xc_pool_name,
+        "prepare_doc_for_search_ui",
         "facets_2_prepare_doc_for_search_ui",
         handler=transform_doc,
     )

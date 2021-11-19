@@ -24,10 +24,10 @@ from airflow.models import Variable
 # You can override them on a per-task basis during operator initialization
 default_args = {"owner": "airflow"}
 default_dag_params = {
-    "item": "bise",
+    "item": "fise",
     "params": {
-        "query_size": 10,
-        "trigger_next_bulk": False,
+        "query_size": 500,
+        "trigger_next_bulk": True,
         "trigger_nlp": False,
         "trigger_searchui": False,
     },
@@ -40,9 +40,7 @@ def build_queries_list(config):
     url_api_part = config["site"]["url_api_part"].strip("/")
     if url_api_part != "":
         url = f"{url}/{url_api_part}"
-    print("URL")
-    print(url)
-    print(config)
+
     if config["site"].get("portal_types", None):
         queries = [
             f"{url}/@search?b_size={config['params']['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"

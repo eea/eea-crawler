@@ -118,11 +118,19 @@ def get_variable(variable):
 
 
 def find_site_by_url(url):
-    name = urlparse(url).netloc
+    parts = url.split("://")[-1].strip("/").split("/")
+
+    names = ["/".join(parts[: (i * -1)]) for i in range(1, len(parts))]
+
     sites = Variable.get("Sites", deserialize_json=True)
+
     site_name = ""
-    for site in sites.keys():
-        site_config = Variable.get(sites[site], deserialize_json=True)
-        if name == urlparse(site_config["url"]).netloc:
-            site_name = site
+    for name in names:
+        for site in sites.keys():
+            if site_name == "":
+                site_config = Variable.get(sites[site], deserialize_json=True)
+                site_url = site_config["url"].split("://")[-1].strip("/")
+                if name == site_url:
+                    site_name = site
+
     return site_name
