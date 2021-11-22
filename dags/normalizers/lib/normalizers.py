@@ -223,6 +223,8 @@ def add_reading_time(norm_doc, doc, txt_props=[], txt_props_black=[]):
     text = doc.get("web_text", "")
     if not text or len(text) == 0:
         text = join_text_fields(doc, txt_props, txt_props_black)
+    pdf_text = doc.get("pdf_text", "")
+    text += pdf_text
     wc = res = len(re.findall(r"\w+", text))
     norm_doc["readingTime"] = wc / 228
     return norm_doc

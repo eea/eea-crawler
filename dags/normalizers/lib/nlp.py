@@ -11,6 +11,8 @@ def common_preprocess(doc, config):
             config["nlp"]["text"].get("blacklist", []),
             config["nlp"]["text"].get("whitelist", []),
         )
+    pdf_text = doc.get("pdf_text", "")
+    text += pdf_text
     title = raw_doc["title"]
     # metadata
     url = raw_doc["@id"]

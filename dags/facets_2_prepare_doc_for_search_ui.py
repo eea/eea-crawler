@@ -45,6 +45,7 @@ def transform_doc(full_config):
         doc = {
             "raw_value": dag_params["params"].get("raw_doc"),
             "web_text": dag_params["params"].get("web_text", ""),
+            "pdf_text": dag_params["params"].get("pdf_text", ""),
         }
     else:
         doc = get_doc_from_raw_idx(dag_params["item"], es)

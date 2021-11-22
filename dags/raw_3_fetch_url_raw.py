@@ -171,11 +171,11 @@ def fix_download_url(download_url, source_url):
     return download_url
 
 
-def extract_attachments(doc, url, nlp_service_params):
+def extract_attachments(raw_doc, url, nlp_service_params):
     params = nlp_service_params["converter"]
 
-    logger.info("Extract attachments %s %s", doc, url)
-    json_doc = json.loads(doc["raw_value"])
+    logger.info("Extract attachments %s %s", raw_doc, url)
+    json_doc = json.loads(raw_doc["raw_value"])
 
     converter_dsn = urlunsplit(
         (
@@ -208,9 +208,9 @@ def extract_attachments(doc, url, nlp_service_params):
 
     logger.info("Retrieved file content: %r", text)
 
-    doc["pdf_text"] += text
+    raw_doc["pdf_text"] = text
 
-    return doc
+    return raw_doc
 
 
 @task
@@ -258,7 +258,7 @@ def fetch_and_send_to_rabbitmq(full_config):
     raw_doc["site"] = site_config["url"]
     raw_doc["indexed_at"] = datetime.now().isoformat()
 
-    extract_attachments(raw_doc, r_url, nlp_service_params)
+    raw_doc = extract_attachments(raw_doc, r_url, nlp_service_params)
 
     rabbitmq_config = Variable.get("rabbitmq", deserialize_json=True)
 
@@ -270,6 +270,7 @@ def fetch_and_send_to_rabbitmq(full_config):
         trigger_dag_id = "facets_2_prepare_doc_for_search_ui"
         dag_params["params"]["raw_doc"] = doc
         dag_params["params"]["web_text"] = web_text
+        dag_params["params"]["pdf_text"] = raw_doc.get("pdf_text", "")
         trigger_dag(trigger_dag_id, dag_params, "prepare_doc_for_searchui")
 
     if dag_params["params"].get("trigger_nlp", False):
@@ -278,6 +279,7 @@ def fetch_and_send_to_rabbitmq(full_config):
         trigger_dag_id = "nlp_2_prepare_doc_for_nlp"
         dag_params["params"]["raw_doc"] = doc
         dag_params["params"]["web_text"] = web_text
+        dag_params["params"]["pdf_text"] = raw_doc.get("pdf_text", "")
         trigger_dag(trigger_dag_id, dag_params, "prepare_doc_for_nlp")
 
 

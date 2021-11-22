@@ -161,6 +161,7 @@ def get_doc_from_raw_idx(item, config):
     doc = {
         "raw_value": json.loads(res["_source"]["raw_value"]),
         "web_text": res["_source"].get("web_text", ""),
+        "pdf_text": res["_source"].get("pdf_text", ""),
     }
 
     return doc
