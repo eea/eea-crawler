@@ -5,7 +5,7 @@ from datetime import datetime
 import json
 import magic
 import requests
-from urllib.parse import urlparse, urlunsplit
+from urllib.parse import urlunsplit  # urlparse,
 
 from tenacity import retry, wait_exponential, stop_after_attempt
 
@@ -19,12 +19,12 @@ from tasks.rabbitmq import simple_send_to_rabbitmq  # , send_to_rabbitmq
 
 from lib.pool import create_pool
 from lib.dagrun import trigger_dag
-from lib.pool import simple_val_to_pool
 from airflow.models import Variable
 import logging
 
 logger = logging.getLogger(__file__)
 
+# from lib.pool import simple_val_to_pool
 # from lib.debug import pretty_id
 # from datetime import timedelta
 
@@ -208,7 +208,7 @@ def extract_attachments(doc, url, nlp_service_params):
 
     logger.info("Retrieved file content: %r", text)
 
-    doc["text"] += text
+    doc["pdf_text"] += text
 
     return doc
 

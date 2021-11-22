@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 from airflow.providers.http.operators.http import SimpleHttpOperator
-from airflow.operators.python_operator import BranchPythonOperator
 
 from tasks.dagrun import BulkTriggerDagRunOperator
 from tasks.pool import CreatePoolOperator
@@ -16,23 +15,29 @@ from tasks.helpers import (
     build_items_list,
     get_params,
     get_item,
-    get_attr,
-    set_attr,
     get_variable,
+    set_attr,
     find_site_by_url,
 )
-from lib.pool import url_to_pool, val_to_pool
+from lib.pool import val_to_pool  # url_to_pool,
 from airflow.models import Variable
 
+from tasks.elastic import simple_create_index
+
+# get_attr,
+# from airflow.operators.python_operator import BranchPythonOperator
 # from normalizers.elastic_settings import settings
 # from normalizers.elastic_mapping import mapping
-from tasks.elastic import simple_create_index
 
 default_args = {"owner": "airflow"}
 
+URL = (
+    "http://www.eea.europa.eu/api/@search?b_size=10&metadata_fields=modified&"
+    "show_inactive=true&sort_order=reverse&sort_on=Date&portal_type=Highlight"
+)
 
 default_dag_params = {
-    "item": "http://www.eea.europa.eu/api/@search?b_size=10&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type=Highlight",
+    "item": URL,
     "params": {"site": "eea"},
 }
 
@@ -128,7 +133,8 @@ def find_site(url):
     schedule_interval=None,
     start_date=days_ago(2),
     tags=["trigger raw_3_fetch_url_raw for each document"],
-    description="Query site for a content type, trigger raw_3_fetch_url_raw for each document",
+    description="""Query site for a content type, trigger
+    raw_3_fetch_url_raw for each document""",
 )
 def raw_2_crawl_with_query(item=default_dag_params):
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
