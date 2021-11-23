@@ -17,7 +17,7 @@ from airflow.models import Variable
 default_args = {"owner": "airflow"}
 
 default_dag_params = {
-    "item": "https://www.eea.europa.eu/api/SITE/highlights/water-stress-is-a-major",
+    "item": "https://water.europa.eu/marine/state-of-europe-seas/marine-sectors-catalogue-of-measures",
     "params": {},
     "site": "",
 }

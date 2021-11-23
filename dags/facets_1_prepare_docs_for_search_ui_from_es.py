@@ -29,9 +29,9 @@ default_args = {"owner": "airflow"}
 default_dag_params = {
     "item": "http://www.eea.europa.eu/api/@search?portal_type=Highlight&sort_order=reverse&sort_on=Date&created.query=2021/6/1&created.range=min&b_size=500",
     "params": {
-        "fast": False,
+        "fast": True,
         "portal_type": "",
-        "site": "",
+        "site": "water_marine",
     },
 }
 

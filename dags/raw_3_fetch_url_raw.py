@@ -100,7 +100,7 @@ def _add_about(doc, value):
     return doc
 
 
-def doc_to_raw(doc, web_text):
+def doc_to_raw(doc, web_text, pdf_text):
     """A middle-ground representation of docs, for the ES "harvested" index"""
 
     raw_doc = {}
@@ -110,6 +110,9 @@ def doc_to_raw(doc, web_text):
 
     if web_text:
         raw_doc["web_text"] = json.dumps(web_text)
+
+    if pdf_text:
+        raw_doc["pdf_text"] = json.dumps(pdf_text)
 
     return raw_doc
 
@@ -171,11 +174,10 @@ def fix_download_url(download_url, source_url):
     return download_url
 
 
-def extract_attachments(raw_doc, url, nlp_service_params):
+def extract_attachments(json_doc, url, nlp_service_params):
     params = nlp_service_params["converter"]
 
-    logger.info("Extract attachments %s %s", raw_doc, url)
-    json_doc = json.loads(raw_doc["raw_value"])
+    logger.info("Extract attachments %s %s", json_doc, url)
 
     converter_dsn = urlunsplit(
         (
@@ -208,9 +210,7 @@ def extract_attachments(raw_doc, url, nlp_service_params):
 
     logger.info("Retrieved file content: %r", text)
 
-    raw_doc["pdf_text"] = text
-
-    return raw_doc
+    return text
 
 
 @task
@@ -250,15 +250,15 @@ def fetch_and_send_to_rabbitmq(full_config):
             site_config.get("scrape_with_js", False),
         )
 
+    pdf_text = extract_attachments(doc, r_url, nlp_service_params)
+
     doc = _add_about(doc, url_without_api)
-    raw_doc = doc_to_raw(doc, web_text)
+    raw_doc = doc_to_raw(doc, web_text, pdf_text)
     raw_doc["modified"] = doc.get(
         "modified", doc.get("modification_date", None)
     )
     raw_doc["site"] = site_config["url"]
     raw_doc["indexed_at"] = datetime.now().isoformat()
-
-    raw_doc = extract_attachments(raw_doc, r_url, nlp_service_params)
 
     rabbitmq_config = Variable.get("rabbitmq", deserialize_json=True)
 
