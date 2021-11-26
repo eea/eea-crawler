@@ -24,7 +24,7 @@ from airflow.models import Variable
 # You can override them on a per-task basis during operator initialization
 default_args = {"owner": "airflow"}
 default_dag_params = {
-    "item": "fise",
+    "item": "eionet",
     "params": {
         "query_size": 500,
         "trigger_next_bulk": True,
@@ -37,9 +37,16 @@ default_dag_params = {
 @task
 def build_queries_list(config):
     url = config["site"]["url"].strip("/")
-    url_api_part = config["site"]["url_api_part"].strip("/")
-    if url_api_part != "":
-        url = f"{url}/{url_api_part}"
+    if config["site"].get("fix_items_url", None):
+        if config["site"]["fix_items_url"]["without_api"] in url:
+            url = url.replace(
+                config["site"]["fix_items_url"]["without_api"],
+                config["site"]["fix_items_url"]["with_api"],
+            )
+    else:
+        url_api_part = config["site"]["url_api_part"].strip("/")
+        if url_api_part != "":
+            url = f"{url}/{url_api_part}"
 
     if config["site"].get("portal_types", None):
         queries = [

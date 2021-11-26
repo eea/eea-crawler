@@ -59,6 +59,13 @@ def _get_api_url(url, params):
     - `https://water.europa.eu/api`
 
     """
+    if params.get("fix_items_url", None):
+        if params["fix_items_url"]["without_api"] in url:
+            url = url.replace(
+                params["fix_items_url"]["without_api"],
+                params["fix_items_url"]["with_api"],
+            )
+        return url
 
     if params["url_api_part"].strip("/") == "":
         return url
@@ -90,6 +97,14 @@ def _add_id(doc, item):
 
 
 def _remove_api_url(url, params):
+    if params.get("fix_items_url", None):
+        if params["fix_items_url"]["with_api"] in url:
+            url = url.replace(
+                params["fix_items_url"]["with_api"],
+                params["fix_items_url"]["without_api"],
+            )
+        return url
+
     if params["url_api_part"].strip("/") == "":
         return url
     return "/".join(url.split("/" + params["url_api_part"] + "/"))
@@ -117,7 +132,7 @@ def doc_to_raw(doc, web_text, pdf_text):
     return raw_doc
 
 
-@retry(wait=wait_exponential(), stop=stop_after_attempt(5))
+@retry(wait=wait_exponential(), stop=stop_after_attempt(1))
 def request_with_retry(url, method="get", data=None):
     logger.info("Fetching %s", url)
 
@@ -240,17 +255,24 @@ def fetch_and_send_to_rabbitmq(full_config):
     url_without_api = _remove_api_url(url_with_api, site_config)
 
     web_text = ""
+    errors = []
+    try:
+        if site_config.get("scrape_pages", False):
+            s_url = url_without_api
+            if site_config.get("avoid_cache_web", False):
+                s_url = f"{url_without_api}?scrape=true"
+            web_text = trafilatura_with_retry(
+                s_url,
+                site_config.get("scrape_with_js", False),
+            )
+    except:
+        errors.append("scraping the page")
 
-    if site_config.get("scrape_pages", False):
-        s_url = url_without_api
-        if site_config.get("avoid_cache_web", False):
-            s_url = f"{url_without_api}?scrape=true"
-        web_text = trafilatura_with_retry(
-            s_url,
-            site_config.get("scrape_with_js", False),
-        )
-
-    pdf_text = extract_attachments(doc, r_url, nlp_service_params)
+    pdf_text = ""
+    try:
+        pdf_text = extract_attachments(doc, r_url, nlp_service_params)
+    except:
+        errors.append("converting pdf file")
 
     doc = _add_about(doc, url_without_api)
     raw_doc = doc_to_raw(doc, web_text, pdf_text)
@@ -281,6 +303,11 @@ def fetch_and_send_to_rabbitmq(full_config):
         dag_params["params"]["web_text"] = web_text
         dag_params["params"]["pdf_text"] = raw_doc.get("pdf_text", "")
         trigger_dag(trigger_dag_id, dag_params, "prepare_doc_for_nlp")
+
+    if errors:
+        msg = ", ".join(errors)
+        logger.warning(f"Error while {msg}, check the logs above")
+        raise Exception(f"WARNING: Error while {msg}")
 
 
 @dag(

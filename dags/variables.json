@@ -6,8 +6,8 @@
         "energy": "config_energy",
         "fise": "config_fise",
         "industry": "config_industry",
-        "water_freshwater": "config_water_freshwater",
-        "water_marine": "config_water_marine"
+        "wise_freshwater": "config_wise_freshwater",
+        "wise_marine": "config_wise_marine"
     },
     "config_bise": {
         "concurrency": 2,
@@ -95,6 +95,7 @@
     "config_eionet": {
         "avoid_cache_api": true,
         "avoid_cache_web": true,
+        "concurrency": 1,
         "scrape_pages": false,
         "scrape_with_js": true,
         "url": "https://www.eionet.europa.eu",
@@ -136,13 +137,23 @@
         "url": "https://industry.eea.europa.eu",
         "url_api_part": "api"
     },
-    "config_water_freshwater": {
+    "config_wise_freshwater": {
+        "fix_items_url": {
+            "with_api": "water.europa.eu/api/++api++/freshwater",
+            "without_api": "water.europa.eu/freshwater"
+        },
+        "nlp_preprocessing": {
+            "text": {
+                "split_length": 500
+            }
+        },
+        "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
         "scrape_with_js": true,
-        "url": "https://water.europa.eu",
-        "url_api_part": "api/++api++/freshwater"
+        "url": "https://water.europa.eu/freshwater",
+        "url_api_part": ""
     },
-    "config_water_marine": {
+    "config_wise_marine": {
         "concurrency": 1,
         "nlp_preprocessing": {
             "text": {

@@ -61,10 +61,24 @@ def extract_docs_from_json(page):
 
 @task
 def extract_next_from_json(page, params):
+    site_config_variable = Variable.get("Sites", deserialize_json=True).get(
+        params["site"], None
+    )
+    site_config = Variable.get(site_config_variable, deserialize_json=True)
+
     if params.get("trigger_next_bulk", False):
         json_doc = json.loads(page)
         if json_doc.get("batching", {}).get("next", False):
-            return [json_doc.get("batching", {}).get("next")]
+            next_url = json_doc.get("batching", {}).get("next")
+            if site_config.get("fix_items_url", None):
+                if site_config["fix_items_url"]["without_api"] in next_url:
+                    next_url = next_url.replace(
+                        site_config["fix_items_url"]["without_api"],
+                        site_config["fix_items_url"]["with_api"],
+                    )
+            print("NEXT URL:")
+            print(next_url)
+            return [next_url]
 
     return []
 
@@ -87,6 +101,14 @@ def check_trigger_nlp(params, es):
 
 
 def remove_api_url(url, params):
+    if params.get("fix_items_url", None):
+        if params["fix_items_url"]["without_api"] in url:
+            return url
+        if params["fix_items_url"]["with_api"] in url:
+            return url.replace(
+                params["fix_items_url"]["with_api"],
+                params["fix_items_url"]["without_api"],
+            )
     return "/".join(url.split("/" + params["url_api_part"] + "/"))
 
 
@@ -97,9 +119,7 @@ def check_robots_txt(url, items, params):
     )
     site_config = Variable.get(site_config_variable, deserialize_json=True)
     allowed_items = []
-    robots_url = (
-        f"{urlparse(url).scheme}://{urlparse(url).hostname}/robots.txt"
-    )
+    robots_url = f"{site_config['url']}/robots.txt"
     print(robots_url)
     rp = robotparser.RobotFileParser()
     rp.set_url(robots_url)
