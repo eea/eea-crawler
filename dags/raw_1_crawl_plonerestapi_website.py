@@ -16,6 +16,7 @@ from tasks.helpers import (
     get_item,
     set_attr,
 )
+from tasks.elastic import simple_create_index
 from lib.pool import val_to_pool
 from airflow.models import Variable
 
@@ -24,10 +25,10 @@ from airflow.models import Variable
 # You can override them on a per-task basis during operator initialization
 default_args = {"owner": "airflow"}
 default_dag_params = {
-    "item": "eionet",
+    "item": "wise_freshwater",
     "params": {
-        "query_size": 500,
-        "trigger_next_bulk": True,
+        "query_size": 10,
+        "trigger_next_bulk": False,
         "trigger_nlp": False,
         "trigger_searchui": False,
     },
@@ -91,6 +92,21 @@ def get_site_config(params):
     return config
 
 
+@task
+def create_raw_index():
+    es = Variable.get("elastic", deserialize_json=True)
+    es_settings = Variable.get("elastic_settings", deserialize_json=True)
+    mapping = {
+        "site": {"fielddata": True, "analyzer": "none", "type": "text"},
+        "id": {"fielddata": True, "analyzer": "none", "type": "text"},
+        "@type": {"fielddata": True, "analyzer": "none", "type": "text"},
+    }
+    es["target_index"] = es["raw_index"]
+    es["mapping"] = mapping
+    es["settings"] = es_settings
+    simple_create_index(es)
+
+
 @dag(
     default_args=default_args,
     schedule_interval=None,
@@ -105,6 +121,7 @@ def raw_1_crawl_plonerestapi_website(item=default_dag_params):
     Main task to crawl a website
     """
     # get_variables()
+    create_raw_index()
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 
     xc_site_config = get_site_config(xc_dag_params)

@@ -8,6 +8,7 @@ from elasticsearch.exceptions import RequestError
 
 from lib.debug import pretty_id
 from lib.dagrun import trigger_dag
+from tasks.helpers import find_site_by_url
 
 
 def get_elastic_config():
@@ -83,8 +84,10 @@ def handle_all_ids(config, dag_params, pool_name, dag_id, handler=None):
 
         sites = Variable.get("Sites", deserialize_json=True)
         site_config = Variable.get(sites[site], deserialize_json=True)
-        site_loc = urlparse(site_config["url"]).netloc
+        site_loc = site_config["url"]
         body["query"]["bool"]["must"].append({"match": {"site": site_loc}})
+    print("ES QUERY:")
+    print(body)
     # Init Elasticsearch instance
     es = Elasticsearch(
         [
