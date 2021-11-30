@@ -39,6 +39,7 @@
             }
         },
         "normalizers_variable": "default_normalizers",
+        "pdf_days_limit": 730,
         "portal_types": [
             "Highlight",
             "Dashboard",
