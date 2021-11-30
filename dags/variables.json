@@ -63,7 +63,8 @@
             "Report",
             "Term",
             "Organisation",
-            "helpcenter_faq"
+            "helpcenter_faq",
+            "ims_indicator"
         ],
         "scrape_pages": false,
         "url": "http://www.eea.europa.eu",
