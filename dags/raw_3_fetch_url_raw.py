@@ -269,10 +269,31 @@ def fetch_and_send_to_rabbitmq(full_config):
         errors.append("scraping the page")
 
     pdf_text = ""
-    try:
-        pdf_text = extract_attachments(doc, r_url, nlp_service_params)
-    except:
-        errors.append("converting pdf file")
+
+    should_extract_pdf = True
+    if site_config.get("pdf_days_limit", 0) > 0:
+        current_date = datetime.now()
+        logger.info("CHECK DATE")
+        mod_date_str = doc.get("modification_date", None)
+        if mod_date_str:
+            mod_date = datetime.strptime(
+                mod_date_str.split("T")[0], "%Y-%m-%d"
+            )
+            logger.info(current_date)
+            logger.info(mod_date)
+            diff = current_date - mod_date
+            delta = diff.days
+            logger.info(delta)
+            logger.info(site_config.get("pdf_days_limit"))
+            if delta > site_config.get("pdf_days_limit"):
+                should_extract_pdf = False
+
+    if should_extract_pdf:
+        logger.info("EXTRACT PDF")
+        try:
+            pdf_text = extract_attachments(doc, r_url, nlp_service_params)
+        except:
+            errors.append("converting pdf file")
 
     doc = _add_about(doc, url_without_api)
     raw_doc = doc_to_raw(doc, web_text, pdf_text)
