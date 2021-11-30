@@ -98,6 +98,9 @@
         "concurrency": 1,
         "scrape_pages": false,
         "scrape_with_js": true,
+        "types_blacklist": [
+            "Event"
+        ],
         "url": "https://www.eionet.europa.eu",
         "url_api_part": ""
     },
