@@ -48,14 +48,25 @@ def get_no_protocol_url(url: str):
 
 
 @task
-def extract_docs_from_json(page):
+def extract_docs_from_json(page, params):
+    site_config_variable = Variable.get("Sites", deserialize_json=True).get(
+        params["site"], None
+    )
+    site_config = Variable.get(site_config_variable, deserialize_json=True)
+    types_blacklist = site_config.get("types_blacklist", [])
+    print("TYPES BLACKLIST:")
+    print(types_blacklist)
     json_doc = json.loads(page)
     print("EXTRACT_DOCS_FROM_JSON")
     print(json_doc)
     docs = json_doc["items"]
-    urls = [doc["@id"] for doc in docs]
+    urls = [doc["@id"] for doc in docs if doc["@type"] not in types_blacklist]
     print("Number of documents:")
     print(len(urls))
+
+    for item in urls:
+        print(item)
+
     return urls
 
 
@@ -181,11 +192,12 @@ def raw_2_crawl_with_query(item=default_dag_params):
         endpoint=xc_endpoint,
         headers={"Accept": "application/json"},
     )
-    xc_urls = extract_docs_from_json(page.output)
+    xc_urls = extract_docs_from_json(page.output, xc_params)
 
     xc_allowed_urls = check_robots_txt(xc_item, xc_urls, xc_params)
 
     xc_items = build_items_list(xc_allowed_urls, xc_params)
+
     xc_site = find_site(xc_item)
     # xc_pool_name = url_to_pool(xc_item, prefix="fetch_url_raw")
 

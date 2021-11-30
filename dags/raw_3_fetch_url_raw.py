@@ -184,7 +184,7 @@ def is_field_of_type(field, _type):
 
 
 def fix_download_url(download_url, source_url):
-    if "eea.europa.eu" in source_url:
+    if "www.eea.europa.eu" in source_url:
         return download_url.replace("@@download", "at_download")
     return download_url
 
