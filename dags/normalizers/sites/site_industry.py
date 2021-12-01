@@ -30,13 +30,14 @@ def normalize_industry(doc, config):
     ):
         logger.info("blacklisted")
         return None
+    logger.info("whitelisted")
+
     normalized_doc = common_normalizer(doc, config)
 
     normalized_doc["cluster_name"] = "Industry (industry.eea.europa.eu)"
 
     doc_loc = urlparse(normalized_doc["id"]).path
 
-    logger.info("whitelisted")
     ct = find_ct_by_rules(
         doc_loc,
         ct_normalize_config.get("location_rules", []),
