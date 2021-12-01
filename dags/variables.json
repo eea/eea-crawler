@@ -98,6 +98,12 @@
         "avoid_cache_api": true,
         "avoid_cache_web": true,
         "concurrency": 1,
+        "nlp_preprocessing": {
+            "text": {
+                "split_length": 500
+            }
+        },
+        "normalizers_variable": "default_normalizers",
         "scrape_pages": false,
         "scrape_with_js": true,
         "types_blacklist": [
@@ -123,6 +129,41 @@
             "text": {
                 "split_length": 500
             }
+        },
+        "normalize": {
+            "blacklist": [],
+            "location_rules": [
+                {
+                    "ct": [
+                        "Topic page",
+                        "Webpage"
+                    ],
+                    "path": "/topics/*"
+                },
+                {
+                    "ct": [
+                        "Webpage"
+                    ],
+                    "path": "/policy/*"
+                },
+                {
+                    "ct": [
+                        "Dashboard"
+                    ],
+                    "path": "/countries/regions/european-union"
+                }
+            ],
+            "location_rules_fallback": "Webpage",
+            "whitelist": [
+                "Document",
+                "News Item",
+                "basic_data_factsheet",
+                "european_union_factsheet",
+                "country_biodiversity_factsheet",
+                "country_bioeconomy_factsheet",
+                "country_climate_factsheet",
+                "country_vitality_factsheet"
+            ]
         },
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
@@ -165,7 +206,7 @@
                     "path": "/download"
                 }
             ],
-            "location_rules_fallback": "Web page",
+            "location_rules_fallback": "Webpage",
             "whitelist": [
                 "Document"
             ]
@@ -295,19 +336,25 @@
             "Term": "Glossary term",
             "agriculture": "Agriculture",
             "air": "Air pollution",
+            "basic_data_factsheet": "Country fact sheet",
             "biodiversity": "Biodiversity - Ecosystems",
             "briefing": "Briefing",
             "chemicals": "Chemicals",
             "climate": "Climate change mitigation",
             "climate-change-adaptation": "Climate change adaptation",
             "coast_sea": "Marine",
+            "country_biodiversity_factsheet": "Country fact sheet",
+            "country_bioeconomy_factsheet": "Country fact sheet",
+            "country_climate_factsheet": "Country fact sheet",
             "country_profile": "Country fact sheet",
+            "country_vitality_factsheet": "Country fact sheet",
             "dashboard": "Dashboard",
             "database": "Data set",
             "dataset": "Data set",
             "default": "Various other issues",
             "en-gb": "en",
             "energy": "Energy",
+            "european_union_factsheet": "Country fact sheet",
             "helpcenter_faq": "FAQ",
             "human": "Environment and health ",
             "industry": "Industry",
