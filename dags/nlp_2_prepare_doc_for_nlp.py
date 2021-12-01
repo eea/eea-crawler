@@ -128,7 +128,9 @@ def transform_doc(full_config):
         "site": site_config,
     }
     normalized_doc = normalize(doc, config)
-
+    if not normalized_doc:
+        print("Should not be preprocessed & indexed for nlp")
+        return
     preprocess = get_nlp_preprocessor(dag_params["item"])
     haystack_data = preprocess(doc, config)
 
