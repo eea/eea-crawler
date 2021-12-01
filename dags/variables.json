@@ -136,6 +136,40 @@
                 "split_length": 500
             }
         },
+        "normalize": {
+            "blacklist": [],
+            "location_rules": [
+                {
+                    "ct": [
+                        "Data",
+                        "Dashboard"
+                    ],
+                    "path": "/"
+                },
+                {
+                    "ct": [
+                        "Map (interactive)"
+                    ],
+                    "path": "/explore/explore-data-map/map"
+                },
+                {
+                    "ct": [
+                        "Dashboard"
+                    ],
+                    "path": "/analyse/*"
+                },
+                {
+                    "ct": [
+                        "Data"
+                    ],
+                    "path": "/download"
+                }
+            ],
+            "location_rules_fallback": "Web page",
+            "whitelist": [
+                "Document"
+            ]
+        },
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
         "scrape_with_js": true,
