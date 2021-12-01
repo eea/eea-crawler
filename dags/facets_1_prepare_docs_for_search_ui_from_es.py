@@ -31,7 +31,7 @@ default_dag_params = {
     "params": {
         "fast": True,
         "portal_type": "",
-        "site": "wise_freshwater",
+        "site": "industry",
     },
 }
 

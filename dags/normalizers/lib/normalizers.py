@@ -281,3 +281,42 @@ def common_normalizer(doc, config):
     normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
 
     return normalized_doc
+
+
+def check_blacklist_whitelist(doc, blacklist, whitelist):
+    if len(whitelist) > 0:
+        if doc["raw_value"].get("@type", "") in whitelist:
+            return True
+    if len(blacklist) > 0:
+        if doc["raw_value"].get("@type", "") not in blacklist:
+            return True
+    return False
+
+
+def is_doc_on_path(loc, doc_loc):
+    loc = loc.strip("*")
+    if (
+        doc_loc.strip("/").find(loc.strip("/")) == 0
+        and len(doc_loc.strip("/").split("/"))
+        == len(loc.strip("/").split("/")) + 1
+    ):
+        return True
+    return False
+
+
+def is_doc_eq_path(loc, doc_loc):
+    return loc.strip("/") == doc_loc.strip("/")
+
+
+def find_ct_by_rules(doc_loc, rules, fallback):
+    ct = []
+    for rule in rules:
+        if rule["path"].endswith("*"):
+            if is_doc_on_path(rule["path"], doc_loc):
+                ct = rule["ct"]
+        else:
+            if is_doc_eq_path(rule["path"], doc_loc):
+                ct = rule["ct"]
+    if len(ct) == 0:
+        ct.append(fallback)
+    return ct

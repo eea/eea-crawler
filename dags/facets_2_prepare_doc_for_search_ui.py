@@ -60,6 +60,7 @@ def transform_doc(full_config):
     config = {
         "normalizers": normalizers_config,
         "nlp": site_config.get("nlp_preprocessing", None),
+        "site": site_config,
     }
     normalized_doc = normalize(doc, config)
     if normalized_doc:
