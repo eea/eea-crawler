@@ -117,20 +117,27 @@ def get_variable(variable):
     return Variable.get(variable, deserialize_json=True)
 
 
+def get_site_map():
+    sites = Variable.get("Sites", deserialize_json=True)
+    site_map = {}
+    for site in sites:
+        site_config = Variable.get(sites[site], deserialize_json=True)
+        site_map[site] = site_config["url"]
+
+    return site_map
+
+
 def find_site_by_url(url):
+    sites = get_site_map()
     parts = url.split("://")[-1].strip("/").split("/")
 
     names = ["/".join(parts[: (i * -1)]) for i in range(1, len(parts))]
-
-    sites = Variable.get("Sites", deserialize_json=True)
 
     site_name = ""
     for name in names:
         for site in sites.keys():
             if site_name == "":
-                site_config = Variable.get(sites[site], deserialize_json=True)
-                site_url = site_config["url"].split("://")[-1].strip("/")
+                site_url = sites[site].split("://")[-1].strip("/")
                 if name == site_url:
                     site_name = site
-
     return site_name
