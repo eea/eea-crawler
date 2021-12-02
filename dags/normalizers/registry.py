@@ -37,7 +37,6 @@ def get_name(url, site_map=None):
 
 
 def get_facets_normalizer(url, site_map=None):
-
     name = get_name(url, site_map)
     return FACETS_SITE_RULES.get(name, FACETS_SITE_RULES["www.eea.europa.eu"])
 

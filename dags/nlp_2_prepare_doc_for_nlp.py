@@ -98,7 +98,8 @@ def task_transform_doc(full_config):
 
 def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
-    site = find_site_by_url(dag_params["item"])
+    site_map = dag_params.get("site_map", None)
+    site = find_site_by_url(dag_params["item"], site_map)
 
     es = Variable.get("elastic", deserialize_json=True)
     rabbitmq = Variable.get("rabbitmq", deserialize_json=True)
@@ -121,7 +122,7 @@ def transform_doc(full_config):
     normalizers_config = Variable.get(
         site_config["normalizers_variable"], deserialize_json=True
     )
-    normalize = get_facets_normalizer(dag_params["item"])
+    normalize = get_facets_normalizer(dag_params["item"], site_map)
     config = {
         "normalizers": normalizers_config,
         "nlp": site_config.get("nlp_preprocessing", None),
@@ -131,7 +132,7 @@ def transform_doc(full_config):
     if not normalized_doc:
         print("Should not be preprocessed & indexed for nlp")
         return
-    preprocess = get_nlp_preprocessor(dag_params["item"])
+    preprocess = get_nlp_preprocessor(dag_params["item"], site_map)
     haystack_data = preprocess(doc, config)
 
     # build the haystack document with text field and meta information
