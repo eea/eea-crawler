@@ -127,8 +127,9 @@ def get_site_map():
     return site_map
 
 
-def find_site_by_url(url):
-    sites = get_site_map()
+def find_site_by_url(url, sites=None):
+    if not sites:
+        sites = get_site_map()
     parts = url.split("://")[-1].strip("/").split("/")
 
     names = ["/".join(parts[: (i * -1)]) for i in range(1, len(parts))]

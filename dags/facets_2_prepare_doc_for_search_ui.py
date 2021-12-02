@@ -35,8 +35,8 @@ def facets_2_prepare_doc_for_search_ui(item=default_dag_params):
 
 def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
-
-    site = find_site_by_url(dag_params["item"])
+    site_map = dag_params.get("site_map", None)
+    site = find_site_by_url(dag_params["item"], site_map)
 
     es = Variable.get("elastic", deserialize_json=True)
     rabbitmq = Variable.get("rabbitmq", deserialize_json=True)
@@ -56,7 +56,7 @@ def transform_doc(full_config):
     normalizers_config = Variable.get(
         site_config["normalizers_variable"], deserialize_json=True
     )
-    normalize = get_facets_normalizer(dag_params["item"])
+    normalize = get_facets_normalizer(dag_params["item"], site_map)
     config = {
         "normalizers": normalizers_config,
         "nlp": site_config.get("nlp_preprocessing", None),

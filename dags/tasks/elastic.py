@@ -8,7 +8,7 @@ from elasticsearch.exceptions import RequestError
 
 from lib.debug import pretty_id
 from lib.dagrun import trigger_dag
-from tasks.helpers import find_site_by_url
+from tasks.helpers import get_site_map
 
 
 def get_elastic_config():
@@ -70,6 +70,7 @@ def simple_create_index(config, add_embedding=False):
 
 @task
 def handle_all_ids(config, dag_params, pool_name, dag_id, handler=None):
+    site_map = get_site_map()
     timeout = 1000
     size = 500
     body = {"query": {"bool": {"must": [], "must_not": [], "should": []}}}
@@ -109,6 +110,7 @@ def handle_all_ids(config, dag_params, pool_name, dag_id, handler=None):
             params = {"item": item}
             params["item"] = item["_id"]
             #            dag_params["params"]["raw_d = item["_source"]["raw_value"]
+            params["site_map"] = site_map
             if not dag_params["params"].get("fast", False):
                 trigger_dag(dag_id, params, pool_name)
             else:
