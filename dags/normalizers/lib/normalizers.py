@@ -241,6 +241,24 @@ def update_locations(norm_doc):
     return norm_doc
 
 
+def fetch_geo_coverage(norm_doc):
+    geo_locations = [
+        loc["label"] for loc in norm_doc.get("geo_coverage.geolocation", [])
+    ]
+    if len(geo_locations) > 0:
+        norm_doc["spatial"] = geo_locations
+    return norm_doc
+
+
+def fetch_temporal_coverage(norm_doc):
+    geo_locations = [
+        loc["label"] for loc in norm_doc.get("temporal_coverage.temporal", [])
+    ]
+    if len(geo_locations) > 0:
+        norm_doc["time_coverage"] = geo_locations
+    return norm_doc
+
+
 def common_normalizer(doc, config):
     normalizer = config["normalizers"]
 
@@ -268,6 +286,8 @@ def common_normalizer(doc, config):
     normalized_doc = apply_norm_prop(
         normalized_doc, normalizer.get("normProp", {})
     )
+    normalized_doc = fetch_geo_coverage(normalized_doc)
+    normalized_doc = fetch_temporal_coverage(normalized_doc)
     normalized_doc = add_places(normalized_doc)
     normalized_doc = apply_norm_missing(
         normalized_doc, normalizer.get("normMissing", {})
