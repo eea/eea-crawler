@@ -66,6 +66,11 @@
             "helpcenter_faq",
             "ims_indicator"
         ],
+        "scrape_for_types": {
+            "ims_indicator": {
+                "scrape_with_js": true
+            }
+        },
         "scrape_pages": false,
         "url": "http://www.eea.europa.eu",
         "url_api_part": "api/SITE"
