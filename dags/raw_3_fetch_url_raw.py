@@ -257,14 +257,25 @@ def fetch_and_send_to_rabbitmq(full_config):
     web_text = ""
     errors = []
     try:
+        scrape = False
+        s_url = ""
+        scrape_with_js = False
         if site_config.get("scrape_pages", False):
             s_url = url_without_api
+            scrape_with_js = site_config.get("scrape_with_js", False)
+            scrape = True
+        scrape_for_types = site_config.get("scrape_for_types", False)
+        if scrape_for_types:
+            scrape_for_type = scrape_for_types.get(doc["@type"], False)
+            if scrape_for_type != False:
+                scrape = True
+                s_url = url_without_api
+                scrape_with_js = scrape_for_type.get("scrape_with_js", False)
+
+        if scrape:
             if site_config.get("avoid_cache_web", False):
                 s_url = f"{url_without_api}?scrape=true"
-            web_text = trafilatura_with_retry(
-                s_url,
-                site_config.get("scrape_with_js", False),
-            )
+            web_text = trafilatura_with_retry(s_url, scrape_with_js)
     except:
         errors.append("scraping the page")
 
