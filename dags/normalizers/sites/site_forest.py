@@ -70,6 +70,8 @@ def normalize_forest(doc, config):
                 "Dashboard",
             ]
 
+    normalized_doc["topic"] = "Biodiversity — Ecosystems"
+
     return normalized_doc
 
 

@@ -45,6 +45,7 @@ def normalize_industry(doc, config):
     )
     logger.info(ct)
     normalized_doc["objectProvides"] = ct
+    normalized_doc["topic"] = "Industry"
 
     return normalized_doc
 

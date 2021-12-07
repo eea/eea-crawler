@@ -57,6 +57,7 @@ def normalize_industry(doc, config):
     normalized_doc[
         "cluster_name"
     ] = "WISE Freshwater (water.europa.eu/freshwater)"
+    normalized_doc["topic"] = "Water and marine environment"
 
     return normalized_doc
 
