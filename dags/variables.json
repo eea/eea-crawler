@@ -134,10 +134,28 @@
         "url_api_part": ""
     },
     "config_energy": {
+        "location_rules_fallback": "Webpage",
         "nlp_preprocessing": {
             "text": {
                 "split_length": 500
             }
+        },
+        "normalize": {
+            "blacklist": [],
+            "location_rules": [
+                {
+                    "ct": [
+                        "Country fact sheet"
+                    ],
+                    "path": "/countries/*"
+                }
+            ],
+            "whitelist": [
+                "Document",
+                "File",
+                "News Item",
+                "visualization"
+            ]
         },
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
