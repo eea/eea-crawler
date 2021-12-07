@@ -1,6 +1,7 @@
 {
     "Sites": {
         "bise": "config_bise",
+        "climate": "config_climate",
         "eea": "config_eea",
         "eionet": "config_eionet",
         "energy": "config_energy",
@@ -21,6 +22,21 @@
         "scrape_with_js": true,
         "url": "https://biodiversity.europa.eu",
         "url_api_part": "api"
+    },
+    "config_climate": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "nlp_preprocessing": {
+            "text": {
+                "split_length": 500
+            }
+        },
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": false,
+        "scrape_with_js": true,
+        "url": "https://climate-adapt.eea.europa.eu",
+        "url_api_part": ""
     },
     "config_eea": {
         "nlp_preprocessing": {
