@@ -282,10 +282,85 @@
     },
     "config_wise_marine": {
         "concurrency": 1,
+        "location_rules_fallback": "Webpage",
         "nlp_preprocessing": {
             "text": {
                 "split_length": 500
             }
+        },
+        "normalize": {
+            "blacklist": [],
+            "location_rules": [
+                {
+                    "ct": [
+                        "Webpage"
+                    ],
+                    "path": "/marine/policy-and-reporting/*"
+                },
+                {
+                    "ct": [
+                        "Topic page",
+                        "Webpage"
+                    ],
+                    "path": "/marine/state-of-europe-seas/"
+                },
+                {
+                    "ct": [
+                        "Topic page",
+                        "Webpage"
+                    ],
+                    "path": "/marine/state-of-europe-seas/*"
+                },
+                {
+                    "ct": [
+                        "Dashboard"
+                    ],
+                    "path": "/marine/state-of-europe-seas/marine-sectors-catalogue-of-measures"
+                },
+                {
+                    "ct": [
+                        "Dashboard"
+                    ],
+                    "path": "/marine/data-maps-and-tools/map-viewers-visualization-tools/dashboards-on-marine-features-under-other-policies/*"
+                },
+                {
+                    "ct": [
+                        "Dashboard"
+                    ],
+                    "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/ges-assessment-dashboards/*"
+                },
+                {
+                    "ct": [
+                        "Country fact sheet",
+                        "Dashboard"
+                    ],
+                    "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/ges-assessment-dashboards/country-thematic-dashboards/"
+                },
+                {
+                    "ct": [
+                        "Data"
+                    ],
+                    "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
+                },
+                {
+                    "ct": [
+                        "Map (interactive)"
+                    ],
+                    "path": "/marine/data-maps-and-tools/map-viewers-visualization-tools/european-reference-maps"
+                },
+                {
+                    "ct": [
+                        "Country fact sheet",
+                        "Dashboard"
+                    ],
+                    "path": "/marine/countries-and-regional-seas/country-profiles/*"
+                }
+            ],
+            "whitelist": [
+                "Document",
+                "File",
+                "country_factsheet"
+            ]
         },
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
@@ -367,6 +442,7 @@
             "country_biodiversity_factsheet": "Country fact sheet",
             "country_bioeconomy_factsheet": "Country fact sheet",
             "country_climate_factsheet": "Country fact sheet",
+            "country_factsheet": "Country fact sheet",
             "country_profile": "Country fact sheet",
             "country_vitality_factsheet": "Country fact sheet",
             "dashboard": "Dashboard",
