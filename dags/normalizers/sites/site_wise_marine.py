@@ -4,94 +4,64 @@ from normalizers.registry import (
     register_facets_normalizer,
     register_nlp_preprocessor,
 )
-from normalizers.lib.normalizers import common_normalizer
+from normalizers.lib.normalizers import (
+    common_normalizer,
+    check_blacklist_whitelist,
+    find_ct_by_rules,
+)
 from normalizers.lib.nlp import common_preprocess
+import logging
 
-
-RULES = [
-    {"path": "/marine/policy-and-reporting/*", "ct": ["Web page"]},
-    {
-        "path": "/marine/state-of-europe-seas/",
-        "ct": ["Topic page", "Web page"],
-    },
-    {
-        "path": "/marine/state-of-europe-seas/*",
-        "ct": ["Topic page", "Web page"],
-    },
-    {
-        "path": "/marine/state-of-europe-seas/marine-sectors-catalogue-of-measures",
-        "ct": ["Dashboard"],
-    },
-    {
-        "path": "/marine/data-maps-and-tools/map-viewers-visualization-tools/dashboards-on-marine-features-under-other-policies/*",
-        "ct": ["Dashboard"],
-    },
-    {
-        "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/ges-assessment-dashboards/*",
-        "ct": ["Dashboard"],
-    },
-    {
-        "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/ges-assessment-dashboards/country-thematic-dashboards/",
-        "ct": ["Country fact sheet", "Dashboard"],
-    },
-    {
-        "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer",
-        "ct": ["Data"],
-    },
-    {
-        "path": "/marine/data-maps-and-tools/map-viewers-visualization-tools/european-reference-maps",
-        "ct": ["Map (interactive)"],
-    },
-    {
-        "path": "/marine/countries-and-regional-seas/country-profiles/*",
-        "ct": ["Country fact sheet", "Dashboard"],
-    },
-]
-
-
-def is_doc_on_path(loc, doc_loc):
-    loc = loc.strip("*")
-    if (
-        doc_loc.strip("/").find(loc.strip("/")) == 0
-        and len(doc_loc.strip("/").split("/"))
-        == len(loc.strip("/").split("/")) + 1
-    ):
-        return True
-    return False
-
-
-def is_doc_eq_path(loc, doc_loc):
-    return loc.strip("/") == doc_loc.strip("/")
-
-
-def find_ct_by_rules(doc_loc):
-    ct = []
-    for rule in RULES:
-        if rule["path"].endswith("*"):
-            if is_doc_on_path(rule["path"], doc_loc):
-                ct = rule["ct"]
-        else:
-            if is_doc_eq_path(rule["path"], doc_loc):
-                ct = rule["ct"]
-    return ct
+logger = logging.getLogger(__file__)
 
 
 @register_facets_normalizer("water.europa.eu/marine")
 def normalize_energy(doc, config):
+    logger.info("NORMALIZE MARINE")
+    logger.info(doc["raw_value"]["@id"])
+    logger.info(doc["raw_value"]["@type"])
+    logger.info(doc)
+    ct_normalize_config = config["site"].get("normalize", {})
+
+    if not check_blacklist_whitelist(
+        doc,
+        ct_normalize_config.get("blacklist", []),
+        ct_normalize_config.get("whitelist", []),
+    ):
+        logger.info("blacklisted")
+        return None
+    logger.info("whitelisted")
+
+    if doc["raw_value"]["@type"] == "File":
+        if doc["raw_value"]["file"]["content-type"] != "application/pdf":
+            logger.info("file, but not pdf")
+            return None
+
+    if doc["raw_value"]["@type"] == "country_factsheet":
+        doc["raw_value"]["spatial"] = doc["raw_value"]["title"]
+
     normalized_doc = common_normalizer(doc, config)
 
+    logger.info("TYPES:")
+    logger.info(normalized_doc["objectProvides"])
+    if (
+        normalized_doc["objectProvides"] == "Webpage"
+        or normalized_doc["objectProvides"] == "Country fact sheet"
+    ):
+        logger.info("CHECK LOCATION:")
+        doc_loc = urlparse(normalized_doc["id"]).path
+        logger.info(doc_loc)
+        ct = find_ct_by_rules(
+            doc_loc,
+            ct_normalize_config.get("location_rules", []),
+            ct_normalize_config.get("location_rules_fallback", "Webpage"),
+        )
+        logger.info(ct)
+        normalized_doc["objectProvides"] = ct
+
     normalized_doc["cluster_name"] = "WISE Marine (water.europa.eu/marine)"
+    normalized_doc["topic"] = "Water and marine environment"
 
-    doc_loc = urlparse(normalized_doc["id"]).path
-
-    ct = find_ct_by_rules(doc_loc)
-
-    if len(ct) == 0:
-        ct.append("Web page")
-    # TODO: remove initial value of ct
-    ct.append(f"from_json_{normalized_doc['objectProvides']}")
-
-    normalized_doc["objectProvides"] = ct
     return normalized_doc
 
 

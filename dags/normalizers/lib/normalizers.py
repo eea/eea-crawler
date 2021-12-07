@@ -315,11 +315,12 @@ def check_blacklist_whitelist(doc, blacklist, whitelist):
 
 def is_doc_on_path(loc, doc_loc):
     loc = loc.strip("*")
-    if (
-        doc_loc.strip("/").find(loc.strip("/")) == 0
-        and len(doc_loc.strip("/").split("/"))
-        == len(loc.strip("/").split("/")) + 1
-    ):
+    if doc_loc.strip("/").find(loc.strip("/")) == 0:
+        # if (
+        #     doc_loc.strip("/").find(loc.strip("/")) == 0
+        #     and len(doc_loc.strip("/").split("/"))
+        #     == len(loc.strip("/").split("/")) + 1
+        # ):
         return True
     return False
 
