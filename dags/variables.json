@@ -6,6 +6,7 @@
         "eionet": "config_eionet",
         "energy": "config_energy",
         "fise": "config_fise",
+        "ias": "config_ias",
         "industry": "config_industry",
         "wise_freshwater": "config_wise_freshwater",
         "wise_marine": "config_wise_marine"
@@ -250,6 +251,22 @@
         "scrape_with_js": true,
         "url": "https://forest.eea.europa.eu",
         "url_api_part": "api"
+    },
+    "config_ias": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "ignore_robots_txt": true,
+        "nlp_preprocessing": {
+            "text": {
+                "split_length": 500
+            }
+        },
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": false,
+        "scrape_with_js": true,
+        "url": "https://ias.eea.europa.eu",
+        "url_api_part": ""
     },
     "config_industry": {
         "nlp_preprocessing": {

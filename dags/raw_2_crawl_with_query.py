@@ -129,6 +129,9 @@ def check_robots_txt(url, items, params):
         params["site"], None
     )
     site_config = Variable.get(site_config_variable, deserialize_json=True)
+    if site_config.get("ignore_robots_txt", False):
+        return items
+
     allowed_items = []
     robots_url = f"{site_config['url']}/robots.txt"
     print(robots_url)
