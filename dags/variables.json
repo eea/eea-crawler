@@ -262,6 +262,13 @@
                 "split_length": 500
             }
         },
+        "normalize": {
+            "blacklist": [],
+            "whitelist": [
+                "Document",
+                "News Item"
+            ]
+        },
         "normalizers_variable": "default_normalizers",
         "scrape_pages": false,
         "scrape_with_js": true,
