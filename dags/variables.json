@@ -74,6 +74,36 @@
                 "split_length": 500
             }
         },
+        "normalize": {
+            "blacklist": [],
+            "whitelist": [
+                "Image",
+                "eea.climateadapt.publicationreport",
+                "eea.climateadapt.aceproject",
+                "File",
+                "News Item",
+                "collective.cover.content",
+                "Folder",
+                "Event",
+                "eea.climateadapt.informationportal",
+                "eea.climateadapt.guidancedocument",
+                "eea.climateadapt.casestudy",
+                "eea.climateadapt.organisation",
+                "eea.climateadapt.mapgraphdataset",
+                "eea.climateadapt.tool",
+                "eea.climateadapt.indicator",
+                "eea.climateadapt.adaptationoption",
+                "Document",
+                "Link",
+                "eea.climateadapt.video",
+                "eea.climateadapt.c3sindicator",
+                "Collection",
+                "FrontpageSlide",
+                "EasyForm",
+                "PDFTheme",
+                "cca-event"
+            ]
+        },
         "normalizers_variable": "default_normalizers",
         "scrape_pages": false,
         "scrape_with_js": true,
@@ -165,6 +195,17 @@
             "text": {
                 "split_length": 500
             }
+        },
+        "normalize": {
+            "blacklist": [],
+            "whitelist": [
+                "Collection",
+                "Page",
+                "Folder",
+                "File",
+                "News Item",
+                "etc_report"
+            ]
         },
         "normalizers_variable": "default_normalizers",
         "scrape_pages": false,
@@ -509,6 +550,7 @@
             "Highlight": "News",
             "Infographic": "Infographic",
             "News": "News",
+            "News Item": "News",
             "Organisation": "Organisation",
             "Page": "Webpage",
             "Report": "Report",
@@ -533,8 +575,20 @@
             "database": "Data set",
             "dataset": "Data set",
             "default": "Various other issues",
+            "eea.climateadapt.adaptationoption": "Adaptation option",
+            "eea.climateadapt.c3sindicator": "Indicator",
+            "eea.climateadapt.casestudy": "Case study",
+            "eea.climateadapt.guidancedocument": "Guidance",
+            "eea.climateadapt.indicator": "Indicator",
+            "eea.climateadapt.informationportal": "Information portal",
+            "eea.climateadapt.mapgraphdataset": "Map (interactive)",
+            "eea.climateadapt.organisation": "Organisation",
+            "eea.climateadapt.publicationreport": "Report",
+            "eea.climateadapt.tool": "Tool",
+            "eea.climateadapt.video": "Video",
             "en-gb": "en",
             "energy": "Energy",
+            "etc_report": "Report",
             "european_union_factsheet": "Country fact sheet",
             "helpcenter_faq": "FAQ",
             "human": "Environment and health ",
