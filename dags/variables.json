@@ -953,6 +953,11 @@
             "fielddata": true,
             "type": "text"
         },
+        "original_id": {
+            "analyzer": "none",
+            "fielddata": true,
+            "type": "text"
+        },
         "places": {
             "analyzer": "none",
             "copy_to": [
@@ -1021,6 +1026,11 @@
             "copy_to": [
                 "all_fields_for_freetext"
             ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "site_id": {
+            "analyzer": "none",
             "fielddata": true,
             "type": "text"
         },
@@ -1119,6 +1129,11 @@
             "type": "text"
         },
         "id": {
+            "analyzer": "none",
+            "fielddata": true,
+            "type": "text"
+        },
+        "original_id": {
             "analyzer": "none",
             "fielddata": true,
             "type": "text"
