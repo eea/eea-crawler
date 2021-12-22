@@ -22,7 +22,7 @@ from tasks.helpers import (
 from lib.pool import val_to_pool  # url_to_pool,
 from airflow.models import Variable
 
-from tasks.elastic import simple_create_index
+from tasks.elastic import simple_create_index, create_raw_index
 
 # get_attr,
 # from airflow.operators.python_operator import BranchPythonOperator
@@ -171,6 +171,8 @@ def find_site(url):
     raw_3_fetch_url_raw for each document""",
 )
 def raw_2_crawl_with_query(item=default_dag_params):
+    create_raw_index()
+
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 
     xc_params = get_params(xc_dag_params)

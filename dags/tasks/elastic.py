@@ -69,6 +69,27 @@ def simple_create_index(config, add_embedding=False):
 
 
 @task
+def create_raw_index():
+    return simple_create_raw_index()
+
+
+def simple_create_raw_index():
+    elastic = Variable.get("elastic", deserialize_json=True)
+    elastic_raw_mapping = Variable.get(
+        "elastic_raw_mapping", deserialize_json=True
+    )
+    elastic_settings = Variable.get("elastic_settings", deserialize_json=True)
+    config = {
+        "host": elastic["host"],
+        "port": elastic["port"],
+        "target_index": elastic["raw_index"],
+        "mapping": elastic_raw_mapping,
+        "settings": elastic_settings,
+    }
+    simple_create_index(config)
+
+
+@task
 def handle_all_ids(config, dag_params, pool_name, dag_id, handler=None):
     site_map = get_site_map()
     timeout = 1000
@@ -164,7 +185,7 @@ def get_doc_from_raw_idx(item, config):
     )
     res = es.get(index=config["raw_index"], id=item)
     doc = {
-        "raw_value": json.loads(res["_source"]["raw_value"]),
+        "raw_value": res["_source"]["raw_value"],
         "web_text": res["_source"].get("web_text", ""),
         "pdf_text": res["_source"].get("pdf_text", ""),
     }

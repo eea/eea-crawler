@@ -20,6 +20,8 @@ from tasks.rabbitmq import simple_send_to_rabbitmq  # , send_to_rabbitmq
 from lib.pool import create_pool
 from lib.dagrun import trigger_dag
 from airflow.models import Variable
+from tasks.elastic import simple_create_raw_index
+
 import logging
 
 logger = logging.getLogger(__file__)
@@ -37,6 +39,7 @@ default_dag_params = {
     "params": {
         "trigger_searchui": False,
         "trigger_nlp": False,
+        "create_index": False,
     },
 }
 
@@ -121,13 +124,13 @@ def doc_to_raw(doc, web_text, pdf_text):
     raw_doc = {}
     raw_doc["id"] = doc["id"]
     raw_doc["@type"] = doc["@type"]
-    raw_doc["raw_value"] = json.dumps(doc)
+    raw_doc["raw_value"] = doc
 
     if web_text:
-        raw_doc["web_text"] = json.dumps(web_text)
+        raw_doc["web_text"] = web_text
 
     if pdf_text:
-        raw_doc["pdf_text"] = json.dumps(pdf_text)
+        raw_doc["pdf_text"] = pdf_text
 
     return raw_doc
 
@@ -234,6 +237,9 @@ def fetch_and_send_to_rabbitmq(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
 
     logger.info("Dag params %s", dag_params)
+
+    if dag_params["params"].get("create_index", False):
+        simple_create_raw_index()
 
     site = find_site_by_url(dag_params["item"])
 

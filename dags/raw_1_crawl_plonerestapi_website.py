@@ -92,21 +92,6 @@ def get_site_config(params):
     return config
 
 
-@task
-def create_raw_index():
-    es = Variable.get("elastic", deserialize_json=True)
-    es_settings = Variable.get("elastic_settings", deserialize_json=True)
-    mapping = {
-        "site": {"fielddata": True, "analyzer": "none", "type": "text"},
-        "id": {"fielddata": True, "analyzer": "none", "type": "text"},
-        "@type": {"fielddata": True, "analyzer": "none", "type": "text"},
-    }
-    es["target_index"] = es["raw_index"]
-    es["mapping"] = mapping
-    es["settings"] = es_settings
-    simple_create_index(es)
-
-
 @dag(
     default_args=default_args,
     schedule_interval=None,
@@ -121,7 +106,6 @@ def raw_1_crawl_plonerestapi_website(item=default_dag_params):
     Main task to crawl a website
     """
     # get_variables()
-    create_raw_index()
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 
     xc_site_config = get_site_config(xc_dag_params)
