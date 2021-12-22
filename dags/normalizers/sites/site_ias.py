@@ -17,8 +17,8 @@ logger = logging.getLogger(__file__)
 @register_facets_normalizer("ias.eea.europa.eu")
 def normalize_ias(doc, config):
     logger.info("NORMALIZE IAS")
-    logger.info(doc["raw_value"]["@id"])
-    logger.info(doc["raw_value"]["@type"])
+    logger.info(doc["raw_value"].get("@id", ""))
+    logger.info(doc["raw_value"].get("@type", ""))
     logger.info(doc)
     ct_normalize_config = config["site"].get("normalize", {})
 

@@ -122,8 +122,8 @@ def doc_to_raw(doc, web_text, pdf_text):
     """A middle-ground representation of docs, for the ES "harvested" index"""
 
     raw_doc = {}
-    raw_doc["id"] = doc["id"]
-    raw_doc["@type"] = doc["@type"]
+    raw_doc["id"] = doc.get("id", "")
+    raw_doc["@type"] = doc.get("@type", "")
     raw_doc["raw_value"] = doc
 
     if web_text:
@@ -233,6 +233,8 @@ def extract_attachments(json_doc, url, nlp_service_params):
 
 @task
 def fetch_and_send_to_rabbitmq(full_config):
+    doc_errors = []
+    errors = []
 
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
 
@@ -256,12 +258,17 @@ def fetch_and_send_to_rabbitmq(full_config):
     if site_config.get("avoid_cache_api", False):
         r_url = f"{url_with_api}?crawler=true"
 
-    r = request_with_retry(r_url)
+    try:
+        r = request_with_retry(r_url)
+    except:
+        errors.append("retrieving json from api")
+        doc_errors.append("json")
+        r = json.dumps({"@id": dag_params["item"]})
+
     doc = _add_id(r, dag_params["item"])
     url_without_api = _remove_api_url(url_with_api, site_config)
 
     web_text = ""
-    errors = []
     try:
         scrape = False
         s_url = ""
@@ -284,6 +291,7 @@ def fetch_and_send_to_rabbitmq(full_config):
             web_text = trafilatura_with_retry(s_url, scrape_with_js)
     except:
         errors.append("scraping the page")
+        doc_errors.append("web")
 
     pdf_text = ""
 
@@ -311,9 +319,12 @@ def fetch_and_send_to_rabbitmq(full_config):
             pdf_text = extract_attachments(doc, r_url, nlp_service_params)
         except:
             errors.append("converting pdf file")
+            doc_errors.append("pdf")
 
     doc = _add_about(doc, url_without_api)
     raw_doc = doc_to_raw(doc, web_text, pdf_text)
+    raw_doc["site_id"] = site
+    raw_doc["errors"] = doc_errors
     raw_doc["modified"] = doc.get(
         "modified", doc.get("modification_date", None)
     )

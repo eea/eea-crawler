@@ -19,8 +19,8 @@ logger = logging.getLogger(__file__)
 @register_facets_normalizer("industry.eea.europa.eu")
 def normalize_industry(doc, config):
     logger.info("NORMALIZE INDUSTRY")
-    logger.info(doc["raw_value"]["@id"])
-    logger.info(doc["raw_value"]["@type"])
+    logger.info(doc["raw_value"].get("@id", ""))
+    logger.info(doc["raw_value"].get("@type", ""))
     ct_normalize_config = config["site"].get("normalize", {})
 
     if not check_blacklist_whitelist(
