@@ -44,7 +44,7 @@ def normalize_ias(doc, config):
             normalized_doc["objectProvides"] = "Map (interactive)"
 
     normalized_doc["cluster_name"] = "IAS (ias.eea.europa.eu)"
-
+    normalized_doc["topic"] = "Biodiversity — Ecosystems"
     return normalized_doc
 
 
