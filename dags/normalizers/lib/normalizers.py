@@ -1,5 +1,6 @@
 import json
 import re
+from normalizers.lib.trafilatura_extract import get_text_from_html
 
 
 def apply_black_map(doc, black_map):
@@ -219,8 +220,11 @@ def delete_attrs(doc, attrs):
     return clean_data
 
 
-def add_reading_time(norm_doc, doc, txt_props=[], txt_props_black=[]):
-    text = doc.get("web_text", "")
+def add_reading_time(
+    norm_doc, doc, txt_props=[], txt_props_black=[], trafilatura_config={}
+):
+    html = doc.get("web_html", "")
+    text = get_text_from_html(html, trafilatura_config)
     if not text or len(text) == 0:
         text = join_text_fields(doc, txt_props, txt_props_black)
     pdf_text = doc.get("pdf_text", "")
@@ -272,6 +276,7 @@ def common_normalizer(doc, config):
         doc,
         config["nlp"]["text"].get("blacklist", []),
         config["nlp"]["text"].get("whitelist", []),
+        config["site"].get("trafilatura", {}),
     )
     normalized_doc = apply_black_map(
         normalized_doc, normalizer.get("blackMap", {})

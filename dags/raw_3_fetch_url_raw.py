@@ -118,7 +118,7 @@ def _add_about(doc, value):
     return doc
 
 
-def doc_to_raw(doc, web_text, pdf_text):
+def doc_to_raw(doc, web_html, pdf_text):
     """A middle-ground representation of docs, for the ES "harvested" index"""
 
     raw_doc = {}
@@ -126,8 +126,8 @@ def doc_to_raw(doc, web_text, pdf_text):
     raw_doc["@type"] = doc.get("@type", "")
     raw_doc["raw_value"] = doc
 
-    if web_text:
-        raw_doc["web_text"] = web_text
+    if web_html:
+        raw_doc["web_html"] = web_html
 
     if pdf_text:
         raw_doc["pdf_text"] = pdf_text
@@ -170,7 +170,7 @@ def trafilatura_with_retry(url, js=False):
 
     logger.info("Downloaded with trafilatura: %s", downloaded)
 
-    return trafilatura.extract(downloaded)
+    return downloaded
 
 
 FIELD_MARKERS = {"file": {"content-type", "download", "filename"}}
@@ -268,7 +268,7 @@ def fetch_and_send_to_rabbitmq(full_config):
     doc = _add_id(r, dag_params["item"])
     url_without_api = _remove_api_url(url_with_api, site_config)
 
-    web_text = ""
+    web_html = ""
     try:
         scrape = False
         s_url = ""
@@ -288,7 +288,7 @@ def fetch_and_send_to_rabbitmq(full_config):
         if scrape:
             if site_config.get("avoid_cache_web", False):
                 s_url = f"{url_without_api}?scrape=true"
-            web_text = trafilatura_with_retry(s_url, scrape_with_js)
+            web_html = trafilatura_with_retry(s_url, scrape_with_js)
     except:
         errors.append("scraping the page")
         doc_errors.append("web")
@@ -322,7 +322,7 @@ def fetch_and_send_to_rabbitmq(full_config):
             doc_errors.append("pdf")
 
     doc = _add_about(doc, url_without_api)
-    raw_doc = doc_to_raw(doc, web_text, pdf_text)
+    raw_doc = doc_to_raw(doc, web_html, pdf_text)
     raw_doc["site_id"] = site
     doc["site_id"] = site
     raw_doc["errors"] = doc_errors
@@ -341,7 +341,7 @@ def fetch_and_send_to_rabbitmq(full_config):
         create_pool("prepare_doc_for_searchui", 16)
         trigger_dag_id = "facets_2_prepare_doc_for_search_ui"
         dag_params["params"]["raw_doc"] = doc
-        dag_params["params"]["web_text"] = web_text
+        dag_params["params"]["web_html"] = web_html
         dag_params["params"]["pdf_text"] = raw_doc.get("pdf_text", "")
         trigger_dag(trigger_dag_id, dag_params, "prepare_doc_for_searchui")
 
@@ -350,7 +350,7 @@ def fetch_and_send_to_rabbitmq(full_config):
         create_pool("prepare_doc_for_nlp", 16)
         trigger_dag_id = "nlp_2_prepare_doc_for_nlp"
         dag_params["params"]["raw_doc"] = doc
-        dag_params["params"]["web_text"] = web_text
+        dag_params["params"]["web_html"] = web_html
         dag_params["params"]["pdf_text"] = raw_doc.get("pdf_text", "")
         trigger_dag(trigger_dag_id, dag_params, "prepare_doc_for_nlp")
 

@@ -109,7 +109,7 @@ def transform_doc(full_config):
     if dag_params["params"].get("raw_doc", None):
         doc = {
             "raw_value": dag_params["params"].get("raw_doc"),
-            "web_text": dag_params["params"].get("web_text", None),
+            "web_html": dag_params["params"].get("web_html", None),
             "pdf_text": dag_params["params"].get("pdf_text", ""),
         }
     else:

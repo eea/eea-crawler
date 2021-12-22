@@ -1,10 +1,13 @@
 from normalizers.lib.normalizers import join_text_fields
 from urllib.parse import urlparse
+from normalizers.lib.trafilatura_extract import get_text_from_html
 
 
 def common_preprocess(doc, config):
     raw_doc = doc["raw_value"]
-    text = doc.get("web_text", "")
+    html = doc.get("web_html", "")
+    text = get_text_from_html(html, config["site"].get("trafilatura", {}))
+
     if len(text) == 0:
         text = join_text_fields(
             raw_doc,

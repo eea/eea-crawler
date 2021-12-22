@@ -186,7 +186,7 @@ def get_doc_from_raw_idx(item, config):
     res = es.get(index=config["raw_index"], id=item)
     doc = {
         "raw_value": res["_source"]["raw_value"],
-        "web_text": res["_source"].get("web_text", ""),
+        "web_html": res["_source"].get("web_html", ""),
         "pdf_text": res["_source"].get("pdf_text", ""),
     }
 
