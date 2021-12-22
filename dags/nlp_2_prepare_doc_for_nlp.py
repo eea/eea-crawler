@@ -20,7 +20,7 @@ from normalizers.registry import get_facets_normalizer, get_nlp_preprocessor
 from tasks.helpers import simple_dag_param_to_dict, merge, find_site_by_url
 from tasks.rabbitmq import simple_send_to_rabbitmq
 from tasks.elastic import get_doc_from_raw_idx
-from airflow.models import Variable
+from lib.variables import get_variable
 
 default_args = {"owner": "airflow"}
 
@@ -98,11 +98,12 @@ def task_transform_doc(full_config):
 
 def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
+    dag_variables = dag_params["params"].get("variables", {})
     site_map = dag_params.get("site_map", None)
     site = find_site_by_url(dag_params["item"], site_map)
 
-    es = Variable.get("elastic", deserialize_json=True)
-    rabbitmq = Variable.get("rabbitmq", deserialize_json=True)
+    es = get_variable("elastic", dag_variables)
+    rabbitmq = get_variable("rabbitmq", dag_variables)
     rabbitmq["queue"] = rabbitmq["nlp_queue"]
 
     # get a single document from elasticsearch or from the params
@@ -116,13 +117,15 @@ def transform_doc(full_config):
         doc = get_doc_from_raw_idx(dag_params["item"], es)
 
     # do the same normalization as we do for searchlib, so we can use the same filters
-    sites = Variable.get("Sites", deserialize_json=True)
+    sites = get_variable("Sites", dag_variables)
 
-    site_config = Variable.get(sites[site], deserialize_json=True)
-    normalizers_config = Variable.get(
-        site_config["normalizers_variable"], deserialize_json=True
+    site_config = get_variable(sites[site], dag_variables)
+    normalizers_config = get_variable(
+        site_config["normalizers_variable"], dag_variables
     )
-    normalize = get_facets_normalizer(dag_params["item"], site_map)
+    normalize = get_facets_normalizer(
+        dag_params["item"], site_map, dag_variables
+    )
     config = {
         "normalizers": normalizers_config,
         "nlp": site_config.get("nlp_preprocessing", None),
@@ -132,7 +135,9 @@ def transform_doc(full_config):
     if not normalized_doc:
         print("Should not be preprocessed & indexed for nlp")
         return
-    preprocess = get_nlp_preprocessor(dag_params["item"], site_map)
+    preprocess = get_nlp_preprocessor(
+        dag_params["item"], site_map, dag_variables
+    )
     haystack_data = preprocess(doc, config)
 
     # build the haystack document with text field and meta information
@@ -146,7 +151,7 @@ def transform_doc(full_config):
     print(haystack_data)
     splitted_docs = preprocess_split_doc(haystack_data, config["nlp"]["text"])
 
-    nlp_services = Variable.get("nlp_services", deserialize_json=True)
+    nlp_services = get_variable("nlp_services", dag_variables)
     # add the embeddings
     docs_with_embedding = add_embeddings_doc(
         splitted_docs, nlp_services["embedding"]

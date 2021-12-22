@@ -15,12 +15,13 @@ from tasks.helpers import (
     build_items_list,
     get_params,
     get_item,
-    get_variable,
+    get_es_variable,
     set_attr,
     find_site_by_url,
+    load_variables,
 )
 from lib.pool import val_to_pool  # url_to_pool,
-from airflow.models import Variable
+from lib.variables import get_variable
 
 from tasks.elastic import simple_create_index, create_raw_index
 
@@ -49,10 +50,8 @@ def get_no_protocol_url(url: str):
 
 @task
 def extract_docs_from_json(page, params):
-    site_config_variable = Variable.get("Sites", deserialize_json=True).get(
-        params["site"], None
-    )
-    site_config = Variable.get(site_config_variable, deserialize_json=True)
+    site_config_variable = get_variable("Sites").get(params["site"], None)
+    site_config = get_variable(site_config_variable)
     types_blacklist = site_config.get("types_blacklist", [])
     print("TYPES BLACKLIST:")
     print(types_blacklist)
@@ -72,10 +71,8 @@ def extract_docs_from_json(page, params):
 
 @task
 def extract_next_from_json(page, params):
-    site_config_variable = Variable.get("Sites", deserialize_json=True).get(
-        params["site"], None
-    )
-    site_config = Variable.get(site_config_variable, deserialize_json=True)
+    site_config_variable = get_variable("Sites").get(params["site"], None)
+    site_config = get_variable(site_config_variable)
 
     if params.get("trigger_next_bulk", False):
         json_doc = json.loads(page)
@@ -125,10 +122,8 @@ def remove_api_url(url, params):
 
 @task
 def check_robots_txt(url, items, params):
-    site_config_variable = Variable.get("Sites", deserialize_json=True).get(
-        params["site"], None
-    )
-    site_config = Variable.get(site_config_variable, deserialize_json=True)
+    site_config_variable = get_variable("Sites").get(params["site"], None)
+    site_config = get_variable(site_config_variable)
     if site_config.get("ignore_robots_txt", False):
         return items
 
@@ -148,10 +143,8 @@ def check_robots_txt(url, items, params):
 
 @task
 def get_concurrency(params):
-    site_config_variable = Variable.get("Sites", deserialize_json=True).get(
-        params["site"], None
-    )
-    site_config = Variable.get(site_config_variable, deserialize_json=True)
+    site_config_variable = get_variable("Sites").get(params["site"], None)
+    site_config = get_variable(site_config_variable)
     return site_config.get("concurrency", 4)
 
 
@@ -176,10 +169,11 @@ def raw_2_crawl_with_query(item=default_dag_params):
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 
     xc_params = get_params(xc_dag_params)
+    xc_params = load_variables(xc_params)
 
-    xc_es = get_variable("elastic")
-    xc_es_mapping = get_variable("elastic_mapping")
-    xc_es_settings = get_variable("elastic_settings")
+    xc_es = get_es_variable("elastic")
+    xc_es_mapping = get_es_variable("elastic_mapping")
+    xc_es_settings = get_es_variable("elastic_settings")
 
     xc_es = set_attr(xc_es, "mapping", xc_es_mapping)
     xc_es = set_attr(xc_es, "settings", xc_es_settings)

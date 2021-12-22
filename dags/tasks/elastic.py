@@ -2,33 +2,13 @@ import json
 from urllib.parse import urlparse
 
 from airflow.decorators import task
-from airflow.models import Variable
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import RequestError
 
 from lib.debug import pretty_id
 from lib.dagrun import trigger_dag
 from tasks.helpers import get_site_map
-
-
-def get_elastic_config():
-    conf = {}
-    conf["host"] = Variable.get("elastic_host")
-    conf["port"] = Variable.get("elastic_port")
-    conf["index"] = Variable.get("elastic_index")
-    return conf
-
-
-def connect(conf):
-    es = Elasticsearch(host=conf["host"], port=conf["port"])
-    return es
-
-
-@task
-def index_doc(doc):
-    conf = get_elastic_config()
-    es = connect(conf)
-    es.index(index=conf["index"], id=doc["id"], body=doc)
+from lib.variables import get_variable
 
 
 @task
@@ -74,11 +54,9 @@ def create_raw_index():
 
 
 def simple_create_raw_index():
-    elastic = Variable.get("elastic", deserialize_json=True)
-    elastic_raw_mapping = Variable.get(
-        "elastic_raw_mapping", deserialize_json=True
-    )
-    elastic_settings = Variable.get("elastic_settings", deserialize_json=True)
+    elastic = get_variable("elastic")
+    elastic_raw_mapping = get_variable("elastic_raw_mapping")
+    elastic_settings = get_variable("elastic_settings")
     config = {
         "host": elastic["host"],
         "port": elastic["port"],
@@ -90,11 +68,21 @@ def simple_create_raw_index():
 
 
 @task
-def handle_all_ids(config, dag_params, pool_name, dag_id, handler=None):
+def handle_all_ids(
+    config, dag_params, pool_name, dag_id, handler=None, variables={}
+):
     site_map = get_site_map()
     timeout = 1000
     size = 500
-    body = {"query": {"bool": {"must": [], "must_not": [], "should": []}}}
+    body = {
+        "query": {
+            "bool": {
+                "must": [],
+                "must_not": [{"match": {"errors": "json"}}],
+                "should": [],
+            }
+        }
+    }
 
     if dag_params["params"].get("portal_type", "") != "":
         body["query"]["bool"]["must"].append(
@@ -104,8 +92,8 @@ def handle_all_ids(config, dag_params, pool_name, dag_id, handler=None):
     if dag_params["params"].get("site", "") != "":
         site = dag_params["params"].get("site", "")
 
-        sites = Variable.get("Sites", deserialize_json=True)
-        site_config = Variable.get(sites[site], deserialize_json=True)
+        sites = get_variable("Sites")
+        site_config = get_variable(sites[site])
         site_loc = site_config["url"]
         body["query"]["bool"]["must"].append({"match": {"site": site_loc}})
     print("ES QUERY:")
@@ -132,6 +120,7 @@ def handle_all_ids(config, dag_params, pool_name, dag_id, handler=None):
             params["item"] = item["_id"]
             #            dag_params["params"]["raw_d = item["_source"]["raw_value"]
             params["site_map"] = site_map
+            params["params"] = {"variables": variables.get("variables")}
             if not dag_params["params"].get("fast", False):
                 trigger_dag(dag_id, params, pool_name)
             else:
@@ -150,7 +139,6 @@ def handle_all_ids(config, dag_params, pool_name, dag_id, handler=None):
         body=body,
         _source=["@id"],
     )
-
     # Get the scroll ID
     sid = data["_scroll_id"]
     scroll_size = len(data["hits"]["hits"])

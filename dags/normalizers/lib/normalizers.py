@@ -304,7 +304,7 @@ def common_normalizer(doc, config):
     normalized_doc = remove_duplicates(normalized_doc)
 
     normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
-
+    normalized_doc["original_id"] = normalized_doc["about"]
     return normalized_doc
 
 

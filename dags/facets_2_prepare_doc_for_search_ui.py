@@ -11,7 +11,7 @@ from normalizers.registry import get_facets_normalizer
 from tasks.helpers import simple_dag_param_to_dict, find_site_by_url
 from tasks.rabbitmq import simple_send_to_rabbitmq
 from tasks.elastic import get_doc_from_raw_idx
-from airflow.models import Variable
+from lib.variables import get_variable
 
 
 default_args = {"owner": "airflow"}
@@ -35,11 +35,14 @@ def facets_2_prepare_doc_for_search_ui(item=default_dag_params):
 
 def transform_doc(full_config):
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
+    dag_variables = dag_params["params"].get("variables", {})
     site_map = dag_params.get("site_map", None)
-    site = find_site_by_url(dag_params["item"], site_map)
+    site = find_site_by_url(
+        dag_params["item"], site_map, variables=dag_variables
+    )
 
-    es = Variable.get("elastic", deserialize_json=True)
-    rabbitmq = Variable.get("rabbitmq", deserialize_json=True)
+    es = get_variable("elastic", dag_variables)
+    rabbitmq = get_variable("rabbitmq", dag_variables)
     rabbitmq["queue"] = rabbitmq["searchui_queue"]
     if dag_params["params"].get("raw_doc", None):
         doc = {
@@ -50,13 +53,15 @@ def transform_doc(full_config):
     else:
         doc = get_doc_from_raw_idx(dag_params["item"], es)
 
-    sites = Variable.get("Sites", deserialize_json=True)
+    sites = get_variable("Sites", dag_variables)
 
-    site_config = Variable.get(sites[site], deserialize_json=True)
-    normalizers_config = Variable.get(
-        site_config["normalizers_variable"], deserialize_json=True
+    site_config = get_variable(sites[site], dag_variables)
+    normalizers_config = get_variable(
+        site_config["normalizers_variable"], dag_variables
     )
-    normalize = get_facets_normalizer(dag_params["item"], site_map)
+    normalize = get_facets_normalizer(
+        dag_params["item"], site_map, dag_variables
+    )
     config = {
         "normalizers": normalizers_config,
         "nlp": site_config.get("nlp_preprocessing", None),

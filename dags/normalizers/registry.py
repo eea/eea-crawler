@@ -1,6 +1,6 @@
 from urllib.parse import urlparse
 from tasks.helpers import find_site_by_url
-from airflow.models import Variable
+from lib.variables import get_variable
 
 
 FACETS_SITE_RULES = {}
@@ -28,19 +28,19 @@ def register_nlp_preprocessor(name):
 from normalizers.sites import *
 
 
-def get_name(url, site_map=None):
-    site = find_site_by_url(url, site_map)
-    sites = Variable.get("Sites", deserialize_json=True)
-    site_config = Variable.get(sites[site], deserialize_json=True)
+def get_name(url, site_map=None, variables={}):
+    site = find_site_by_url(url, site_map, variables)
+    sites = get_variable("Sites", variables)
+    site_config = get_variable(sites[site], variables)
     name = site_config["url"].split("://")[-1].strip("/")
     return name
 
 
-def get_facets_normalizer(url, site_map=None):
-    name = get_name(url, site_map)
+def get_facets_normalizer(url, site_map=None, variables={}):
+    name = get_name(url, site_map, variables)
     return FACETS_SITE_RULES.get(name, FACETS_SITE_RULES["www.eea.europa.eu"])
 
 
-def get_nlp_preprocessor(url, site_map=None):
-    name = get_name(url, site_map)
+def get_nlp_preprocessor(url, site_map=None, variables={}):
+    name = get_name(url, site_map, variables)
     return NLP_SITE_RULES.get(name, NLP_SITE_RULES["www.eea.europa.eu"])

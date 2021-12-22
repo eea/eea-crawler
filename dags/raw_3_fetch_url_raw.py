@@ -19,7 +19,7 @@ from tasks.rabbitmq import simple_send_to_rabbitmq  # , send_to_rabbitmq
 
 from lib.pool import create_pool
 from lib.dagrun import trigger_dag
-from airflow.models import Variable
+from lib.variables import get_variable
 from tasks.elastic import simple_create_raw_index
 
 import logging
@@ -238,19 +238,18 @@ def fetch_and_send_to_rabbitmq(full_config):
 
     dag_params = simple_dag_param_to_dict(full_config, default_dag_params)
 
+    dag_variables = dag_params["params"].get("variables", {})
     logger.info("Dag params %s", dag_params)
 
     if dag_params["params"].get("create_index", False):
         simple_create_raw_index()
 
-    site = find_site_by_url(dag_params["item"])
+    site = find_site_by_url(dag_params["item"], variables=dag_variables)
 
-    site_config_variable = Variable.get("Sites", deserialize_json=True).get(
-        site, None
-    )
-    site_config = Variable.get(site_config_variable, deserialize_json=True)
+    site_config_variable = get_variable("Sites", dag_variables).get(site, None)
+    site_config = get_variable(site_config_variable, dag_variables)
 
-    nlp_service_params = Variable.get("nlp_services", deserialize_json=True)
+    nlp_service_params = get_variable("nlp_services", dag_variables)
 
     url_with_api = _get_api_url(dag_params["item"], site_config)
 
@@ -323,6 +322,7 @@ def fetch_and_send_to_rabbitmq(full_config):
 
     doc = _add_about(doc, url_without_api)
     raw_doc = doc_to_raw(doc, web_html, pdf_text)
+    raw_doc["original_id"] = url_without_api
     raw_doc["site_id"] = site
     doc["site_id"] = site
     raw_doc["errors"] = doc_errors
@@ -332,7 +332,7 @@ def fetch_and_send_to_rabbitmq(full_config):
     raw_doc["site"] = site_config["url"]
     raw_doc["indexed_at"] = datetime.now().isoformat()
 
-    rabbitmq_config = Variable.get("rabbitmq", deserialize_json=True)
+    rabbitmq_config = get_variable("rabbitmq", dag_variables)
 
     simple_send_to_rabbitmq(raw_doc, rabbitmq_config)
 

@@ -18,14 +18,14 @@ from tasks.helpers import (
 )
 from tasks.elastic import simple_create_index
 from lib.pool import val_to_pool
-from airflow.models import Variable
+from lib.variables import get_variable
 
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
 default_args = {"owner": "airflow"}
 default_dag_params = {
-    "item": "wise_freshwater",
+    "item": "ias",
     "params": {
         "query_size": 10,
         "trigger_next_bulk": False,
@@ -66,26 +66,22 @@ def build_queries_list(config):
 def get_site_config(params):
     site = params.get("item", None)
     config = {}
-    sites = Variable.get("Sites", deserialize_json=True)
+    sites = get_variable("Sites")
     site_config_variable = sites.get(site, None)
     if site_config_variable:
-        site_config = Variable.get(site_config_variable, deserialize_json=True)
+        site_config = get_variable(site_config_variable)
         normalizers_config_variable = site_config.get(
             "normalizers_variable", "default_normalizers"
         )
-        normalizers_config = Variable.get(
-            normalizers_config_variable, deserialize_json=True
-        )
+        normalizers_config = get_variable(normalizers_config_variable)
         config["site"] = site_config
         if params["params"].get("portal_types", None):
             config["site"]["portal_types"] = params["params"]["portal_types"]
         config["normalizers"] = normalizers_config
 
-        config["nlp_services"] = Variable.get(
-            "nlp_services", deserialize_json=True
-        )
-        config["elastic"] = Variable.get("nlp_services", deserialize_json=True)
-        config["rabbitmq"] = Variable.get("rabbitmq", deserialize_json=True)
+        config["nlp_services"] = get_variable("nlp_services")
+        config["elastic"] = get_variable("nlp_services")
+        config["rabbitmq"] = get_variable("rabbitmq")
         config["params"] = params["params"]
         config["params"]["site"] = site
     print(config)

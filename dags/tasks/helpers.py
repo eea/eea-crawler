@@ -1,8 +1,8 @@
 import collections
 from copy import deepcopy
 from airflow.decorators import task
-from airflow.models import Variable
 from urllib.parse import urlparse
+from lib.variables import get_variable, get_all_variables
 
 
 def merge(dict1, dict2):
@@ -113,23 +113,23 @@ def set_attr(params, attr, val):
 
 
 @task
-def get_variable(variable):
-    return Variable.get(variable, deserialize_json=True)
+def get_es_variable(variable):
+    return get_variable(variable)
 
 
-def get_site_map():
-    sites = Variable.get("Sites", deserialize_json=True)
+def get_site_map(variables={}):
+    sites = get_variable("Sites", variables)
     site_map = {}
     for site in sites:
-        site_config = Variable.get(sites[site], deserialize_json=True)
+        site_config = get_variable(sites[site], variables)
         site_map[site] = site_config["url"]
 
     return site_map
 
 
-def find_site_by_url(url, sites=None):
+def find_site_by_url(url, sites=None, variables={}):
     if not sites:
-        sites = get_site_map()
+        sites = get_site_map(variables=variables)
     parts = url.split("://")[-1].strip("/").split("/")
 
     names = ["/".join(parts[: (i * -1)]) for i in range(1, len(parts))]
@@ -142,3 +142,10 @@ def find_site_by_url(url, sites=None):
                 if name == site_url:
                     site_name = site
     return site_name
+
+
+@task
+def load_variables(params):
+    variables = get_all_variables()
+    params["variables"] = variables
+    return params

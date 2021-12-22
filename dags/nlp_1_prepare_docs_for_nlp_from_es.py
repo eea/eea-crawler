@@ -5,12 +5,18 @@ from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 from tasks.pool import CreatePoolOperator
 
-from tasks.helpers import dag_param_to_dict, get_item, get_variable, set_attr
+from tasks.helpers import (
+    dag_param_to_dict,
+    get_item,
+    get_variable,
+    set_attr,
+    load_variables,
+)
 from lib.pool import url_to_pool
 
 from tasks.elastic import create_index, handle_all_ids
 from nlp_2_prepare_doc_for_nlp import transform_doc
-from airflow.models import Variable
+from lib.variables import get_variable
 
 # import json
 # from airflow.providers.http.operators.http import SimpleHttpOperator
@@ -22,21 +28,21 @@ default_dag_params = {
     "params": {
         "fast": True,
         "portal_type": "",
-        "site": "",
+        "site": "ias",
     },
 }
 
 
 @task
 def get_es_config():
-    elastic = Variable.get("elastic", deserialize_json=True)
+    elastic = get_variable("elastic")
     elastic["target_index"] = elastic["nlp_target_index"]
     return elastic
 
 
 @task
 def get_rabbitmq_config():
-    rabbitmq = Variable.get("rabbitmq", deserialize_json=True)
+    rabbitmq = get_variable("rabbitmq")
     rabbitmq["queue"] = rabbitmq["nlp_queue"]
     return rabbitmq
 
@@ -50,6 +56,8 @@ def get_rabbitmq_config():
 )
 def nlp_1_prepare_docs_for_nlp_from_es(item=default_dag_params):
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
+
+    xc_variables = load_variables({})
 
     xc_item = get_item(xc_dag_params)
     xc_es = get_es_config()
@@ -71,6 +79,7 @@ def nlp_1_prepare_docs_for_nlp_from_es(item=default_dag_params):
         "prepare_doc_for_nlp",
         "nlp_2_prepare_doc_for_nlp",
         handler=transform_doc,
+        variables=xc_variables,
     )
 
 
