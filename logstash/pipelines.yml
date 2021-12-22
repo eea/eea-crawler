@@ -2,9 +2,6 @@
 # For more information on multiple pipelines, see the documentation:
 #   https://www.elastic.co/guide/en/logstash/current/multiple-pipelines.html
 
-- pipeline.id: default
-  path.config: "/usr/share/logstash/pipeline/default.conf"
-
 - pipeline.id: raw_data
   path.config: "/usr/share/logstash/pipeline/raw_data.conf"
 
@@ -13,9 +10,3 @@
 
 - pipeline.id: nlp_data
   path.config: "/usr/share/logstash/pipeline/nlp_data.conf"
-
-- pipeline.id: eea_raw
-  path.config: "/usr/share/logstash/pipeline/eea_raw.conf"
-
-- pipeline.id: eea_searchui
-  path.config: "/usr/share/logstash/pipeline/eea_searchui.conf"
