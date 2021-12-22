@@ -324,6 +324,7 @@ def fetch_and_send_to_rabbitmq(full_config):
     doc = _add_about(doc, url_without_api)
     raw_doc = doc_to_raw(doc, web_text, pdf_text)
     raw_doc["site_id"] = site
+    doc["site_id"] = site
     raw_doc["errors"] = doc_errors
     raw_doc["modified"] = doc.get(
         "modified", doc.get("modification_date", None)
