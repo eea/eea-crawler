@@ -311,8 +311,13 @@
             ]
         },
         "normalizers_variable": "default_normalizers",
-        "scrape_pages": false,
+        "scrape_pages": true,
         "scrape_with_js": true,
+        "trafilatura": {
+            "blacklist": [
+                "header"
+            ]
+        },
         "url": "https://ias.eea.europa.eu",
         "url_api_part": ""
     },
@@ -652,7 +657,8 @@
             "modified",
             "site",
             "indexed_at",
-            "spatial"
+            "spatial",
+            "site_id"
         ],
         "whiteMap": {}
     },
@@ -1097,6 +1103,37 @@
             "copy_to": [
                 "all_fields_for_freetext"
             ],
+            "fielddata": true,
+            "type": "text"
+        }
+    },
+    "elastic_raw_mapping": {
+        "@type": {
+            "analyzer": "none",
+            "fielddata": true,
+            "type": "text"
+        },
+        "errors": {
+            "analyzer": "none",
+            "fielddata": true,
+            "type": "text"
+        },
+        "id": {
+            "analyzer": "none",
+            "fielddata": true,
+            "type": "text"
+        },
+        "raw_value": {
+            "enabled": false,
+            "type": "object"
+        },
+        "site": {
+            "analyzer": "none",
+            "fielddata": true,
+            "type": "text"
+        },
+        "site_id": {
+            "analyzer": "none",
             "fielddata": true,
             "type": "text"
         }
