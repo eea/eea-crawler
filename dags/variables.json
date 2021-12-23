@@ -77,14 +77,12 @@
         "normalize": {
             "blacklist": [],
             "whitelist": [
-                "Image",
                 "eea.climateadapt.publicationreport",
                 "eea.climateadapt.aceproject",
                 "File",
                 "News Item",
                 "collective.cover.content",
                 "Folder",
-                "Event",
                 "eea.climateadapt.informationportal",
                 "eea.climateadapt.guidancedocument",
                 "eea.climateadapt.casestudy",
@@ -94,14 +92,8 @@
                 "eea.climateadapt.indicator",
                 "eea.climateadapt.adaptationoption",
                 "Document",
-                "Link",
                 "eea.climateadapt.video",
-                "eea.climateadapt.c3sindicator",
-                "Collection",
-                "FrontpageSlide",
-                "EasyForm",
-                "PDFTheme",
-                "cca-event"
+                "eea.climateadapt.c3sindicator"
             ]
         },
         "normalizers_variable": "default_normalizers",
@@ -332,7 +324,7 @@
             "location_rules": [
                 {
                     "ct": [
-                        "Data",
+                        "Data set",
                         "Dashboard"
                     ],
                     "path": "/"
@@ -351,7 +343,7 @@
                 },
                 {
                     "ct": [
-                        "Data"
+                        "Data set"
                     ],
                     "path": "/download"
                 }
@@ -410,7 +402,7 @@
         "url_api_part": ""
     },
     "config_wise_marine": {
-        "concurrency": 1,
+        "concurrency": 4,
         "location_rules_fallback": "Webpage",
         "nlp_preprocessing": {
             "text": {
@@ -467,7 +459,7 @@
                 },
                 {
                     "ct": [
-                        "Data"
+                        "Data set"
                     ],
                     "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
                 },
@@ -570,6 +562,7 @@
             "climate": "Climate change mitigation",
             "climate-change-adaptation": "Climate change adaptation",
             "coast_sea": "Marine",
+            "collective.cover.content": "Webpage",
             "country_biodiversity_factsheet": "Country fact sheet",
             "country_bioeconomy_factsheet": "Country fact sheet",
             "country_climate_factsheet": "Country fact sheet",
@@ -580,6 +573,7 @@
             "database": "Data set",
             "dataset": "Data set",
             "default": "Various other issues",
+            "eea.climateadapt.aceproject": "Research and knowledge project",
             "eea.climateadapt.adaptationoption": "Adaptation option",
             "eea.climateadapt.c3sindicator": "Indicator",
             "eea.climateadapt.casestudy": "Case study",
