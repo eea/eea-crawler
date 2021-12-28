@@ -10,6 +10,7 @@ from normalizers.lib.normalizers import (
 )
 from normalizers.lib.nlp import common_preprocess
 import logging
+from datetime import date, timedelta
 
 logger = logging.getLogger(__file__)
 
@@ -17,6 +18,7 @@ logger = logging.getLogger(__file__)
 @register_facets_normalizer("climate-adapt.eea.europa.eu")
 def normalize_climate(doc, config):
     logger.info("NORMALIZE CLIMATE")
+    logger.info(f"RS: {doc['raw_value'].get('review_state')}")
     logger.info(doc["raw_value"].get("@id", ""))
     logger.info(doc["raw_value"].get("@type", ""))
     logger.info(doc)
@@ -43,6 +45,11 @@ def normalize_climate(doc, config):
     ] = "Climate-adapt (climate-adapt.eea.europa.eu)"
     normalized_doc["topic"] = "Climate change adaptation"
 
+    if doc["raw_value"].get("review_state") == "archived":
+        # raise Exception("review_state")
+        expires = date.today() - timedelta(days=2)
+        normalized_doc["expires"] = expires.isoformat()
+        logger.info("RS EXPIRES")
     return normalized_doc
 
 
