@@ -117,7 +117,14 @@ def remove_api_url(url, params):
                 params["fix_items_url"]["with_api"],
                 params["fix_items_url"]["without_api"],
             )
-    return "/".join(url.split("/" + params["url_api_part"] + "/"))
+    ret_url = "/".join(url.split("/" + params["url_api_part"] + "/"))
+
+    # Handle languages
+    if url.find("www.eea.europa.eu") > -1:
+        if url.find("/api/"):
+            ret_url = "/".join(ret_url.split("/api/"))
+
+    return ret_url
 
 
 @task

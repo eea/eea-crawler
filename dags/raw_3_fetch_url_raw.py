@@ -62,6 +62,12 @@ def _get_api_url(url, params):
     - `https://water.europa.eu/api`
 
     """
+
+    # Handle languages
+    if url.find("www.eea.europa.eu") > -1:
+        if url.find("/api/"):
+            return url
+
     if params.get("fix_items_url", None):
         if params["fix_items_url"]["without_api"] in url:
             url = url.replace(
@@ -110,7 +116,14 @@ def _remove_api_url(url, params):
 
     if params["url_api_part"].strip("/") == "":
         return url
-    return "/".join(url.split("/" + params["url_api_part"] + "/"))
+    ret_url = "/".join(url.split("/" + params["url_api_part"] + "/"))
+
+    # Handle languages
+    if url.find("www.eea.europa.eu") > -1:
+        if url.find("/api/"):
+            ret_url = "/".join(ret_url.split("/api/"))
+
+    return ret_url
 
 
 def _add_about(doc, value):

@@ -25,12 +25,14 @@ from lib.variables import get_variable
 # You can override them on a per-task basis during operator initialization
 default_args = {"owner": "airflow"}
 default_dag_params = {
-    "item": "ias",
+    "item": "eea",
     "params": {
-        "query_size": 10,
-        "trigger_next_bulk": False,
+        "query_size": 500,
+        "trigger_next_bulk": True,
         "trigger_nlp": False,
         "trigger_searchui": False,
+        "portal_types": ["Highlight"],
+        "languages": ["hu"],
     },
 }
 
@@ -54,6 +56,12 @@ def build_queries_list(config):
             f"{url}/@search?b_size={config['params']['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
             for portal_type in config["site"]["portal_types"]
         ]
+        if config["site"].get("languages", None):
+            for language in config["site"].get("languages"):
+                for portal_type in config["site"]["portal_types"]:
+                    queries.append(
+                        f"{url}/{language}/@search?b_size={config['params']['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
+                    )
     else:
         queries = [
             f"{url}/@search?b_size={config['params']['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date"
@@ -77,6 +85,8 @@ def get_site_config(params):
         config["site"] = site_config
         if params["params"].get("portal_types", None):
             config["site"]["portal_types"] = params["params"]["portal_types"]
+        if params["params"].get("languages", None):
+            config["site"]["languages"] = params["params"]["languages"]
         config["normalizers"] = normalizers_config
 
         config["nlp_services"] = get_variable("nlp_services")
