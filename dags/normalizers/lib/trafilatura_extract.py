@@ -7,5 +7,5 @@ def get_text_from_html(html, config):
     # TODO: apply config before extracting the text
     # print("TRAFILATURA CONFIG")
     # print(config)
-    text = trafilatura.extract(html)
+    text = trafilatura.extract(html) or ""
     return text
