@@ -159,8 +159,9 @@ def transform_doc(full_config):
 
     # print(docs_with_embedding)
 
-    for doc in docs_with_embedding:
-        simple_send_to_rabbitmq(doc, rabbitmq)
+    for doc_with_embedding in docs_with_embedding:
+        doc_with_embedding["site_id"] = doc["raw_value"].get("site_id")
+        simple_send_to_rabbitmq(doc_with_embedding, rabbitmq)
 
 
 prepare_doc_for_nlp_dag = nlp_2_prepare_doc_for_nlp()

@@ -69,6 +69,7 @@ def transform_doc(full_config):
     }
     normalized_doc = normalize(doc, config)
     if normalized_doc:
+        normalized_doc["site_id"] = doc["raw_value"].get("site_id")
         simple_send_to_rabbitmq(normalized_doc, rabbitmq)
 
 
