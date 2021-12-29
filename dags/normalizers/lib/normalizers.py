@@ -134,7 +134,7 @@ def add_places(norm_doc):
 def join_text_fields(json_doc, txt_props, txt_props_black):
     # json_doc = json.loads(doc)
     # start text with the document title.
-    title = json_doc.get("title", "no title")
+    title = json_doc.get("title", "no title") or "no title"
     text = title + ".\n\n"
 
     # get other predefined fields first in the order defined in txt_props param
@@ -226,7 +226,7 @@ def add_reading_time(
     html = doc.get("web_html", "")
     text = get_text_from_html(html, trafilatura_config)
     if not text or len(text) == 0:
-        text = join_text_fields(doc, txt_props, txt_props_black)
+        text = join_text_fields(doc["raw_value"], txt_props, txt_props_black)
     pdf_text = doc.get("pdf_text", "")
     text += pdf_text
     wc = res = len(re.findall(r"\w+", text))
