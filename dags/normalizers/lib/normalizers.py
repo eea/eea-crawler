@@ -125,6 +125,14 @@ def remove_empty(doc):
     return clean_data
 
 
+def strip_fields(doc):
+    for key in doc.keys():
+        if isinstance(doc[key], str):
+            doc[key] = doc[key].strip()
+
+    return doc
+
+
 def add_places(norm_doc):
     if norm_doc.get("spatial", None) is not None:
         norm_doc["places"] = norm_doc["spatial"]
@@ -305,6 +313,7 @@ def common_normalizer(doc, config):
 
     normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
     normalized_doc["original_id"] = normalized_doc["about"]
+    normalized_doc = strip_fields(normalized_doc)
     return normalized_doc
 
 
