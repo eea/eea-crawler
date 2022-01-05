@@ -159,7 +159,6 @@ def request_with_retry(url, method="get", data=None):
     logger.info("Response: %s", resp.text)
 
     assert json.loads(resp.text)  # test if response is json
-    assert json.loads(resp.text)["@id"]
     logger.info("Response is valid json")
 
     return resp.text
@@ -273,6 +272,7 @@ def fetch_and_send_to_rabbitmq(full_config):
 
     try:
         r = request_with_retry(r_url)
+        assert json.loads(r)["@id"]
     except:
         errors.append("retrieving json from api")
         doc_errors.append("json")
