@@ -1,28 +1,24 @@
 """
 """
 
-from datetime import datetime
 import json
-import magic
-import requests
+import logging
+from datetime import datetime
 from urllib.parse import urlunsplit  # urlparse,
 
-from tenacity import retry, wait_exponential, stop_after_attempt
-
+import magic
+import requests
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
+from tenacity import retry, stop_after_attempt, wait_exponential
 
-import trafilatura
-
-from tasks.helpers import simple_dag_param_to_dict, find_site_by_url
-from tasks.rabbitmq import simple_send_to_rabbitmq  # , send_to_rabbitmq
-
-from lib.pool import create_pool
 from lib.dagrun import trigger_dag
+from lib.pool import create_pool
 from lib.variables import get_variable
+from normalizers.lib.trafilatura_extract import get_text_from_html
 from tasks.elastic import simple_create_raw_index
-
-import logging
+from tasks.helpers import find_site_by_url, simple_dag_param_to_dict
+from tasks.rabbitmq import simple_send_to_rabbitmq  # , send_to_rabbitmq
 
 logger = logging.getLogger(__file__)
 
@@ -166,7 +162,7 @@ def request_with_retry(url, method="get", data=None):
 
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
-def trafilatura_with_retry(url, js=False):
+def trafilatura_with_retry(url, config, js=False):
     logger.info("Fetching with trafilatura: %s", url)
 
     if js:
@@ -177,7 +173,8 @@ def trafilatura_with_retry(url, js=False):
         )
         downloaded = resp.text
     else:
-        downloaded = trafilatura.fetch_url(url)
+        resp = downloaded = requests.get(url)
+        downloaded = get_text_from_html(resp.text, config)
 
     if magic.from_buffer(downloaded) == "data":
         return None
@@ -273,7 +270,8 @@ def fetch_and_send_to_rabbitmq(full_config):
 
     try:
         r = request_with_retry(r_url)
-    except:
+    except Exception:
+        logger.exception("retrieving json from api")
         errors.append("retrieving json from api")
         doc_errors.append("json")
         r = json.dumps({"@id": dag_params["item"]})
@@ -293,15 +291,20 @@ def fetch_and_send_to_rabbitmq(full_config):
         scrape_for_types = site_config.get("scrape_for_types", False)
         if scrape_for_types:
             scrape_for_type = scrape_for_types.get(doc.get("@type"), False)
-            if scrape_for_type != False:
+            if scrape_for_type is not False:
                 scrape = True
                 s_url = url_without_api
                 scrape_with_js = scrape_for_type.get("scrape_with_js", False)
         if scrape:
             if site_config.get("avoid_cache_web", False):
                 s_url = f"{url_without_api}?scrape=true"
-            web_html = trafilatura_with_retry(s_url, scrape_with_js)
-    except:
+            web_html = trafilatura_with_retry(
+                s_url,
+                site_config.get("trafilatura", {}),
+                scrape_with_js,
+            )
+    except Exception:
+        logger.exception("Error scraping the page")
         errors.append("scraping the page")
         doc_errors.append("web")
 
@@ -329,7 +332,8 @@ def fetch_and_send_to_rabbitmq(full_config):
         logger.info("EXTRACT PDF")
         try:
             pdf_text = extract_attachments(doc, r_url, nlp_service_params)
-        except:
+        except Exception:
+            logger.exception("Error converting pdf file")
             errors.append("converting pdf file")
             doc_errors.append("pdf")
 
