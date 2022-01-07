@@ -7,6 +7,7 @@ from normalizers.registry import (
 from normalizers.lib.normalizers import (
     common_normalizer,
     check_blacklist_whitelist,
+    add_counts,
 )
 from normalizers.lib.nlp import common_preprocess
 import logging
@@ -50,6 +51,8 @@ def normalize_climate(doc, config):
         expires = date.today() - timedelta(days=2)
         normalized_doc["expires"] = expires.isoformat()
         logger.info("RS EXPIRES")
+
+    normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 
 

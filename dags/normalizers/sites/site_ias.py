@@ -7,6 +7,7 @@ from normalizers.registry import (
 from normalizers.lib.normalizers import (
     common_normalizer,
     check_blacklist_whitelist,
+    add_counts,
 )
 from normalizers.lib.nlp import common_preprocess
 import logging
@@ -45,6 +46,8 @@ def normalize_ias(doc, config):
 
     normalized_doc["cluster_name"] = "IAS (ias.eea.europa.eu)"
     normalized_doc["topic"] = "Biodiversity — Ecosystems"
+
+    normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 
 

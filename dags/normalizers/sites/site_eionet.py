@@ -7,6 +7,7 @@ from normalizers.registry import (
 from normalizers.lib.normalizers import (
     common_normalizer,
     check_blacklist_whitelist,
+    add_counts,
 )
 from normalizers.lib.nlp import common_preprocess
 import logging
@@ -85,6 +86,7 @@ def normalize_eionet(doc, config):
             )
             normalized_doc["topic"] = "Resource efficiency and waste"
 
+    normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 
 

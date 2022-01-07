@@ -8,6 +8,7 @@ from normalizers.lib.normalizers import (
     common_normalizer,
     check_blacklist_whitelist,
     find_ct_by_rules,
+    add_counts,
 )
 from normalizers.lib.nlp import common_preprocess
 import logging
@@ -62,6 +63,7 @@ def normalize_energy(doc, config):
     normalized_doc["cluster_name"] = "WISE Marine (water.europa.eu/marine)"
     normalized_doc["topic"] = "Water and marine environment"
 
+    normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 
 

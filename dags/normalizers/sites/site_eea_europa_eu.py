@@ -4,7 +4,7 @@ from normalizers.registry import (
     register_facets_normalizer,
     register_nlp_preprocessor,
 )
-from normalizers.lib.normalizers import common_normalizer
+from normalizers.lib.normalizers import common_normalizer, add_counts
 from normalizers.lib.nlp import common_preprocess
 
 
@@ -14,6 +14,7 @@ def normalize_eea_europa_eu(doc, config):
 
     normalized_doc["cluster_name"] = "EEA Website (www.eea.europa.eu)"
 
+    normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 
 

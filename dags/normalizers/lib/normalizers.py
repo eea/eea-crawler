@@ -355,3 +355,14 @@ def find_ct_by_rules(doc_loc, rules, fallback):
     if len(ct) == 0:
         ct.append(fallback)
     return ct
+
+
+def add_counts(doc):
+    doc_with_counts = {}
+    for key in doc.keys():
+        doc_with_counts[key] = doc[key]
+        if isinstance(doc[key], list):
+            doc_with_counts[f"items_count_{key}"] = len(doc[key])
+        else:
+            doc_with_counts[f"items_count_{key}"] = 1
+    return doc_with_counts

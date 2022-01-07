@@ -8,6 +8,7 @@ from normalizers.lib.normalizers import (
     common_normalizer,
     check_blacklist_whitelist,
     find_ct_by_rules,
+    add_counts,
 )
 from normalizers.lib.nlp import common_preprocess
 
@@ -47,6 +48,7 @@ def normalize_industry(doc, config):
     normalized_doc["objectProvides"] = ct
     normalized_doc["topic"] = "Industry"
 
+    normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 
 
