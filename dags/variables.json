@@ -550,7 +550,6 @@
             "format": "text/html",
             "hasWorkflowState": "published",
             "issued": "field:creation_date",
-            "items_count_references": 1,
             "language": "en",
             "organisation": "European Environment Agency (EEA)",
             "places": "unknown",
