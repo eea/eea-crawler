@@ -32,6 +32,8 @@ from tasks.elastic import simple_create_index, create_raw_index
 
 default_args = {"owner": "airflow"}
 
+SKIP_EXTENSIONS = ["png", "svg", "jpg", "gif", "eps"]
+
 URL = (
     "http://www.eea.europa.eu/api/@search?b_size=10&metadata_fields=modified&"
     "show_inactive=true&sort_order=reverse&sort_on=Date&portal_type=Highlight"
@@ -58,7 +60,16 @@ def extract_docs_from_json(page, params):
     json_doc = json.loads(page)
     print("EXTRACT_DOCS_FROM_JSON")
     print(json_doc)
-    docs = json_doc["items"]
+    docs_from_json = json_doc["items"]
+
+    docs = []
+    for doc in docs_from_json:
+        skip = False
+        if doc["@type"] == "File":
+            if doc["@id"].split(".")[-1].lower() in SKIP_EXTENSIONS:
+                skip = True
+        if not skip:
+            docs.append(doc)
     urls = [doc["@id"] for doc in docs if doc["@type"] not in types_blacklist]
     print("Number of documents:")
     print(len(urls))
