@@ -226,9 +226,17 @@ def extract_attachments(json_doc, url, nlp_service_params):
         ):
             download_url = fix_download_url(value["download"], url)
             logger.info("Download url found: %s", download_url)
-            resp = request_with_retry(
-                converter_dsn, "post", {"url": download_url}
-            )
+            try:
+                resp = request_with_retry(
+                    converter_dsn, "post", {"url": download_url}
+                )
+            except Exception:
+                logger.exception("failed pdf extraction, retry")
+                download_url = value["download"]
+                logger.info("Retry with download url: %s", download_url)
+                resp = request_with_retry(
+                    converter_dsn, "post", {"url": download_url}
+                )
             if isinstance(resp, str):
                 resp = json.loads(resp)
             for doc in resp["documents"]:
