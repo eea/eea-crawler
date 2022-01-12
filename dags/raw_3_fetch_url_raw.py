@@ -272,8 +272,9 @@ def fetch_and_send_to_rabbitmq(full_config):
     url_with_api = _get_api_url(dag_params["item"], site_config)
 
     r_url = url_with_api
+    r_url = f"{url_with_api}?expand=object_provides"
     if site_config.get("avoid_cache_api", False):
-        r_url = f"{url_with_api}?crawler=true"
+        r_url = f"{r_url}&crawler=true"
 
     try:
         r = request_with_retry(r_url)

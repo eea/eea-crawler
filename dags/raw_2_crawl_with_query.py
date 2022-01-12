@@ -65,6 +65,10 @@ def extract_docs_from_json(page, params):
     docs = []
     for doc in docs_from_json:
         skip = False
+        portal_types = site_config.get("portal_types", [])
+        if len(portal_types) > 0:
+            if doc["@type"] not in portal_types:
+                skip = True
         if doc["@type"] == "File":
             if doc["@id"].split(".")[-1].lower() in SKIP_EXTENSIONS:
                 skip = True

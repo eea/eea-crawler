@@ -31,8 +31,6 @@ default_dag_params = {
         "trigger_next_bulk": True,
         "trigger_nlp": False,
         "trigger_searchui": False,
-        "portal_types": ["Highlight"],
-        "languages": ["hu"],
     },
 }
 
@@ -52,16 +50,16 @@ def build_queries_list(config):
             url = f"{url}/{url_api_part}"
 
     if config["site"].get("portal_types", None):
+        # queries = []
         queries = [
             f"{url}/@search?b_size={config['params']['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
             for portal_type in config["site"]["portal_types"]
         ]
         if config["site"].get("languages", None):
             for language in config["site"].get("languages"):
-                for portal_type in config["site"]["portal_types"]:
-                    queries.append(
-                        f"{url}/{language}/@search?b_size={config['params']['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
-                    )
+                queries.append(
+                    f"{url}/{language}/@search?b_size={config['params']['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date"
+                )
     else:
         queries = [
             f"{url}/@search?b_size={config['params']['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date"
@@ -94,7 +92,6 @@ def get_site_config(params):
         config["rabbitmq"] = get_variable("rabbitmq")
         config["params"] = params["params"]
         config["params"]["site"] = site
-    print(config)
     return config
 
 
