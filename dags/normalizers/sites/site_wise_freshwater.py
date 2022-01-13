@@ -55,9 +55,7 @@ def normalize_industry(doc, config):
         logger.info(ct)
         normalized_doc["objectProvides"] = ct
 
-    normalized_doc[
-        "cluster_name"
-    ] = "WISE Freshwater (water.europa.eu/freshwater)"
+    normalized_doc["cluster_name"] = "wise-freshwater"
     normalized_doc["topic"] = "Water and marine environment"
 
     normalized_doc = add_counts(normalized_doc)

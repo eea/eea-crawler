@@ -62,7 +62,7 @@ def normalize_energy(doc, config):
     logger.info(ct)
     normalized_doc["objectProvides"] = ct
 
-    normalized_doc["cluster_name"] = "Energy (climate-energy.eea.europa.eu)"
+    normalized_doc["cluster_name"] = "energy"
     normalized_doc["topic"] = "Energy"
 
     normalized_doc = add_counts(normalized_doc)

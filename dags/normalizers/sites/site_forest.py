@@ -45,7 +45,7 @@ def normalize_forest(doc, config):
 
     normalized_doc = common_normalizer(doc, config)
 
-    normalized_doc["cluster_name"] = "FISE (forest.eea.europa.eu)"
+    normalized_doc["cluster_name"] = "fise"
 
     doc_loc = urlparse(normalized_doc["id"]).path
     if normalized_doc["objectProvides"] == "Webpage":

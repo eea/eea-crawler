@@ -39,51 +39,37 @@ def normalize_eionet(doc, config):
 
     normalized_doc = common_normalizer(doc, config)
 
-    normalized_doc["cluster_name"] = ["Eionet (eionet.europa.eu)"]
+    normalized_doc["cluster_name"] = ["etc"]
 
     doc_loc = urlparse(normalized_doc["id"]).path
     doc_loc_parts = doc_loc.strip("/").split("/")
     if doc_loc_parts[0] == "etcs" and len(doc_loc_parts) > 1:
         if doc_loc_parts[1] == "etc-atni":
-            normalized_doc["cluster_name"].append(
-                "ETC on Air Pollution, Transport, Noise and Industrial Pollution (www.eionet.europa.eu/etcs/etc-atni)"
-            )
+            normalized_doc["cluster_name"].append(doc_loc_parts[1])
             normalized_doc["topic"] = "Air pollution"
 
         if doc_loc_parts[1] == "etc-bd":
-            normalized_doc["cluster_name"].append(
-                "ETC on Biological Diversity (www.eionet.europa.eu/etcs/etc-bd)"
-            )
+            normalized_doc["cluster_name"].append(doc_loc_parts[1])
             normalized_doc["topic"] = "Biodiversity — Ecosystems"
 
         if doc_loc_parts[1] == "etc-cca":
-            normalized_doc["cluster_name"].append(
-                "ETC on Climate Change Impacts, Vulnerability and Adaptation (www.eionet.europa.eu/etcs/etc-cca)"
-            )
+            normalized_doc["cluster_name"].append(doc_loc_parts[1])
             normalized_doc["topic"] = "Climate change adaptation"
 
         if doc_loc_parts[1] == "etc-cme":
-            normalized_doc["cluster_name"].append(
-                "ETC on Climate Change Mitigation and Energy (www.eionet.europa.eu/etcs/etc-cme)"
-            )
+            normalized_doc["cluster_name"].append(doc_loc_parts[1])
             normalized_doc["topic"] = ["Climate change mitigation", "Energy"]
 
         if doc_loc_parts[1] == "etc-icm":
-            normalized_doc["cluster_name"].append(
-                "ETC on Inland, Coastal and Marine Waters (www.eionet.europa.eu/etcs/etc-icm)"
-            )
+            normalized_doc["cluster_name"].append(doc_loc_parts[1])
             normalized_doc["topic"] = "Water and marine environment"
 
         if doc_loc_parts[1] == "etc-uls":
-            normalized_doc["cluster_name"].append(
-                "ETC on Urban, Land and Soil Systems (www.eionet.europa.eu/etcs/etc-uls)"
-            )
+            normalized_doc["cluster_name"].append(doc_loc_parts[1])
             normalized_doc["topic"] = ["Land use", "Soil"]
 
         if doc_loc_parts[1] == "etc-wmge":
-            normalized_doc["cluster_name"].append(
-                "ETC on Waste and Materials in Green Economy (www.eionet.europa.eu/etcs/etc-wmge)"
-            )
+            normalized_doc["cluster_name"].append(doc_loc_parts[1])
             normalized_doc["topic"] = "Resource efficiency and waste"
 
     normalized_doc = add_counts(normalized_doc)

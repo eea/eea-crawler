@@ -12,7 +12,7 @@ from normalizers.lib.nlp import common_preprocess
 def normalize_eea_europa_eu(doc, config):
     normalized_doc = common_normalizer(doc, config)
 
-    normalized_doc["cluster_name"] = "EEA Website (www.eea.europa.eu)"
+    normalized_doc["cluster_name"] = "eea"
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

@@ -35,7 +35,7 @@ def normalize_industry(doc, config):
 
     normalized_doc = common_normalizer(doc, config)
 
-    normalized_doc["cluster_name"] = "Industry (industry.eea.europa.eu)"
+    normalized_doc["cluster_name"] = "industry"
 
     doc_loc = urlparse(normalized_doc["id"]).path
 

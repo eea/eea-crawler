@@ -41,9 +41,7 @@ def normalize_climate(doc, config):
 
     normalized_doc = common_normalizer(doc, config)
 
-    normalized_doc[
-        "cluster_name"
-    ] = "Climate-adapt (climate-adapt.eea.europa.eu)"
+    normalized_doc["cluster_name"] = "cca"
     normalized_doc["topic"] = "Climate change adaptation"
 
     if doc["raw_value"].get("review_state") == "archived":

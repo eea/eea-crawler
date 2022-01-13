@@ -57,7 +57,7 @@ def normalize_biodiversity_europa_eu(doc, config):
     if normalized_doc["objectProvides"] == "Country fact sheet":
         normalized_doc["objectProvides"] = ["Country fact sheet", "Dashboard"]
     logger.info(normalized_doc["objectProvides"])
-    normalized_doc["cluster_name"] = "BISE (biodiversity.europa.eu)"
+    normalized_doc["cluster_name"] = "bise"
     normalized_doc["topic"] = "Biodiversity — Ecosystems"
 
     normalized_doc = add_counts(normalized_doc)
