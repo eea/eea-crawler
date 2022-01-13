@@ -856,6 +856,7 @@
             "type": "text"
         },
         "description": {
+            "analyzer": "english_stop_analyzer",
             "fields": {
                 "keyword": {
                     "ignore_above": 256,
@@ -1140,6 +1141,7 @@
             "type": "text"
         },
         "subject": {
+            "analyzer": "english_stop_analyzer",
             "fields": {
                 "keyword": {
                     "ignore_above": 256,
@@ -1166,6 +1168,7 @@
             "type": "text"
         },
         "title": {
+            "analyzer": "english_stop_analyzer",
             "copy_to": [
                 "did_you_mean",
                 "autocomplete",
@@ -1180,6 +1183,7 @@
                     "type": "keyword"
                 },
                 "toindex": {
+                    "analyzer": "english_stop_analyzer",
                     "fielddata": true,
                     "type": "text"
                 }
@@ -1294,12 +1298,19 @@
                         "tokenizer": "standard",
                         "type": "custom"
                     },
+                    "english_stop_analyzer": {
+                        "filter": [
+                            "english_stop"
+                        ],
+                        "tokenizer": "lowercase"
+                    },
                     "freetext": {
                         "char_filter": [
                             "html_strip"
                         ],
                         "filter": [
-                            "lowercase"
+                            "lowercase",
+                            "english_stop"
                         ],
                         "tokenizer": "standard",
                         "type": "custom"
@@ -1335,6 +1346,10 @@
                     "english_stemmer": {
                         "language": "english",
                         "type": "stemmer"
+                    },
+                    "english_stop": {
+                        "stopwords": "_english_",
+                        "type": "stop"
                     }
                 }
             },
