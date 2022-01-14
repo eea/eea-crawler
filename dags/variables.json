@@ -788,9 +788,6 @@
         },
         "all_fields_for_freetext": {
             "analyzer": "freetext",
-            "copy_to": [
-                "text"
-            ],
             "fielddata": true,
             "type": "text"
         },
@@ -885,6 +882,13 @@
                 "all_fields_for_freetext"
             ],
             "fielddata": true,
+            "type": "text"
+        },
+        "fulltext": {
+            "analyzer": "none",
+            "copy_to": [
+                "all_fields_for_freetext"
+            ],
             "type": "text"
         },
         "hasWorkflowState": {
