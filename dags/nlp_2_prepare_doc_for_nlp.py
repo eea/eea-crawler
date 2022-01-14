@@ -132,10 +132,10 @@ def transform_doc(full_config):
         "site": site_config,
     }
     normalized_doc = normalize(doc, config)
-    normalized_doc["fulltext"] = None
     if not normalized_doc:
         print("Should not be preprocessed & indexed for nlp")
         return
+    normalized_doc["fulltext"] = None
     preprocess = get_nlp_preprocessor(
         dag_params["item"], site_map, dag_variables
     )
