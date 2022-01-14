@@ -272,8 +272,6 @@ def fetch_temporal_coverage(norm_doc):
 
 
 def merge_types(doc):
-    print("update_types")
-    print(doc)
     if isinstance(doc.get("@components.object_provides"), str):
         doc["@components.object_provides"] = [
             doc["@components.object_provides"]
@@ -281,7 +279,11 @@ def merge_types(doc):
     if isinstance(doc.get("@type"), str):
         doc["@type"] = [doc["@type"]]
         doc["@type"] = doc["@type"] + doc["@components.object_provides"]
-    print(doc)
+    return doc
+
+
+def update_language(doc):
+    doc["language"] = doc.get("language", doc.get("language.token", "en"))
     return doc
 
 
@@ -289,6 +291,7 @@ def common_normalizer(doc, config):
     normalizer = config["normalizers"]
 
     normalized_doc = create_doc(doc["raw_value"])
+    normalized_doc = update_language(normalized_doc)
     normalized_doc = merge_types(normalized_doc)
     normalized_doc = update_locations(normalized_doc)
     attrs_to_delete = get_attrs_to_delete(
