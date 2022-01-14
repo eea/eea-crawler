@@ -228,7 +228,7 @@ def delete_attrs(doc, attrs):
     return clean_data
 
 
-def add_reading_time(
+def add_reading_time_and_fulltext(
     norm_doc, doc, txt_props=[], txt_props_black=[], trafilatura_config={}
 ):
     html = doc.get("web_html", "")
@@ -237,6 +237,7 @@ def add_reading_time(
         text = join_text_fields(doc["raw_value"], txt_props, txt_props_black)
     pdf_text = doc.get("pdf_text", "")
     text += pdf_text
+    norm_doc["fulltext"] = text
     wc = res = len(re.findall(r"\w+", text))
     norm_doc["readingTime"] = wc / 228
     return norm_doc
@@ -297,7 +298,7 @@ def common_normalizer(doc, config):
     attrs_to_delete = get_attrs_to_delete(
         normalized_doc, normalizer.get("proplist", [])
     )
-    normalized_doc = add_reading_time(
+    normalized_doc = add_reading_time_and_fulltext(
         normalized_doc,
         doc,
         config["nlp"]["text"].get("blacklist", []),

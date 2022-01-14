@@ -28,7 +28,6 @@ default_dag_params = {
     "params": {
         "fast": True,
         "portal_type": "",
-        "site": "ias",
     },
 }
 

@@ -132,6 +132,7 @@ def transform_doc(full_config):
         "site": site_config,
     }
     normalized_doc = normalize(doc, config)
+    normalized_doc["fulltext"] = None
     if not normalized_doc:
         print("Should not be preprocessed & indexed for nlp")
         return
