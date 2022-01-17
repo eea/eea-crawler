@@ -662,6 +662,7 @@
             "eea.sparql.interfaces.ISparql": "Data table (via SPARQL)",
             "eea.themecentre.interfaces.IThemeCentre": "Topic/subtopic site",
             "en-gb": "en",
+            "en-us": "en",
             "energy": "Energy",
             "etc_report": "Report",
             "european_union_factsheet": "Country fact sheet",
