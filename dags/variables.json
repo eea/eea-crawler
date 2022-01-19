@@ -886,7 +886,6 @@
             "type": "text"
         },
         "fulltext": {
-            "analyzer": "none",
             "copy_to": [
                 "all_fields_for_freetext"
             ],
