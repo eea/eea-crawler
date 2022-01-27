@@ -62,6 +62,12 @@
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
         "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".header-wrapper",
+                ".footerWrapper"
+            ]
+        },
         "url": "https://biodiversity.europa.eu",
         "url_api_part": "api"
     },
@@ -187,6 +193,13 @@
             }
         },
         "scrape_pages": false,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".header-wrapper",
+                ".breadcrumb",
+                ".footer-wrapper"
+            ]
+        },
         "url": "http://www.eea.europa.eu",
         "url_api_part": "api/SITE"
     },
@@ -270,6 +283,12 @@
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
         "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".breadcrumbs",
+                ".footer"
+            ]
+        },
         "url": "https://climate-energy.eea.europa.eu",
         "url_api_part": "api"
     },
@@ -317,6 +336,13 @@
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
         "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".header",
+                ".breadcrumbs",
+                ".footer"
+            ]
+        },
         "url": "https://forest.eea.europa.eu",
         "url_api_part": "api"
     },
@@ -341,8 +367,10 @@
         "scrape_pages": true,
         "scrape_with_js": true,
         "trafilatura": {
-            "blacklist": [
-                "header"
+            "remove_by_selector": [
+                "#content-header",
+                "#above-content-wrapper",
+                "#portal-footer-wrapper"
             ]
         },
         "url": "https://ias.eea.europa.eu",
@@ -391,6 +419,12 @@
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
         "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".header-wrapper",
+                "#footer"
+            ]
+        },
         "url": "https://industry.eea.europa.eu",
         "url_api_part": "api"
     },
@@ -433,6 +467,13 @@
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
         "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".header",
+                ".breadcrumbs",
+                ".footerWrapper"
+            ]
+        },
         "url": "https://water.europa.eu/freshwater",
         "url_api_part": ""
     },
@@ -521,6 +562,14 @@
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
         "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".fp-header",
+                ".content-header",
+                ".plone-breadcrumb",
+                ".footer-wrapper"
+            ]
+        },
         "url": "https://water.europa.eu/marine",
         "url_api_part": ""
     },
@@ -548,8 +597,6 @@
             "creator": "European Environment Agency (EEA)",
             "fleschReadingEaseScore": 0,
             "format": "text/html",
-            "hasWorkflowState": "published",
-            "issued": "field:creation_date",
             "language": "en",
             "organisation": "European Environment Agency (EEA)",
             "places": "unknown",
@@ -754,7 +801,10 @@
             "indexed_at",
             "spatial",
             "site_id",
-            "expires"
+            "expires",
+            "format",
+            "hasWorkflowState",
+            "issued"
         ],
         "whiteMap": {}
     },
@@ -1352,7 +1402,45 @@
                         "type": "stemmer"
                     },
                     "english_stop": {
-                        "stopwords": "_english_",
+                        "stopwords": [
+                            "a",
+                            "an",
+                            "and",
+                            "are",
+                            "as",
+                            "at",
+                            "be",
+                            "but",
+                            "by",
+                            "for",
+                            "if",
+                            "in",
+                            "into",
+                            "is",
+                            "it",
+                            "no",
+                            "not",
+                            "of",
+                            "on",
+                            "or",
+                            "such",
+                            "that",
+                            "the",
+                            "their",
+                            "then",
+                            "there",
+                            "these",
+                            "they",
+                            "this",
+                            "to",
+                            "was",
+                            "will",
+                            "what",
+                            "where",
+                            "how",
+                            "why",
+                            "does"
+                        ],
                         "type": "stop"
                     }
                 }
