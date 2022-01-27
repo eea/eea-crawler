@@ -44,6 +44,8 @@ def normalize_forest(doc, config):
             doc["raw_value"]["spatial"] = doc["raw_value"]["parent"]["title"]
 
     normalized_doc = common_normalizer(doc, config)
+    if not normalized_doc:
+        return None
 
     normalized_doc["cluster_name"] = "fise"
 
@@ -71,7 +73,7 @@ def normalize_forest(doc, config):
                 "Dashboard",
             ]
 
-    normalized_doc["topic"] = "Biodiversity — Ecosystems"
+    normalized_doc["topic"] = "Biodiversity - Ecosystems"
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

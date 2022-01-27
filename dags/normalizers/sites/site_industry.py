@@ -34,6 +34,8 @@ def normalize_industry(doc, config):
     logger.info("whitelisted")
 
     normalized_doc = common_normalizer(doc, config)
+    if not normalized_doc:
+        return None
 
     normalized_doc["cluster_name"] = "industry"
 

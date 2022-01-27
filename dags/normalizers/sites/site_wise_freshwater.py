@@ -33,13 +33,11 @@ def normalize_industry(doc, config):
         return None
     logger.info("whitelisted")
 
-    if doc["raw_value"]["@type"] == "File":
-        if doc["raw_value"]["file"]["content-type"] != "application/pdf":
-            logger.info("file, but not pdf")
-            return None
     if doc["raw_value"]["@type"] == "country_profile":
         doc["raw_value"]["spatial"] = doc["raw_value"]["title"]
     normalized_doc = common_normalizer(doc, config)
+    if not normalized_doc:
+        return None
 
     logger.info("TYPES:")
     logger.info(normalized_doc["objectProvides"])

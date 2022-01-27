@@ -33,6 +33,8 @@ def normalize_ias(doc, config):
     logger.info("whitelisted")
 
     normalized_doc = common_normalizer(doc, config)
+    if not normalized_doc:
+        return None
 
     doc_loc = urlparse(normalized_doc["id"]).path
     if (
@@ -45,7 +47,7 @@ def normalize_ias(doc, config):
             normalized_doc["objectProvides"] = "Map (interactive)"
 
     normalized_doc["cluster_name"] = "ias"
-    normalized_doc["topic"] = "Biodiversity — Ecosystems"
+    normalized_doc["topic"] = "Biodiversity - Ecosystems"
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

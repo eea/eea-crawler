@@ -32,12 +32,9 @@ def normalize_eionet(doc, config):
         return None
     logger.info("whitelisted")
 
-    if doc["raw_value"]["@type"] == "File":
-        if doc["raw_value"]["file"]["content-type"] != "application/pdf":
-            logger.info("file, but not pdf")
-            return None
-
     normalized_doc = common_normalizer(doc, config)
+    if not normalized_doc:
+        return None
 
     normalized_doc["cluster_name"] = ["etc"]
 
@@ -50,7 +47,7 @@ def normalize_eionet(doc, config):
 
         if doc_loc_parts[1] == "etc-bd":
             normalized_doc["cluster_name"].append(doc_loc_parts[1])
-            normalized_doc["topic"] = "Biodiversity — Ecosystems"
+            normalized_doc["topic"] = "Biodiversity - Ecosystems"
 
         if doc_loc_parts[1] == "etc-cca":
             normalized_doc["cluster_name"].append(doc_loc_parts[1])

@@ -1,6 +1,14 @@
+# https://www.eea.europa.eu/api/SITE/soer/2020/outreach/soer-2020-outreach-specific-privacy-statement
+# pubished_eionet
+
 import json
 import re
+from datetime import date, timedelta
+
 from normalizers.lib.trafilatura_extract import get_text_from_html
+import logging
+
+logger = logging.getLogger(__file__)
 
 
 def apply_black_map(doc, black_map):
@@ -232,7 +240,11 @@ def add_reading_time_and_fulltext(
     norm_doc, doc, txt_props=[], txt_props_black=[], trafilatura_config={}
 ):
     html = doc.get("web_html", "")
+    #    print("BEFORE")
+    #    print(html)
     text = get_text_from_html(html, trafilatura_config)
+    #    print("AFTER")
+    #    print(text)
     if not text or len(text) == 0:
         text = join_text_fields(doc["raw_value"], txt_props, txt_props_black)
     pdf_text = doc.get("pdf_text", "")
@@ -288,12 +300,56 @@ def update_language(doc):
     return doc
 
 
-def common_normalizer(doc, config):
-    normalizer = config["normalizers"]
+def fix_state(doc):
+    # list of all issues with examples
 
+    ## ignore that has no state published
+    # treat it by site, not generic
+
+    # keep this
+    if (
+        doc.get("objectProvides") == "File"
+        and doc.get("hasWorkflowState") == "visible"
+    ):
+        doc["hasWorkflowState"] = doc["parent.review_state"]
+    # if no publish date => don't index
+    if doc["hasWorkflowState"] in ["published", "archived"]:
+        if not doc.get("issued"):
+            doc["issued"] = doc.get("created", doc.get("creation_date"))
+    # keep this
+    if doc["hasWorkflowState"] == "archived" and not doc.get("expires"):
+        expires = date.today() - timedelta(
+            days=2
+        )  ## should be modification date
+        doc["expires"] = expires.isoformat()
+
+    # get rid,
+    if doc.get("issued"):
+        doc["hasWorkflowState"] = "published"
+
+    return doc
+
+
+def common_normalizer(doc, config):
+    if doc["raw_value"]["@type"] == "Plone Site":
+        return None
+    if doc["raw_value"]["@type"] == "File":
+        if doc["raw_value"]["file"]["content-type"] != "application/pdf":
+            logger.info("file, but not pdf")
+            return None
+        else:
+            doc["raw_value"]["format"] = doc["raw_value"]["file"][
+                "content-type"
+            ]
+    doc["raw_value"]["hasWorkflowState"] = (
+        doc["raw_value"].get("review_state", "visible") or "missing"
+    )
+    normalizer = config["normalizers"]
+    # if has issued & no hasWorkflowState => set hasWorkflowState
+    # if hasWorkflowState & no issued => set issued
     normalized_doc = create_doc(doc["raw_value"])
     normalized_doc = update_language(normalized_doc)
-    normalized_doc = merge_types(normalized_doc)
+    # normalized_doc = merge_types(normalized_doc)
     normalized_doc = update_locations(normalized_doc)
     attrs_to_delete = get_attrs_to_delete(
         normalized_doc, normalizer.get("proplist", [])
@@ -329,6 +385,8 @@ def common_normalizer(doc, config):
     # normalized_doc = apply_types_detection(normalized_doc)
 
     normalized_doc = remove_duplicates(normalized_doc)
+
+    normalized_doc = fix_state(normalized_doc)
 
     normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
     normalized_doc["original_id"] = normalized_doc["about"]

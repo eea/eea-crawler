@@ -33,12 +33,9 @@ def normalize_energy(doc, config):
         return None
     logger.info("whitelisted")
 
-    if doc["raw_value"]["@type"] == "File":
-        if doc["raw_value"]["file"]["content-type"] != "application/pdf":
-            logger.info("file, but not pdf")
-            return None
-
     normalized_doc = common_normalizer(doc, config)
+    if not normalized_doc:
+        return None
 
     logger.info("CHECK LOCATION:")
     doc_loc = urlparse(normalized_doc["id"]).path
