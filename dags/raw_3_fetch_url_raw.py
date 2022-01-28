@@ -161,8 +161,8 @@ def request_with_retry(url, method="get", data=None):
 
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
-def trafilatura_with_retry(url, config, js=False):
-    logger.info("Fetching with trafilatura: %s", url)
+def scrape_with_retry(url, js=False):
+    logger.info("Scraping url: %s", url)
 
     if js:
         resp = requests.post(
@@ -172,13 +172,13 @@ def trafilatura_with_retry(url, config, js=False):
         )
         downloaded = resp.text
     else:
-        resp = downloaded = requests.get(url)
-        downloaded = get_text_from_html(resp.text, config)
+        resp = requests.get(url)
+        downloaded = resp.text
 
     if magic.from_buffer(downloaded) == "data":
         return None
 
-    logger.info("Downloaded with trafilatura: %s", downloaded)
+    logger.info("Downloaded: %s", downloaded)
 
     return downloaded
 
@@ -304,12 +304,13 @@ def fetch_and_send_to_rabbitmq(full_config):
                 scrape = True
                 s_url = url_without_api
                 scrape_with_js = scrape_for_type.get("scrape_with_js", False)
+        if doc.get("@type") == "File":
+            scrape = False
         if scrape:
             if site_config.get("avoid_cache_web", False):
                 s_url = f"{url_without_api}?scrape=true"
-            web_html = trafilatura_with_retry(
+            web_html = scrape_with_retry(
                 s_url,
-                site_config.get("trafilatura", {}),
                 scrape_with_js,
             )
     except Exception:

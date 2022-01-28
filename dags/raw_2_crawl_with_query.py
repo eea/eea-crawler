@@ -22,8 +22,12 @@ from tasks.helpers import (
 )
 from lib.pool import val_to_pool  # url_to_pool,
 from lib.variables import get_variable
-
 from tasks.elastic import simple_create_index, create_raw_index
+from tenacity import retry, stop_after_attempt, wait_exponential
+import logging
+
+logger = logging.getLogger(__file__)
+import requests
 
 # get_attr,
 # from airflow.operators.python_operator import BranchPythonOperator
@@ -177,6 +181,28 @@ def find_site(url):
     return site
 
 
+@retry(wait=wait_exponential(), stop=stop_after_attempt(1))
+def request_with_retry(url, method="get", data=None):
+    logger.info("Fetching %s", url)
+
+    handler = getattr(requests, method)
+    resp = handler(
+        url, headers={"Accept": "application/json"}, data=json.dumps(data)
+    )
+    logger.info("Response: %s", resp.text)
+
+    assert json.loads(resp.text)  # test if response is json
+    logger.info("Response is valid json")
+
+    return resp.text
+
+
+@task
+def http_request(url):
+    val = request_with_retry(url)
+    return val
+
+
 @dag(
     default_args=default_args,
     schedule_interval=None,
@@ -207,13 +233,15 @@ def raw_2_crawl_with_query(item=default_dag_params):
     xc_endpoint = get_no_protocol_url(xc_item)
 
     debug_value(xc_dag_params)
-    page = SimpleHttpOperator(
-        task_id="get_docs_request",
-        method="GET",
-        endpoint=xc_endpoint,
-        headers={"Accept": "application/json"},
-    )
-    xc_urls = extract_docs_from_json(page.output, xc_params)
+    debug_value(xc_endpoint)
+    xc_resp = http_request(xc_item)
+    # page = SimpleHttpOperator(
+    #     task_id="get_docs_request",
+    #     method="GET",
+    #     endpoint=xc_endpoint,
+    #     headers={"Accept": "application/json"},
+    # )
+    xc_urls = extract_docs_from_json(xc_resp, xc_params)
 
     xc_allowed_urls = check_robots_txt(xc_item, xc_urls, xc_params)
 
@@ -237,7 +265,7 @@ def raw_2_crawl_with_query(item=default_dag_params):
         custom_pool=xc_pool_name,
     )
 
-    xc_next = extract_next_from_json(page.output, xc_params)
+    xc_next = extract_next_from_json(xc_resp, xc_params)
     debug_value(xc_next)
 
     # xc_pool_name_next = url_to_pool(xc_item, prefix="crawl_with_query")
