@@ -8,14 +8,15 @@ def common_preprocess(doc, config):
     html = doc.get("web_html", "")
     text = get_text_from_html(html, config["site"].get("trafilatura", {}))
 
-    if len(text) == 0:
-        text = join_text_fields(
-            raw_doc,
-            config["nlp"]["text"].get("blacklist", []),
-            config["nlp"]["text"].get("whitelist", []),
-        )
+    metadata_text = join_text_fields(
+        text,
+        raw_doc,
+        config["nlp"]["text"].get("blacklist", []),
+        config["nlp"]["text"].get("whitelist", []),
+    )
     pdf_text = doc.get("pdf_text", "")
-    text += pdf_text
+
+    text += "\n\n" + pdf_text
     title = raw_doc["title"]
     # metadata
     url = raw_doc["@id"]
