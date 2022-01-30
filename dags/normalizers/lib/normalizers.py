@@ -391,6 +391,12 @@ def common_normalizer(doc, config):
     normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
     normalized_doc["original_id"] = normalized_doc["about"]
     normalized_doc = strip_fields(normalized_doc)
+
+    if not normalized_doc.get("description"):
+        normalized_doc["description"] = " ".join(
+            normalized_doc.get("fulltext", "").strip().split(" ")[:100]
+        )
+
     return normalized_doc
 
 
