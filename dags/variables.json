@@ -105,6 +105,13 @@
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
         "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".header",
+                "#portal-breadcrumbs",
+                "footer"
+            ]
+        },
         "url": "https://climate-adapt.eea.europa.eu",
         "url_api_part": ""
     },
@@ -192,8 +199,11 @@
         "trafilatura": {
             "remove_by_selector": [
                 ".header-wrapper",
+                "#portal-header",
                 ".breadcrumb",
-                ".footer-wrapper"
+                "#portal-breadcrumbs",
+                ".footer-wrapper",
+                "#footer-wrapper"
             ]
         },
         "url": "http://www.eea.europa.eu",
@@ -246,6 +256,13 @@
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
         "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".content-header",
+                "#portal-breadcrumbs",
+                "#portal-footer-wrapper"
+            ]
+        },
         "types_blacklist": [
             "Event"
         ],
