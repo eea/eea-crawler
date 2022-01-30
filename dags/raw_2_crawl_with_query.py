@@ -19,10 +19,15 @@ from tasks.helpers import (
     set_attr,
     find_site_by_url,
     load_variables,
+    simple_dag_param_to_dict,
 )
 from lib.pool import val_to_pool  # url_to_pool,
 from lib.variables import get_variable
-from tasks.elastic import simple_create_index, create_raw_index
+from tasks.elastic import (
+    simple_create_index,
+    create_raw_index,
+    get_doc_from_raw_idx,
+)
 from tenacity import retry, stop_after_attempt, wait_exponential
 import logging
 
@@ -54,6 +59,30 @@ def get_no_protocol_url(url: str):
     return url.split("://")[-1]
 
 
+def is_doc_in_elastic(doc, params):
+    logger.info("CHECK IN ES")
+
+    dag_params = simple_dag_param_to_dict(params, default_dag_params)
+    dag_variables = dag_params["params"].get("variables", {})
+
+    es = get_variable("elastic", dag_variables)
+
+    doc_in_es = get_doc_from_raw_idx(doc["@id"], es)
+
+    if doc_in_es:
+        if doc_in_es.get("_source").get("errors"):
+            logger.info("with errors")
+            return False
+        if doc_in_es.get("_source").get("modified") == doc.get("modified"):
+            logger.info("exists")
+            return True
+        else:
+            logger.info("updated")
+            return False
+    logger.info("does not exist")
+    return False
+
+
 @task
 def extract_docs_from_json(page, params):
     site_config_variable = get_variable("Sites").get(params["site"], None)
@@ -76,6 +105,10 @@ def extract_docs_from_json(page, params):
         if doc["@type"] == "File":
             if doc["@id"].split(".")[-1].lower() in SKIP_EXTENSIONS:
                 skip = True
+
+        if is_doc_in_elastic(doc, params):
+            skip = True
+
         if not skip:
             docs.append(doc)
     urls = [doc["@id"] for doc in docs if doc["@type"] not in types_blacklist]

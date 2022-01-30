@@ -171,11 +171,16 @@ def get_doc_from_raw_idx(item, config):
         ],
         timeout=timeout,
     )
-    res = es.get(index=config["raw_index"], id=item)
+    try:
+        res = es.get(index=config["raw_index"], id=item)
+    except Exception:
+        return None
+
     doc = {
         "raw_value": res["_source"]["raw_value"],
         "web_html": res["_source"].get("web_html", ""),
         "pdf_text": res["_source"].get("pdf_text", ""),
+        "_source": res["_source"],
     }
 
     return doc
