@@ -154,15 +154,17 @@ def transform_doc(full_config):
 
     nlp_services = get_variable("nlp_services", dag_variables)
     # add the embeddings
-    docs_with_embedding = add_embeddings_doc(
-        splitted_docs, nlp_services["embedding"]
-    )
+    if len(splitted_docs):
+        docs_with_embedding = add_embeddings_doc(
+            splitted_docs, nlp_services["embedding"]
+        )
+        print("STEP 3")
 
-    # print(docs_with_embedding)
+        # print(docs_with_embedding)
 
-    for doc_with_embedding in docs_with_embedding:
-        doc_with_embedding["site_id"] = doc["raw_value"].get("site_id")
-        simple_send_to_rabbitmq(doc_with_embedding, rabbitmq)
+        for doc_with_embedding in docs_with_embedding:
+            doc_with_embedding["site_id"] = doc["raw_value"].get("site_id")
+            simple_send_to_rabbitmq(doc_with_embedding, rabbitmq)
 
 
 prepare_doc_for_nlp_dag = nlp_2_prepare_doc_for_nlp()

@@ -147,12 +147,15 @@ def add_places(norm_doc):
     return norm_doc
 
 
-def join_text_fields(text, json_doc, txt_props, txt_props_black):
+def join_text_fields(
+    text, json_doc, txt_props, txt_props_black, include_title=True
+):
     # json_doc = json.loads(doc)
     # start text with the document title.
     title = json_doc.get("title", "no title") or "no title"
 
-    text += "\n\n" + title + ".\n\n"
+    if include_title:
+        text += "\n\n" + title + ".\n\n"
 
     # get other predefined fields first in the order defined in txt_props param
     for prop in txt_props:
@@ -161,10 +164,10 @@ def join_text_fields(text, json_doc, txt_props, txt_props_black):
             txt = cleanhtml(prop_v.get("data", ""))
         else:
             txt = cleanhtml(prop_v)
-        if not txt.endswith("."):
+        if len(txt) and not txt.endswith("."):
             txt = txt + "."
         # avoid redundant text
-        if txt not in text:
+        if len(txt) and txt not in text:
             text = text + txt + "\n\n"
 
     # find automatically all props that have text or html in it
@@ -181,10 +184,10 @@ def join_text_fields(text, json_doc, txt_props, txt_props_black):
                 # print('%s is text/html' % k)
                 txt = cleanhtml(json_doc.get(k, {}).get("data", ""))
             # avoid redundant text
-            if txt and txt not in text:
+            if len(txt) and txt not in text:
                 if not txt.endswith("."):
                     txt = txt + "."
-                text = text + "\n\n" + k.upper() + ": " + txt + "\n\n"
+                text = text + "\n\n" + txt + "\n\n"
 
     # TODO: for volto based content types with blocks, the above would not work,
     # a better approach would need to grab the rendered html page and strip the html. could be done for all content types.
@@ -198,7 +201,7 @@ def cleanhtml(raw_html):
         cleanr = re.compile("<.*?>")
         cleantext = re.sub(cleanr, "", raw_html)
 
-    return cleantext
+    return cleantext.strip()
 
 
 def simplify_elements(element, element_key):
@@ -246,7 +249,10 @@ def add_reading_time_and_fulltext(
     text = get_text_from_html(html, trafilatura_config)
     #    print("AFTER")
     #    print(text)
-    text = join_text_fields(text, doc["raw_value"], txt_props, txt_props_black)
+
+    text = join_text_fields(
+        text, doc["raw_value"], txt_props, txt_props_black, include_title=False
+    )
     pdf_text = doc.get("pdf_text", "")
     text += "\n\n" + pdf_text
     norm_doc["fulltext"] = text
