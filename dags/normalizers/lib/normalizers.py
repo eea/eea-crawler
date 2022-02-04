@@ -250,10 +250,19 @@ def add_reading_time_and_fulltext(
     #    print("AFTER")
     #    print(text)
 
-    text = join_text_fields(
-        text, doc["raw_value"], txt_props, txt_props_black, include_title=False
-    )
+    if not text or len(text) == 0:
+        text = join_text_fields(
+            text,
+            doc["raw_value"],
+            txt_props,
+            txt_props_black,
+            include_title=False,
+        )
+
+    # CHECK pdf viewer & trafilatura
+
     pdf_text = doc.get("pdf_text", "")
+
     text += "\n\n" + pdf_text
     norm_doc["fulltext"] = text
     wc = res = len(re.findall(r"\w+", text))
@@ -319,9 +328,9 @@ def fix_state(doc):
     ):
         doc["hasWorkflowState"] = doc["parent.review_state"]
     # if no publish date => don't index
-    if doc["hasWorkflowState"] in ["published", "archived"]:
-        if not doc.get("issued"):
-            doc["issued"] = doc.get("created", doc.get("creation_date"))
+    # if doc["hasWorkflowState"] in ["published", "archived"]:
+    #     if not doc.get("issued"):
+    #         doc["issued"] = doc.get("created", doc.get("creation_date"))
     # keep this
     if doc["hasWorkflowState"] == "archived" and not doc.get("expires"):
         expires = date.today() - timedelta(
@@ -330,8 +339,8 @@ def fix_state(doc):
         doc["expires"] = expires.isoformat()
 
     # get rid,
-    if doc.get("issued"):
-        doc["hasWorkflowState"] = "published"
+    # if doc.get("issued"):
+    #     doc["hasWorkflowState"] = "published"
 
     return doc
 
