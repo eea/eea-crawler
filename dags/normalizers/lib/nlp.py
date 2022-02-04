@@ -7,13 +7,13 @@ def common_preprocess(doc, config):
     raw_doc = doc["raw_value"]
     html = doc.get("web_html", "")
     text = get_text_from_html(html, config["site"].get("trafilatura", {}))
-
-    metadata_text = join_text_fields(
-        text,
-        raw_doc,
-        config["nlp"]["text"].get("blacklist", []),
-        config["nlp"]["text"].get("whitelist", []),
-    )
+    if not text or len(text) == 0:
+        text = join_text_fields(
+            text,
+            raw_doc,
+            config["nlp"]["text"].get("blacklist", []),
+            config["nlp"]["text"].get("whitelist", []),
+        )
     pdf_text = doc.get("pdf_text", "")
 
     text += "\n\n" + pdf_text
