@@ -36,37 +36,37 @@ def normalize_eionet(doc, config):
     if not normalized_doc:
         return None
 
-    normalized_doc["cluster_name"] = ["etc"]
+    normalized_doc["cluster_name"] = "etc"
 
     doc_loc = urlparse(normalized_doc["id"]).path
     doc_loc_parts = doc_loc.strip("/").split("/")
     if doc_loc_parts[0] == "etcs" and len(doc_loc_parts) > 1:
         if doc_loc_parts[1] == "etc-atni":
-            normalized_doc["cluster_name"].append(doc_loc_parts[1])
+            normalized_doc["cluster_name"] = doc_loc_parts[1]
             normalized_doc["topic"] = "Air pollution"
 
         if doc_loc_parts[1] == "etc-bd":
-            normalized_doc["cluster_name"].append(doc_loc_parts[1])
+            normalized_doc["cluster_name"] = doc_loc_parts[1]
             normalized_doc["topic"] = "Biodiversity - Ecosystems"
 
         if doc_loc_parts[1] == "etc-cca":
-            normalized_doc["cluster_name"].append(doc_loc_parts[1])
+            normalized_doc["cluster_name"] = doc_loc_parts[1]
             normalized_doc["topic"] = "Climate change adaptation"
 
         if doc_loc_parts[1] == "etc-cme":
-            normalized_doc["cluster_name"].append(doc_loc_parts[1])
+            normalized_doc["cluster_name"] = doc_loc_parts[1]
             normalized_doc["topic"] = ["Climate change mitigation", "Energy"]
 
         if doc_loc_parts[1] == "etc-icm":
-            normalized_doc["cluster_name"].append(doc_loc_parts[1])
+            normalized_doc["cluster_name"] = doc_loc_parts[1]
             normalized_doc["topic"] = "Water and marine environment"
 
         if doc_loc_parts[1] == "etc-uls":
-            normalized_doc["cluster_name"].append(doc_loc_parts[1])
+            normalized_doc["cluster_name"] = doc_loc_parts[1]
             normalized_doc["topic"] = ["Land use", "Soil"]
 
         if doc_loc_parts[1] == "etc-wmge":
-            normalized_doc["cluster_name"].append(doc_loc_parts[1])
+            normalized_doc["cluster_name"] = doc_loc_parts[1]
             normalized_doc["topic"] = "Resource efficiency and waste"
 
     normalized_doc = add_counts(normalized_doc)
