@@ -34,5 +34,5 @@ def get_text_from_html(html, config):
                 )
 
     cleaned = lxml.html.tostring(e)
-    text = trafilatura.extract(e) or ""
+    text = trafilatura.extract(cleaned, favor_recall=True) or ""
     return text
