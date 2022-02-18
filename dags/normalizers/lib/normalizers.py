@@ -345,6 +345,17 @@ def fix_state(doc):
     return doc
 
 
+def addFormat(doc, raw_doc):
+    if raw_doc.get("pdf_text", None):
+        doc_format = doc.get("format", None)
+        if not isinstance(doc_format, list):
+            doc_format = [doc_format]
+        if "application/pdf" not in doc_format:
+            doc_format.append("application/pdf")
+            doc["format"] = doc_format
+    return doc
+
+
 def common_normalizer(doc, config):
     if doc["raw_value"]["@type"] == "Plone Site":
         return None
@@ -402,6 +413,7 @@ def common_normalizer(doc, config):
     normalized_doc = remove_duplicates(normalized_doc)
 
     normalized_doc = fix_state(normalized_doc)
+    normalized_doc = addFormat(normalized_doc, doc)
 
     normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
     normalized_doc["original_id"] = normalized_doc["about"]
