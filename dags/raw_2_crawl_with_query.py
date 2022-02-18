@@ -84,7 +84,7 @@ def is_doc_in_elastic(doc, params):
 
 
 @task
-def extract_docs_from_json(page, params):
+def extract_docs_from_json(page, params, raw_idx):
     site_config_variable = get_variable("Sites").get(params["site"], None)
     site_config = get_variable(site_config_variable)
     types_blacklist = site_config.get("types_blacklist", [])
@@ -245,7 +245,7 @@ def http_request(url):
     raw_3_fetch_url_raw for each document""",
 )
 def raw_2_crawl_with_query(item=default_dag_params):
-    create_raw_index()
+    raw_idx = create_raw_index()
 
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 
@@ -274,7 +274,7 @@ def raw_2_crawl_with_query(item=default_dag_params):
     #     endpoint=xc_endpoint,
     #     headers={"Accept": "application/json"},
     # )
-    xc_urls = extract_docs_from_json(xc_resp, xc_params)
+    xc_urls = extract_docs_from_json(xc_resp, xc_params, raw_idx)
 
     xc_allowed_urls = check_robots_txt(xc_item, xc_urls, xc_params)
 

@@ -46,6 +46,7 @@ def simple_create_index(config, add_embedding=False):
             print("Index already exists")
         else:
             raise (e)
+    return True
 
 
 @task
