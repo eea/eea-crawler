@@ -919,6 +919,10 @@
         "description": {
             "analyzer": "english_stop_analyzer",
             "fields": {
+                "highlight": {
+                    "analyzer": "highlight",
+                    "type": "text"
+                },
                 "keyword": {
                     "ignore_above": 256,
                     "type": "keyword"
@@ -1378,6 +1382,14 @@
                         "filter": [
                             "lowercase",
                             "english_stop"
+                        ],
+                        "tokenizer": "standard",
+                        "type": "custom"
+                    },
+                    "highlight": {
+                        "filter": [
+                            "lowercase",
+                            "asciifolding"
                         ],
                         "tokenizer": "standard",
                         "type": "custom"
