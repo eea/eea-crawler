@@ -25,7 +25,7 @@ from lib.variables import get_variable
 # You can override them on a per-task basis during operator initialization
 default_args = {"owner": "airflow"}
 default_dag_params = {
-    "item": "eea",
+    "item": "ias",
     "params": {
         "query_size": 500,
         "trigger_next_bulk": True,
@@ -69,7 +69,8 @@ def build_queries_list(config):
 
 
 @task
-def get_site_config(params):
+def get_site_config(task_params):
+    params = task_params
     site = params.get("item", None)
     config = {}
     sites = get_variable("Sites")
@@ -108,6 +109,7 @@ def raw_1_crawl_plonerestapi_website(item=default_dag_params):
 
     Main task to crawl a website
     """
+
     # get_variables()
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
 

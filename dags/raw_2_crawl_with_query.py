@@ -59,7 +59,8 @@ def get_no_protocol_url(url: str):
     return url.split("://")[-1]
 
 
-def is_doc_in_elastic(doc, params):
+def is_doc_in_elastic(doc, task_params):
+    params = task_params
     logger.info("CHECK IN ES")
 
     dag_params = simple_dag_param_to_dict(params, default_dag_params)
@@ -84,7 +85,8 @@ def is_doc_in_elastic(doc, params):
 
 
 @task
-def extract_docs_from_json(page, params, raw_idx):
+def extract_docs_from_json(page, task_params, raw_idx):
+    params = task_params
     site_config_variable = get_variable("Sites").get(params["site"], None)
     site_config = get_variable(site_config_variable)
     types_blacklist = site_config.get("types_blacklist", [])
@@ -122,7 +124,8 @@ def extract_docs_from_json(page, params, raw_idx):
 
 
 @task
-def extract_next_from_json(page, params):
+def extract_next_from_json(page, task_params):
+    params = task_params
     site_config_variable = get_variable("Sites").get(params["site"], None)
     site_config = get_variable(site_config_variable)
 
@@ -144,8 +147,8 @@ def extract_next_from_json(page, params):
 
 
 @task
-def check_trigger_searchui(params, es):
-    print(es)
+def check_trigger_searchui(task_params, es):
+    params = task_params
     if params.get("trigger_searchui", False):
         es["target_index"] = es["searchui_target_index"]
         simple_create_index(es)
@@ -153,14 +156,16 @@ def check_trigger_searchui(params, es):
 
 
 @task
-def check_trigger_nlp(params, es):
+def check_trigger_nlp(task_params, es):
+    params = task_params
     if params.get("trigger_nlp", False):
         es["target_index"] = es["nlp_target_index"]
         simple_create_index(es, add_embedding=True)
     return params
 
 
-def remove_api_url(url, params):
+def remove_api_url(url, task_params):
+    params = task_params
     if params.get("fix_items_url", None):
         if params["fix_items_url"]["without_api"] in url:
             return url
@@ -180,7 +185,8 @@ def remove_api_url(url, params):
 
 
 @task
-def check_robots_txt(url, items, params):
+def check_robots_txt(url, items, task_params):
+    params = task_params
     site_config_variable = get_variable("Sites").get(params["site"], None)
     site_config = get_variable(site_config_variable)
     if site_config.get("ignore_robots_txt", False):
@@ -201,7 +207,8 @@ def check_robots_txt(url, items, params):
 
 
 @task
-def get_concurrency(params):
+def get_concurrency(task_params):
+    params =  task_params
     site_config_variable = get_variable("Sites").get(params["site"], None)
     site_config = get_variable(site_config_variable)
     return site_config.get("concurrency", 4)

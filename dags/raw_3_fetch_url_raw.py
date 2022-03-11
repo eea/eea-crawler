@@ -306,6 +306,7 @@ def fetch_and_send_to_rabbitmq(full_config):
                 scrape_with_js = scrape_for_type.get("scrape_with_js", False)
         if doc.get("@type") == "File":
             scrape = False
+        scrape = False
         if scrape:
             if site_config.get("avoid_cache_web", False):
                 s_url = f"{url_without_api}?scrape=true"
@@ -337,7 +338,7 @@ def fetch_and_send_to_rabbitmq(full_config):
             logger.info(site_config.get("pdf_days_limit"))
             if delta > site_config.get("pdf_days_limit"):
                 should_extract_pdf = False
-
+    should_extract_pdf = False
     if should_extract_pdf:
         logger.info("EXTRACT PDF")
         try:
