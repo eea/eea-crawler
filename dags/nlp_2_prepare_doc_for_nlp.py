@@ -22,6 +22,8 @@ from tasks.rabbitmq import simple_send_to_rabbitmq
 from tasks.elastic import get_doc_from_raw_idx
 from lib.variables import get_variable
 
+from normalizers.lib.nlp import preprocess_split_doc, add_embeddings_to_doc
+
 default_args = {"owner": "airflow"}
 
 default_dag_params = {
@@ -41,54 +43,9 @@ def nlp_2_prepare_doc_for_nlp(item=default_dag_params):
     task_transform_doc(item)
 
 
-@retry(wait=wait_exponential(), stop=stop_after_attempt(5))
-def preprocess_split_doc(doc, config):
-    from haystack.preprocessor.preprocessor import PreProcessor
-
-    preprocessor = PreProcessor(
-        clean_empty_lines=True,
-        clean_whitespace=True,
-        clean_header_footer=False,
-        split_by="word",
-        split_length=config["split_length"],
-        split_respect_sentence_boundary=True,
-    )
-
-    docs = preprocessor.process(doc)
-    print(doc["meta"]["name"])
-    print(f"n_docs_output: {len(docs)}")
-
-    for tmp_doc in docs:
-        tmp_doc["id"] = f"{tmp_doc['id']}#{tmp_doc['meta']['_split_id']}"
-
-    return docs
 
 
-@retry(wait=wait_exponential(), stop=stop_after_attempt(5))
-def add_embeddings_doc(docs, nlp_service):
-    # data = {'snippets':[doc['text']], "is_passage": True}
 
-    data = {"is_passage": True, "snippets": []}
-
-    for doc in docs:
-        data["snippets"].append(doc["text"])
-
-    data = json.dumps(data)
-    r = requests.post(
-        f"http://{nlp_service['host']}:{nlp_service['port']}/{nlp_service['path']}",
-        headers={
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-        },
-        data=data,
-    )
-
-    embeddings = json.loads(r.text)["embeddings"]
-    for doc in docs:
-        for embedding in embeddings:
-            if doc["text"] == embedding["text"]:
-                doc["embedding"] = embedding["embedding"]
-    return docs
 
 
 @task
@@ -150,22 +107,24 @@ def transform_doc(full_config):
     # split the document
     print("TRANSFORM_NLP")
     print(haystack_data)
-    splitted_docs = preprocess_split_doc(haystack_data, config["nlp"]["text"])
-
+    doc = preprocess_split_doc(haystack_data, config["nlp"]["text"])
+    print("SPLITTED")
+    print(doc)
     nlp_services = get_variable("nlp_services", dag_variables)
     # add the embeddings
-    if len(splitted_docs):
-        docs_with_embedding = add_embeddings_doc(
-            splitted_docs, nlp_services["embedding"]
+    if len(doc):
+        doc = add_embeddings_to_doc(
+            doc, nlp_services["embedding"]
         )
-        print("STEP 3")
 
         # print(docs_with_embedding)
 
-        for doc_with_embedding in docs_with_embedding:
-            doc_with_embedding["site_id"] = doc["raw_value"].get("site_id")
-            simple_send_to_rabbitmq(doc_with_embedding, rabbitmq)
-
+        # for doc_with_embedding in docs_with_embedding:
+        #     doc_with_embedding["site_id"] = doc["raw_value"].get("site_id")
+        #     simple_send_to_rabbitmq(doc_with_embedding, rabbitmq)
+    simple_send_to_rabbitmq(doc, rabbitmq)
+    print("EMBEDDINGS")
+    print(doc)
 
 prepare_doc_for_nlp_dag = nlp_2_prepare_doc_for_nlp()
 

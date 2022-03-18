@@ -13,6 +13,7 @@ from tasks.rabbitmq import simple_send_to_rabbitmq
 from tasks.elastic import get_doc_from_raw_idx
 from lib.variables import get_variable
 
+from normalizers.lib.nlp import preprocess_split_doc, add_embeddings_to_doc
 
 default_args = {"owner": "airflow"}
 
@@ -70,6 +71,13 @@ def transform_doc(full_config):
     normalized_doc = normalize(doc, config)
     if normalized_doc:
         normalized_doc["site_id"] = doc["raw_value"].get("site_id")
+
+        doc = preprocess_split_doc(normalized_doc, config["nlp"]["text"], field="fulltext")
+        print("SPLIT:")
+        print(doc)
+        nlp_services = get_variable("nlp_services", dag_variables)
+        doc = add_embeddings_to_doc(doc, nlp_services["embedding"])
+
         simple_send_to_rabbitmq(normalized_doc, rabbitmq)
 
 
