@@ -131,7 +131,7 @@ def raw_1_crawl_plonerestapi_website(item=default_dag_params):
         task_id="crawl_with_query",
         items=xc_items,
         trigger_dag_id="raw_2_crawl_with_query",
-        custom_pool=xc_pool_name,
+        custom_pool=cpo.output,
     )
 
 

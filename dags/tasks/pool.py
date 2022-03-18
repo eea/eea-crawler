@@ -16,18 +16,16 @@ class CreatePoolOperator(BaseOperator):
         self.name = name
 
     def execute(self, context):
-        print("SELF:")
-        print(self.description)
-        print(self.slots)
-        print(self.name)
         try:
             pool = get_pool(name=self.name)
             if pool:
                 self.log.info(f"Pool exists: {pool}")
-                return
+
         except PoolNotFound:
             # create the pool
             pool = create_pool(
                 name=self.name, slots=self.slots, description=self.description
             )
             self.log.info(f"Created pool: {pool}")
+
+        return (self.name)
