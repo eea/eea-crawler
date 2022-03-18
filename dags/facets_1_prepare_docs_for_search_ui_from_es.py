@@ -62,7 +62,6 @@ def facets_1_prepare_docs_for_search_ui_from_es(item=default_dag_params):
 
     xc_variables = load_variables({})
 
-    xc_item = get_item(xc_dag_params)
     xc_es = get_es_config()
     xc_es_mapping = get_variable("elastic_mapping")
     xc_es_settings = get_variable("elastic_settings")
@@ -70,13 +69,13 @@ def facets_1_prepare_docs_for_search_ui_from_es(item=default_dag_params):
     xc_es = set_attr(xc_es, "mapping", xc_es_mapping)
     xc_es = set_attr(xc_es, "settings", xc_es_settings)
 
-    create_index(xc_es)
+    idx = create_index(xc_es)
 
     cpo = CreatePoolOperator(
         task_id="create_pool", name="prepare_doc_for_search_ui", slots=16
     )
 
-    handle_all_ids(
+    tasks = handle_all_ids(
         xc_es,
         xc_dag_params,
         "prepare_doc_for_search_ui",
@@ -85,6 +84,7 @@ def facets_1_prepare_docs_for_search_ui_from_es(item=default_dag_params):
         variables=xc_variables,
     )
 
+    idx >> cpo >> tasks
 
 prepare_docs_for_search_ui_from_es_dag = (
     facets_1_prepare_docs_for_search_ui_from_es()

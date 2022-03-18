@@ -85,7 +85,7 @@ def is_doc_in_elastic(doc, task_params):
 
 
 @task
-def extract_docs_from_json(page, task_params, raw_idx):
+def extract_docs_from_json(page, task_params):
     params = task_params
     site_config_variable = get_variable("Sites").get(params["site"], None)
     site_config = get_variable(site_config_variable)
@@ -255,6 +255,7 @@ def raw_2_crawl_with_query(item=default_dag_params):
     raw_idx = create_raw_index()
 
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
+    raw_idx >> xc_dag_params
 
     xc_params = get_params(xc_dag_params)
     xc_params = load_variables(xc_params)
@@ -273,7 +274,7 @@ def raw_2_crawl_with_query(item=default_dag_params):
 
     debug_value(xc_dag_params)
     xc_resp = http_request(xc_item)
-    xc_urls = extract_docs_from_json(xc_resp, xc_params, raw_idx)
+    xc_urls = extract_docs_from_json(xc_resp, xc_params)
 
     xc_allowed_urls = check_robots_txt(xc_item, xc_urls, xc_params)
 
