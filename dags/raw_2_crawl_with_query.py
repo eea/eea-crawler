@@ -270,17 +270,9 @@ def raw_2_crawl_with_query(item=default_dag_params):
     xc_params = check_trigger_nlp(xc_params, xc_es)
 
     xc_item = get_item(xc_dag_params)
-    xc_endpoint = get_no_protocol_url(xc_item)
 
     debug_value(xc_dag_params)
-    debug_value(xc_endpoint)
     xc_resp = http_request(xc_item)
-    # page = SimpleHttpOperator(
-    #     task_id="get_docs_request",
-    #     method="GET",
-    #     endpoint=xc_endpoint,
-    #     headers={"Accept": "application/json"},
-    # )
     xc_urls = extract_docs_from_json(xc_resp, xc_params, raw_idx)
 
     xc_allowed_urls = check_robots_txt(xc_item, xc_urls, xc_params)
@@ -302,7 +294,7 @@ def raw_2_crawl_with_query(item=default_dag_params):
         task_id="fetch_url_raw",
         items=xc_items,
         trigger_dag_id="raw_3_fetch_url_raw",
-        custom_pool=xc_pool_name,
+        custom_pool=cpo.output,
     )
 
     xc_next = extract_next_from_json(xc_resp, xc_params)
@@ -316,12 +308,14 @@ def raw_2_crawl_with_query(item=default_dag_params):
 
     xc_items_next = build_items_list(xc_next, xc_params)
 
-    bt = BulkTriggerDagRunOperator(
+    bt_next = BulkTriggerDagRunOperator(
         task_id="crawl_with_query",
         items=xc_items_next,
         trigger_dag_id="raw_2_crawl_with_query",
-        custom_pool=xc_pool_name_next,
+        custom_pool=cpo_next.output,
     )
+    
+    bt >> cpo_next
 
 
 crawl_with_query_dag = raw_2_crawl_with_query()
