@@ -24,7 +24,7 @@ def simple_create_index(config, add_embedding=False):
             {
                 "host": config["host"],
                 "port": config["port"],
-                "schema": "http"
+                "scheme": "http"
             }
         ],
         timeout=timeout,
@@ -106,7 +106,7 @@ def handle_all_ids(
             {
                 "host": config["host"],
                 "port": config["port"],
-                "schema": "http"
+                "scheme": "http"
             }
         ],
         timeout=timeout,
@@ -170,7 +170,7 @@ def get_doc_from_raw_idx(item, config):
             {
                 "host": config["host"],
                 "port": config["port"],
-                "schema": "http"
+                "scheme": "http"
             }
         ],
         timeout=timeout,
