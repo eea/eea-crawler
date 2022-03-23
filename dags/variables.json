@@ -1102,6 +1102,18 @@
         "modified": {
             "type": "date"
         },
+        "nlp": {
+            "properties": {
+                "embedding": {
+                    "dims": 768,
+                    "type": "dense_vector"
+                },
+                "text": {
+                    "type": "text"
+                }
+            },
+            "type": "nested"
+        },
         "objectProvides": {
             "copy_to": [
                 "did_you_mean",
