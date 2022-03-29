@@ -61,14 +61,14 @@ def common_preprocess(doc, config):
     return dict_doc
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
-def preprocess_split_doc(doc, config, field="text"):
+def preprocess_split_doc(doc, config, field="text", field_name="nlp", split_length=500):
     preprocessor = PreProcessor(
         clean_empty_lines=True,
         clean_whitespace=True,
         clean_header_footer=False,
         split_by="word",
         #split_length=config["split_length"],
-        split_length=100,
+        split_length=split_length,
         split_respect_sentence_boundary=True,
     )
     tmp_doc = {'content': doc.get(field,'')}
@@ -78,19 +78,18 @@ def preprocess_split_doc(doc, config, field="text"):
 
     # for tmp_doc in docs:
     #     tmp_doc["id"] = f"{tmp_doc['id']}#{tmp_doc['meta']['_split_id']}"
-    doc['nlp'] = []
+    doc[field_name] = []
     for tmp_doc in docs:
-        doc['nlp'].append({'text':tmp_doc['content']})
+        doc[field_name].append({'text':tmp_doc['content']})
 
     return doc
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
-def add_embeddings_to_doc(doc, nlp_service):
+def add_embeddings_to_doc(doc, nlp_service, field_name="nlp"):
     # data = {'snippets':[doc['text']], "is_passage": True}
 
     data = {"is_passage": True, "snippets": []}
-
-    for content in doc['nlp']:
+    for content in doc[field_name]:
         data["snippets"].append(content["text"])
 
     data = json.dumps(data)
@@ -102,9 +101,8 @@ def add_embeddings_to_doc(doc, nlp_service):
         },
         data=data,
     )
-
     embeddings = json.loads(r.text)["embeddings"]
-    for content in doc['nlp']:
+    for content in doc[field_name]:
         for embedding in embeddings:
             if content["text"] == embedding["text"]:
                 content["embedding"] = embedding["embedding"]

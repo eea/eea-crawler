@@ -7,7 +7,7 @@ import json
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 
-from normalizers.registry import get_facets_normalizer
+from normalizers.registry import get_facets_normalizer, get_nlp_preprocessor
 from tasks.helpers import simple_dag_param_to_dict, find_site_by_url
 from tasks.rabbitmq import simple_send_to_rabbitmq
 from tasks.elastic import get_doc_from_raw_idx
@@ -70,13 +70,23 @@ def transform_doc(full_config):
     }
     normalized_doc = normalize(doc, config)
     if normalized_doc:
-        normalized_doc["site_id"] = doc["raw_value"].get("site_id")
+        preprocess = get_nlp_preprocessor(
+            dag_params["item"], site_map, dag_variables
+        )
+        haystack_data = preprocess(doc, config)
+        normalized_doc["fulltext"] = haystack_data.get("text", "")
 
-        doc = preprocess_split_doc(normalized_doc, config["nlp"]["text"], field="fulltext")
-        print("SPLIT:")
-        print(doc)
+        normalized_doc["site_id"] = doc["raw_value"].get("site_id")
         nlp_services = get_variable("nlp_services", dag_variables)
-        doc = add_embeddings_to_doc(doc, nlp_services["embedding"])
+
+        doc = preprocess_split_doc(normalized_doc, config["nlp"]["text"], field="fulltext", field_name="nlp_500", split_length=500)
+        doc = add_embeddings_to_doc(doc, nlp_services["embedding"], field_name="nlp_500")
+
+        doc = preprocess_split_doc(normalized_doc, config["nlp"]["text"], field="fulltext", field_name="nlp_250", split_length=250)
+        doc = add_embeddings_to_doc(doc, nlp_services["embedding"], field_name="nlp_250")
+
+        doc = preprocess_split_doc(normalized_doc, config["nlp"]["text"], field="fulltext", field_name="nlp_100", split_length=100)
+        doc = add_embeddings_to_doc(doc, nlp_services["embedding"], field_name="nlp_100")
 
         simple_send_to_rabbitmq(normalized_doc, rabbitmq)
 

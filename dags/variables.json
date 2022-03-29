@@ -1102,7 +1102,31 @@
         "modified": {
             "type": "date"
         },
-        "nlp": {
+        "nlp_100": {
+            "properties": {
+                "embedding": {
+                    "dims": 768,
+                    "type": "dense_vector"
+                },
+                "text": {
+                    "type": "text"
+                }
+            },
+            "type": "nested"
+        },
+        "nlp_250": {
+            "properties": {
+                "embedding": {
+                    "dims": 768,
+                    "type": "dense_vector"
+                },
+                "text": {
+                    "type": "text"
+                }
+            },
+            "type": "nested"
+        },
+        "nlp_500": {
             "properties": {
                 "embedding": {
                     "dims": 768,
