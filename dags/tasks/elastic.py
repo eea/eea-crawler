@@ -20,13 +20,7 @@ def simple_create_index(config, add_embedding=False):
     # TODO: check if index already exists
     timeout = 100
     es = Elasticsearch(
-        [
-            {
-                "host": config["host"],
-                "port": config["port"],
-                "scheme": "http"
-            }
-        ],
+        [{"host": config["host"], "port": config["port"], "scheme": "http"}],
         timeout=timeout,
     )
     if add_embedding:
@@ -102,13 +96,7 @@ def handle_all_ids(
     print(body)
     # Init Elasticsearch instance
     es = Elasticsearch(
-        [
-            {
-                "host": config["host"],
-                "port": config["port"],
-                "scheme": "http"
-            }
-        ],
+        [{"host": config["host"], "port": config["port"], "scheme": "http"}],
         timeout=timeout,
     )
 
@@ -166,13 +154,7 @@ def handle_all_ids(
 def get_doc_from_raw_idx(item, config):
     timeout = 1000
     es = Elasticsearch(
-        [
-            {
-                "host": config["host"],
-                "port": config["port"],
-                "scheme": "http"
-            }
-        ],
+        [{"host": config["host"], "port": config["port"], "scheme": "http"}],
         timeout=timeout,
     )
     try:

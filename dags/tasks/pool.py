@@ -28,4 +28,4 @@ class CreatePoolOperator(BaseOperator):
             )
             self.log.info(f"Created pool: {pool}")
 
-        return (self.name)
+        return self.name

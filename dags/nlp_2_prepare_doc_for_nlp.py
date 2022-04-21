@@ -43,11 +43,6 @@ def nlp_2_prepare_doc_for_nlp(item=default_dag_params):
     task_transform_doc(item)
 
 
-
-
-
-
-
 @task
 def task_transform_doc(full_config):
     transform_doc(full_config)
@@ -113,9 +108,7 @@ def transform_doc(full_config):
     nlp_services = get_variable("nlp_services", dag_variables)
     # add the embeddings
     if len(doc):
-        doc = add_embeddings_to_doc(
-            doc, nlp_services["embedding"]
-        )
+        doc = add_embeddings_to_doc(doc, nlp_services["embedding"])
 
         # print(docs_with_embedding)
 
@@ -125,6 +118,7 @@ def transform_doc(full_config):
     simple_send_to_rabbitmq(doc, rabbitmq)
     print("EMBEDDINGS")
     print(doc)
+
 
 prepare_doc_for_nlp_dag = nlp_2_prepare_doc_for_nlp()
 

@@ -17,62 +17,65 @@ def common_preprocess(doc, config):
         text = join_text_fields(
             text,
             raw_doc,
-            config["nlp"]["text"].get("blacklist", []),
             config["nlp"]["text"].get("whitelist", []),
+            config["nlp"]["text"].get("blacklist", []),
         )
     pdf_text = doc.get("pdf_text", "")
 
     text += "\n\n" + pdf_text
-    title = raw_doc["title"]
-    # metadata
-    url = raw_doc["@id"]
-    uid = raw_doc["UID"]
-    content_type = raw_doc["@type"]
-    source_domain = urlparse(url).netloc
+    # title = raw_doc["title"]
+    # # metadata
+    # url = raw_doc["@id"]
+    # uid = raw_doc["UID"]
+    # content_type = raw_doc["@type"]
+    # source_domain = urlparse(url).netloc
 
     # Archetype DC dates
-    if "creation_date" in raw_doc:
-        creation_date = raw_doc["creation_date"]
-        publishing_date = raw_doc.get("effectiveDate", "")
-        expiration_date = raw_doc.get("expirationDate", "")
+    # if "creation_date" in raw_doc:
+    #     creation_date = raw_doc["creation_date"]
+    #     publishing_date = raw_doc.get("effectiveDate", "")
+    #     expiration_date = raw_doc.get("expirationDate", "")
     # Dexterity DC dates
-    elif "created" in raw_doc:
-        creation_date = raw_doc["created"]
-        publishing_date = raw_doc.get("effective", "")
-        expiration_date = raw_doc.get("expires", "")
+    # elif "created" in raw_doc:
+    #     creation_date = raw_doc["created"]
+    #     publishing_date = raw_doc.get("effective", "")
+    #     expiration_date = raw_doc.get("expires", "")
 
-    review_state = raw_doc.get("review_state", "")
+    # review_state = raw_doc.get("review_state", "")
 
     # build haystack dict
     dict_doc = {
         "text": text,
         "meta": {
-            "name": title,
-            "url": url,
-            "uid": uid,
-            "content_type": content_type,
-            "creation_date": creation_date,
-            "publishing_date": publishing_date,
-            "expiration_date": expiration_date,
-            "review_state": review_state,
-            "source_domain": source_domain,
+            # "name": title,
+            # "url": url,
+            # "uid": uid,
+            # "content_type": content_type,
+            # "creation_date": creation_date,
+            # "publishing_date": publishing_date,
+            # "expiration_date": expiration_date,
+            # "review_state": review_state,
+            # "source_domain": source_domain,
         },
     }
     return dict_doc
 
+
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
-def preprocess_split_doc(doc, config, field="text", field_name="nlp", split_length=500):
+def preprocess_split_doc(
+    doc, config, field="text", field_name="nlp", split_length=500
+):
     preprocessor = PreProcessor(
         clean_empty_lines=True,
         clean_whitespace=True,
         clean_header_footer=False,
         split_by="word",
-        #split_length=config["split_length"],
+        # split_length=config["split_length"],
         split_length=split_length,
         split_respect_sentence_boundary=True,
     )
-    tmp_doc = {'content': doc.get(field,'')}
-#    doc["content"] = doc.get('text', '')
+    tmp_doc = {"content": doc.get(field, "")}
+    #    doc["content"] = doc.get('text', '')
 
     docs = preprocessor.process(tmp_doc)
 
@@ -80,9 +83,10 @@ def preprocess_split_doc(doc, config, field="text", field_name="nlp", split_leng
     #     tmp_doc["id"] = f"{tmp_doc['id']}#{tmp_doc['meta']['_split_id']}"
     doc[field_name] = []
     for tmp_doc in docs:
-        doc[field_name].append({'text':tmp_doc['content']})
+        doc[field_name].append({"text": tmp_doc["content"]})
 
     return doc
+
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
 def add_embeddings_to_doc(doc, nlp_service, field_name="nlp"):

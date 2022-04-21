@@ -26,7 +26,7 @@ def get_all_variables():
             variables["Sites"][site], deserialize_json=True
         )
         normalizer = variables[variables["Sites"][site]].get(
-            "normalizers_variable", ""
+            "normalizers_variable", "default_normalizers"
         )
         variables[normalizer] = Variable.get(normalizer, deserialize_json=True)
 

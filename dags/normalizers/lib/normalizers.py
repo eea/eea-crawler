@@ -383,8 +383,8 @@ def common_normalizer(doc, config):
     normalized_doc = add_reading_time_and_fulltext(
         normalized_doc,
         doc,
-        config["nlp"]["text"].get("blacklist", []),
         config["nlp"]["text"].get("whitelist", []),
+        config["nlp"]["text"].get("blacklist", []),
         config["site"].get("trafilatura", {}),
     )
     normalized_doc = apply_black_map(

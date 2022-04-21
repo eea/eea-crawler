@@ -208,7 +208,7 @@ def check_robots_txt(url, items, task_params):
 
 @task
 def get_concurrency(task_params):
-    params =  task_params
+    params = task_params
     site_config_variable = get_variable("Sites").get(params["site"], None)
     site_config = get_variable(site_config_variable)
     return site_config.get("concurrency", 4)
@@ -315,7 +315,7 @@ def raw_2_crawl_with_query(item=default_dag_params):
         trigger_dag_id="raw_2_crawl_with_query",
         custom_pool=cpo_next.output,
     )
-    
+
     bt >> cpo_next
 
 

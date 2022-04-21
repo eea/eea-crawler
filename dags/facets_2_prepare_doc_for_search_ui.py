@@ -54,14 +54,18 @@ def transform_doc(full_config):
     else:
         doc = get_doc_from_raw_idx(dag_params["item"], es)
 
+    if not site:
+        site = doc["_source"].get("site_id", "")
+
     sites = get_variable("Sites", dag_variables)
 
     site_config = get_variable(sites[site], dag_variables)
     normalizers_config = get_variable(
-        site_config["normalizers_variable"], dag_variables
+        site_config.get("normalizers_variable", "default_normalizers"),
+        dag_variables,
     )
     normalize = get_facets_normalizer(
-        dag_params["item"], site_map, dag_variables
+        dag_params["item"], site_map, dag_variables, site_id=site
     )
     config = {
         "normalizers": normalizers_config,
@@ -71,7 +75,7 @@ def transform_doc(full_config):
     normalized_doc = normalize(doc, config)
     if normalized_doc:
         preprocess = get_nlp_preprocessor(
-            dag_params["item"], site_map, dag_variables
+            dag_params["item"], site_map, dag_variables, site_id=site
         )
         haystack_data = preprocess(doc, config)
         normalized_doc["fulltext"] = haystack_data.get("text", "")
@@ -79,14 +83,38 @@ def transform_doc(full_config):
         normalized_doc["site_id"] = doc["raw_value"].get("site_id")
         nlp_services = get_variable("nlp_services", dag_variables)
 
-        doc = preprocess_split_doc(normalized_doc, config["nlp"]["text"], field="fulltext", field_name="nlp_500", split_length=500)
-        doc = add_embeddings_to_doc(doc, nlp_services["embedding"], field_name="nlp_500")
+        doc = preprocess_split_doc(
+            normalized_doc,
+            config["nlp"]["text"],
+            field="fulltext",
+            field_name="nlp_500",
+            split_length=500,
+        )
+        doc = add_embeddings_to_doc(
+            doc, nlp_services["embedding"], field_name="nlp_500"
+        )
 
-        doc = preprocess_split_doc(normalized_doc, config["nlp"]["text"], field="fulltext", field_name="nlp_250", split_length=250)
-        doc = add_embeddings_to_doc(doc, nlp_services["embedding"], field_name="nlp_250")
+        doc = preprocess_split_doc(
+            normalized_doc,
+            config["nlp"]["text"],
+            field="fulltext",
+            field_name="nlp_250",
+            split_length=250,
+        )
+        doc = add_embeddings_to_doc(
+            doc, nlp_services["embedding"], field_name="nlp_250"
+        )
 
-        doc = preprocess_split_doc(normalized_doc, config["nlp"]["text"], field="fulltext", field_name="nlp_100", split_length=100)
-        doc = add_embeddings_to_doc(doc, nlp_services["embedding"], field_name="nlp_100")
+        doc = preprocess_split_doc(
+            normalized_doc,
+            config["nlp"]["text"],
+            field="fulltext",
+            field_name="nlp_100",
+            split_length=100,
+        )
+        doc = add_embeddings_to_doc(
+            doc, nlp_services["embedding"], field_name="nlp_100"
+        )
 
         simple_send_to_rabbitmq(normalized_doc, rabbitmq)
 
