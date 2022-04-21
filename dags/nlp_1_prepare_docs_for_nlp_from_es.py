@@ -82,4 +82,5 @@ def nlp_1_prepare_docs_for_nlp_from_es(item=default_dag_params):
 
     idx >> cpo >> tasks
 
+
 prepare_docs_for_nlp_from_es_dag = nlp_1_prepare_docs_for_nlp_from_es()

@@ -28,14 +28,19 @@ identificationInfo/*/resourceMaintenance
 resourceDate/publication
 th_eea-topics/default
 """
-def simplify_list(sdi_list, field = 'default'):
+
+
+def simplify_list(sdi_list, field="default"):
     return [val[field] for val in sdi_list or []]
 
-def capitalise_list(sdi_list, field = 'default'):
+
+def capitalise_list(sdi_list, field="default"):
     return [val[field].title() for val in sdi_list or []]
+
 
 def simplify_list_from_tree(sdi_list):
     return [val.split("^")[-1].title() for val in sdi_list or []]
+
 
 def pre_normalize_sdi(doc, config):
     doc["raw_value"]["site_id"] = "sdi"
@@ -63,12 +68,24 @@ def pre_normalize_sdi(doc, config):
                 doc["raw_value"].get("createDate"),
             )
 
-    doc["raw_value"]["overview.url"] = simplify_list(doc["raw_value"].get("overview", []), 'url')
-    doc["raw_value"]["sdi_rod"] = simplify_list(doc["raw_value"].get("th_rod-eionet-europa-eu", []))
-    doc["raw_value"]["sdi_topics"] = simplify_list(doc["raw_value"].get("th_eea-topics", []))
-    doc["raw_value"]["sdi_gemet"] = simplify_list_from_tree(doc["raw_value"].get("th_gemet_tree.default", []))
-    doc["raw_value"]["sdi_spatialRepresentationType"] = simplify_list(doc["raw_value"].get("cl_spatialRepresentationType", []))
-    doc["raw_value"]["sdi_spatial"] = simplify_list(doc["raw_value"].get("th_regions", []))
+    doc["raw_value"]["overview.url"] = simplify_list(
+        doc["raw_value"].get("overview", []), "url"
+    )
+    doc["raw_value"]["sdi_rod"] = simplify_list(
+        doc["raw_value"].get("th_rod-eionet-europa-eu", [])
+    )
+    doc["raw_value"]["sdi_topics"] = simplify_list(
+        doc["raw_value"].get("th_eea-topics", [])
+    )
+    doc["raw_value"]["sdi_gemet"] = simplify_list_from_tree(
+        doc["raw_value"].get("th_gemet_tree.default", [])
+    )
+    doc["raw_value"]["sdi_spatialRepresentationType"] = simplify_list(
+        doc["raw_value"].get("cl_spatialRepresentationType", [])
+    )
+    doc["raw_value"]["sdi_spatial"] = simplify_list(
+        doc["raw_value"].get("th_regions", [])
+    )
     return doc
 
 

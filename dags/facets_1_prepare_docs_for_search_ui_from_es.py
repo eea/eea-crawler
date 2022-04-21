@@ -86,6 +86,7 @@ def facets_1_prepare_docs_for_search_ui_from_es(item=default_dag_params):
 
     idx >> cpo >> tasks
 
+
 prepare_docs_for_search_ui_from_es_dag = (
     facets_1_prepare_docs_for_search_ui_from_es()
 )
