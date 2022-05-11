@@ -48,8 +48,16 @@ def pre_normalize_sdi(doc, config):
     doc["raw_value"]["@type"] = "series"
     doc["raw_value"][
         "about"
-    ] = f"https://galliwasp.eea.europa.eu/catalogue/datahub/eng/catalog.search#/metadata/{doc['raw_value']['metadataIdentifier']}"
-    if doc["raw_value"].get("isPublishedToAll", "false") == "true":
+    ] = doc['raw_value']['metadataIdentifier']
+    isPublishedToAll = doc["raw_value"].get("isPublishedToAll", "false")
+    print("ISPUBLISHED")
+    print (isPublishedToAll)
+    if isinstance(isPublishedToAll, list):
+        isPublishedToAll = isPublishedToAll[0]
+    if isinstance(isPublishedToAll, type(True)):
+        isPublishedToAll = str(isPublishedToAll).lower()
+    print (isPublishedToAll)
+    if isPublishedToAll == "true":
         doc["raw_value"]["review_state"] = "published"
 
         resourceDates = doc["raw_value"].get("resourceDate", [])
@@ -97,6 +105,7 @@ def normalize_sdi(doc, config):
     normalized_doc = common_normalizer(doc, config)
     normalized_doc["cluster_name"] = "sdi"
     normalized_doc = add_counts(normalized_doc)
+    normalized_doc["raw_value"] = doc["raw_value"]
     return normalized_doc
 
 

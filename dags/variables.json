@@ -8,6 +8,7 @@
         "fise": "config_fise",
         "ias": "config_ias",
         "industry": "config_industry",
+        "sdi": "config_sdi",
         "wise_freshwater": "config_wise_freshwater",
         "wise_marine": "config_wise_marine"
     },
@@ -157,7 +158,7 @@
                     "contact",
                     "rights"
                 ],
-                "props": [
+                "whitelist": [
                     "description",
                     "key_message",
                     "summary",
@@ -216,7 +217,7 @@
                     "contact",
                     "rights"
                 ],
-                "props": [
+                "whitelist": [
                     "description",
                     "key_message",
                     "summary",
@@ -440,6 +441,72 @@
         },
         "url": "https://industry.eea.europa.eu",
         "url_api_part": "api"
+    },
+    "config_sdi": {
+        "_endpoint": "https://galliwasp.eea.europa.eu/catalogue/datahub/api/search/records/_search",
+        "_query": {
+            "query": {
+                "query_string": {
+                    "query": "+resourceType:series"
+                }
+            },
+            "track_total_hits": true
+        },
+        "authorization": "<AUTHORIZATION>",
+        "custom_dag": "sdi_1_crawl",
+        "custom_task_id": "crawl_sdi",
+        "endpoint": "https://galliwasp.eea.europa.eu/catalogue/srv/api/search/records/_search",
+        "metadata_query": {
+            "_source": {
+                "excludes": [
+                    "*.data"
+                ]
+            },
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "metadataIdentifier": "<metadataIdentifier>"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "nlp_preprocessing": {
+            "text": {
+                "blacklist": [],
+                "split_length": 500,
+                "whitelist": [
+                    "resourceTitleObject.default",
+                    "resourceAbstractObject.default"
+                ]
+            }
+        },
+        "normalizers_variable": "sdi_normalizers",
+        "query": {
+            "_source": "metadataIdentifier",
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "resourceType": "series"
+                            }
+                        },
+                        {
+                            "match": {
+                                "groupPublished": "datahub"
+                            }
+                        }
+                    ]
+                }
+            },
+            "size": 10000,
+            "track_total_hits": true
+        },
+        "url": "https://galliwasp.eea.europa.eu/catalogue/datahub"
     },
     "config_wise_freshwater": {
         "fix_items_url": {
@@ -958,6 +1025,15 @@
             ],
             "type": "text"
         },
+        "gemet": {
+            "analyzer": "none",
+            "copy_to": [
+                "did_you_mean",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
         "hasWorkflowState": {
             "analyzer": "none",
             "copy_to": [
@@ -1171,6 +1247,10 @@
             "fielddata": true,
             "type": "text"
         },
+        "raw_value": {
+            "enabled": false,
+            "type": "object"
+        },
         "rdf_lastRefreshed": {
             "copy_to": [
                 "all_fields_for_freetext"
@@ -1182,6 +1262,18 @@
             "type": "double"
         },
         "references": {
+            "analyzer": "none",
+            "copy_to": [
+                "did_you_mean",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "resolutionScaleDenominator": {
+            "type": "double"
+        },
+        "rod": {
             "analyzer": "none",
             "copy_to": [
                 "did_you_mean",
@@ -1242,6 +1334,15 @@
             "copy_to": [
                 "did_you_mean",
                 "searchable_spatial",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
+        "spatialRepresentationType": {
+            "analyzer": "none",
+            "copy_to": [
+                "did_you_mean",
                 "all_fields_for_freetext"
             ],
             "fielddata": true,
@@ -1540,5 +1641,67 @@
         "queue": "queue_raw_data",
         "searchui_queue": "queue_searchui",
         "username": "guest"
+    },
+    "sdi_normalizers": {
+        "//": "Normalise missing properties with the given values",
+        "blackMap": {},
+        "normMissing": {},
+        "normObj": {
+            "true": "published"
+        },
+        "normProp": {
+            "@type": "objectProvides",
+            "OrgForResource": "organisation",
+            "about": [
+                "id",
+                "about"
+            ],
+            "isPublishedToAll": "hasWorkflowState",
+            "mainLanguage": "language",
+            "resourceAbstractObject.default": "description",
+            "resourceTitleObject.default": [
+                "title",
+                "label"
+            ],
+            "sdi_gemet": "gemet",
+            "sdi_rod": "rod",
+            "sdi_spatial": [
+                "spatial",
+                "places"
+            ],
+            "sdi_spatialRepresentationType": "spatialRepresentationType",
+            "sdi_topics": "topic"
+        },
+        "proplist": [
+            "id",
+            "about",
+            "language",
+            "title",
+            "description",
+            "themes",
+            "subject",
+            "location",
+            "year",
+            "modified",
+            "site",
+            "indexed_at",
+            "spatial",
+            "site_id",
+            "expires",
+            "format",
+            "hasWorkflowState",
+            "issued",
+            "overview.url",
+            "rod",
+            "topic",
+            "gemet",
+            "organisation",
+            "spatialRepresentationType",
+            "resolutionScaleDenominator",
+            "spatial",
+            "places",
+            "raw_value"
+        ],
+        "whiteMap": {}
     }
 }
