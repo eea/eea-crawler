@@ -204,7 +204,8 @@
                 ".breadcrumb",
                 "#portal-breadcrumbs",
                 ".footer-wrapper",
-                "#footer-wrapper"
+                "#footer-wrapper",
+                ".qrbox.featured"
             ]
         },
         "url": "http://www.eea.europa.eu",
@@ -1514,7 +1515,8 @@
                     },
                     "freetext": {
                         "char_filter": [
-                            "html_strip"
+                            "html_strip",
+                            "strip_urls"
                         ],
                         "filter": [
                             "lowercase",
@@ -1550,6 +1552,12 @@
                             ". =>  "
                         ],
                         "type": "mapping"
+                    },
+                    "strip_urls": {
+                        "type": "pattern_replace",
+                        "pattern":  "(https?://.*?)(?=\\s|$)",
+                        "replacement": "",
+                        "flags": "CASE_INSENSITIVE|MULTILINE"
                     }
                 },
                 "filter": {
