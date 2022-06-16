@@ -205,7 +205,8 @@
                 "#portal-breadcrumbs",
                 ".footer-wrapper",
                 "#footer-wrapper",
-                ".qrbox.featured"
+                ".qrbox.featured",
+                ".colophonWrapper"
             ]
         },
         "url": "http://www.eea.europa.eu",
