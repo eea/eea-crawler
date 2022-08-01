@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from urllib.parse import urlparse
 
@@ -170,3 +171,23 @@ def get_doc_from_raw_idx(item, config):
     }
 
     return doc
+
+BLOCK_WRITE_TRUE = {"settings": {"index.blocks.write": True}}
+BLOCK_WRITE_FALSE = {"settings": {"index.blocks.write": False}}
+
+def backup_index(elastic_conf, index, sufix='backup'):
+    es = Elasticsearch(
+        [{"host": elastic_conf["host"], "port": elastic_conf["port"], "scheme": "http"}]
+    )
+
+    es.indices.put_settings(json.dumps(BLOCK_WRITE_TRUE), index)
+    es.indices.clone(index, "{index}_{sufix}")
+    es.indices.put_settings(json.dumps(BLOCK_WRITE_FALSE), index)
+
+def backup_all_indices():
+    now = datetime.now()
+    ts = now.strftime("%Y_%m_%d_%H_%M_%S")
+
+    elastic = get_variable("elastic")
+    backup_index(elastic, elastic['raw_index'], ts)
+    backup_index(elastic, elastic['searchui_target_index'], ts)
