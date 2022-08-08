@@ -1,15 +1,12 @@
+import json
 from airflow.models import Variable
 
 
 def get_variable(variable, variables={}):
-    # print("GET VARIABLE")
-    # print(variable)
     val = variables.get(variable, None)
     if val:
-        # print("exists in cache")
         return val
     else:
-        # print("not found in cache")
         return Variable.get(variable, deserialize_json=True)
 
 
@@ -30,4 +27,10 @@ def get_all_variables():
         )
         variables[normalizer] = Variable.get(normalizer, deserialize_json=True)
 
+    return variables
+
+def load_variables_from_disk(fileName):
+    f = open(fileName)
+    variables = json.load(f)
+    f.close()
     return variables
