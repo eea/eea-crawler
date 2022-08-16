@@ -20,7 +20,7 @@ def sync():
     elastic_conf = v.get("elastic")
     elastic.backup_indices(es, [elastic_conf['raw_index']])
 
-    crawl("climate")
+    crawl("sdi")
 
 if __name__ == "__main__":
     sync()

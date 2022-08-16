@@ -2,17 +2,18 @@
 
 # get all documents from sdi and 
 import json
+print("PACKAGE")
+print("----------------------------------------------------------------")
+print (__package__)
 
 if __package__ is None or __package__ == '':
     import sys
     from os import path
     sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
     from lib import variables
-    from lib import elastic
     from lib import rabbitmq
 else:
     from ..lib import variables
-    from ..lib import elastic
     from ..lib import rabbitmq
 
 
