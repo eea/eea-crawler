@@ -2,7 +2,7 @@ import collections
 from copy import deepcopy
 from airflow.decorators import task
 from urllib.parse import urlparse
-from lib.variables import get_variable, get_all_variables
+from lib.airflow_variables import get_variable, get_all_variables
 
 
 def merge(dict1, dict2):

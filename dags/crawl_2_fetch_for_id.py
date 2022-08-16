@@ -52,7 +52,7 @@ def crawl_doc(metadataIdentifier, task_params):
     optional: trigger facets_2_prepare_doc_for_search_ui and
     nlp_2_prepare_doc_for_nlp""",
 )
-def sdi_2_fetch_for_id(item=default_dag_params):
+def crawl_2_fetch_for_id_dag(item=default_dag_params):
     """
         ### get info about an url
 
@@ -67,4 +67,4 @@ def sdi_2_fetch_for_id(item=default_dag_params):
     crawl_doc(xc_item, xc_params)
 
 
-sdi_fetch_for_id_dag = sdi_2_fetch_for_id()
+crawl_fetch_for_id_dag = crawl_2_fetch_for_id_dag()

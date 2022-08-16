@@ -8,7 +8,9 @@ import requests
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 
-from app import sdi_crawl
+from crawlers.registry import get_site_crawler, get_doc_crawler
+from lib import rabbitmq
+
 from tasks.helpers import simple_dag_param_to_dict
 from tasks.helpers import (
     dag_param_to_dict,
@@ -36,9 +38,23 @@ default_dag_params = {
 
 default_args = {"owner": "airflow"}
 
+def send_to_rabbitmq(v, raw_doc):
+    print("send_to_rabbitmq:")
+    print(raw_doc)
+    rabbitmq_config = v.get("rabbitmq")
+    rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
+
+
 @task 
-def crawl_doc(metadataIdentifier, task_params):
-    sdi_crawl.crawl_doc(task_params['variables'], metadataIdentifier)
+def crawl_doc(doc_id, task_params):
+    v = task_params["variables"]
+    site_id = task_params["site"]
+    site_config_v = task_params["variables"]["Sites"][site_id]
+    site_config = task_params["variables"][site_config_v]
+    crawl_type = site_config.get("type", "plone_rest_api")
+    crawler = get_doc_crawler(crawl_type)
+
+    crawler(v, site_id, site_config, doc_id, send_to_rabbitmq)
 
 @dag(
     default_args=default_args,
@@ -52,7 +68,7 @@ def crawl_doc(metadataIdentifier, task_params):
     optional: trigger facets_2_prepare_doc_for_search_ui and
     nlp_2_prepare_doc_for_nlp""",
 )
-def sdi_2_fetch_for_id(item=default_dag_params):
+def d3_crawl_fetch_for_id(item=default_dag_params):
     """
         ### get info about an url
 
@@ -67,4 +83,4 @@ def sdi_2_fetch_for_id(item=default_dag_params):
     crawl_doc(xc_item, xc_params)
 
 
-sdi_fetch_for_id_dag = sdi_2_fetch_for_id()
+crawl_fetch_for_id_dag = d3_crawl_fetch_for_id()

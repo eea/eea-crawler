@@ -50,7 +50,7 @@ def parse_all_documents(task_params):
     description="Entrypoint for crawling sdi",
     tags=["sdi"],
 )
-def sdi_1_crawl(item=default_dag_params):
+def crawl_1_site(item=default_dag_params):
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
     xc_params = get_params(xc_dag_params)
     xc_params = load_variables(xc_params)
@@ -61,4 +61,5 @@ def sdi_1_crawl(item=default_dag_params):
     cri >> cpo >> pd
 
 
-crawl_sdi_dag = sdi_1_crawl()
+crawl_dag = crawl_1_site()
+

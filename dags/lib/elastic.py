@@ -1,6 +1,8 @@
 from datetime import datetime
 from elasticsearch.exceptions import RequestError
 from elasticsearch.client.utils import query_params
+from elasticsearch import Elasticsearch
+
 import json
 
 BLOCK_WRITE_TRUE = {"settings": {"index.blocks.write": True}}
@@ -130,7 +132,7 @@ def get_docs(es, index=None, query=None, _source=None, path=None, scroll_size=10
             # Get the number of results that returned in the last scroll
             scroll_size = len(data["hits"]["hits"])
 
-def get_doc_by_id(es, item, path=None, index=None, headers=None, params=None, field=None):
+def get_doc_by_id(es, item, path=None, index=None, headers=None, params=None, field=None, excludes=None):
     try:
         if field is None:
             res = es.get(index=index, id=item)
@@ -147,9 +149,16 @@ def get_doc_by_id(es, item, path=None, index=None, headers=None, params=None, fi
                 }
             }
             query['query']['bool']['must'][0]['match'][field]=item
+            if excludes:
+                query['_source']={'excludes':excludes}
+            print (query)
             res = search(es=es, path=path, body=query)
+            print(res)
             res = res['hits']['hits'][0]
-    except Exception:
+    except Exception as e:
+        print("EXCEPTION:")
+        print(item)
+        print(e)
         return None
 
     doc = res["_source"]
@@ -174,4 +183,33 @@ def delete_old_indeces_for_index(es, index, cnt=3):
         delete_index(es, idx['index'])
 
 def delete_doc(es, index, doc_id):
-    es.delete(index, id='9a248e53-0747-4bba-b92b-1dea02030dc0')
+    es.delete(index, id=doc_id)
+
+def create_raw_index(variables):
+    es = elastic_connection(variables)
+
+    elastic_raw_mapping = variables.get('elastic_raw_mapping',None)
+    elastic_settings = variables.get("elastic_settings", None)
+    elastic = variables.get("elastic", None)
+    create_index(es, index=elastic["raw_index"],  mapping=elastic_raw_mapping, settings=elastic_settings)
+
+def elastic_connection(variables):
+    elastic = variables.get("elastic", None)
+    econf = {
+        "host": elastic["host"],
+        "port": elastic["port"],
+    }
+
+    es = Elasticsearch([econf])
+    return es
+
+def get_all_ids_from_raw_for_site(v, site):
+    es = elastic_connection(v)
+    elastic_conf = v.get("elastic")
+    query = {"query":{"bool":{"must":[{"match":{"site_id":site}}],"must_not":[],"should":[]}}}
+    docs = get_docs(es, index=elastic_conf.get('raw_index'), _source=['site_id', "id", "modified", "errors"], query=query)
+
+    docs_dict = {}
+    for doc in docs:
+        docs_dict[doc['_source']['id']] = {"modified":doc['_source']["modified"], "errors":doc['_source']["errors"]}
+    return docs_dict
