@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("climate-energy.eea.europa.eu")
+@register_facets_normalizer("energy")
 def normalize_energy(doc, config):
     logger.info("NORMALIZE ENERGY")
     logger.info(doc["raw_value"].get("@id", ""))
@@ -66,7 +66,7 @@ def normalize_energy(doc, config):
     return normalized_doc
 
 
-@register_nlp_preprocessor("climate-energy.eea.europa.eu")
+@register_nlp_preprocessor("energy")
 def preprocess_energy(doc, config):
     dict_doc = common_preprocess(doc, config)
 

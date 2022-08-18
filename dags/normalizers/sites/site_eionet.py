@@ -15,7 +15,7 @@ import logging
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("www.eionet.europa.eu")
+@register_facets_normalizer("eionet")
 def normalize_eionet(doc, config):
     logger.info("NORMALIZE EIONET")
     logger.info(doc["raw_value"].get("@id", ""))
@@ -73,7 +73,7 @@ def normalize_eionet(doc, config):
     return normalized_doc
 
 
-@register_nlp_preprocessor("www.eionet.europa.eu")
+@register_nlp_preprocessor("eionet")
 def preprocess_eionet(doc, config):
     dict_doc = common_preprocess(doc, config)
 

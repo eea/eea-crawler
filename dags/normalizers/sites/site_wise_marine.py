@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("water.europa.eu/marine")
+@register_facets_normalizer("wise_marine")
 def normalize_energy(doc, config):
     logger.info("NORMALIZE MARINE")
     logger.info(doc["raw_value"].get("@id", ""))
@@ -64,7 +64,7 @@ def normalize_energy(doc, config):
     return normalized_doc
 
 
-@register_nlp_preprocessor("water.europa.eu/marine")
+@register_nlp_preprocessor("wise_marine")
 def preprocess_energy(doc, config):
     dict_doc = common_preprocess(doc, config)
 

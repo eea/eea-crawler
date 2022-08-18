@@ -132,7 +132,6 @@ def pre_normalize_sdi(doc, config):
 @register_facets_normalizer("sdi")
 def normalize_sdi(doc, config):
     logger.info("NORMALIZE SDI")
-
     doc = pre_normalize_sdi(doc, config)
     normalized_doc = common_normalizer(doc, config)
     normalized_doc["cluster_name"] = "sdi"

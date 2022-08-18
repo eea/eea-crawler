@@ -30,13 +30,16 @@ def parse_all_documents(v, site, sdi_conf, handler=None, doc_handler=None):
     docs = elastic.get_docs(es=es_sdi, query=query, path=path)
     
     es_docs = elastic.get_all_ids_from_raw_for_site(v, site)
-
+    print("ES DOCS")
+    print(es_docs)
     for doc in docs:
         doc_id = doc['_source']['metadataIdentifier']
         doc_modified = doc['_source']['changeDate']
-        es_doc_modified = es_docs.get(doc_id, None)
+        es_doc_modified = es_docs.get(doc_id, None).get("modified","")
         print("DOC:")
         print(doc_id)
+        print (es_doc_modified)
+        print(doc_modified)
         if es_doc_modified == doc_modified:
             print("Document did not change, skip indexing")
         else:
@@ -83,4 +86,5 @@ def crawl_doc(v, site, sdi_conf, metadataIdentifier, handler=None):
 
     raw_doc = prepare_doc_for_rabbitmq(doc, site)
 
-    handler(v, raw_doc)
+    if handler:
+        handler(v, raw_doc)

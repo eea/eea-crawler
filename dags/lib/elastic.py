@@ -193,6 +193,14 @@ def create_raw_index(variables):
     elastic = variables.get("elastic", None)
     create_index(es, index=elastic["raw_index"],  mapping=elastic_raw_mapping, settings=elastic_settings)
 
+def create_search_index(variables):
+    es = elastic_connection(variables)
+
+    elastic_search_mapping = variables.get('elastic_mapping',None)
+    elastic_settings = variables.get("elastic_settings", None)
+    elastic = variables.get("elastic", None)
+    create_index(es, index=elastic["searchui_target_index"],  mapping=elastic_search_mapping, settings=elastic_settings)
+
 def elastic_connection(variables):
     elastic = variables.get("elastic", None)
     econf = {
@@ -211,5 +219,48 @@ def get_all_ids_from_raw_for_site(v, site):
 
     docs_dict = {}
     for doc in docs:
-        docs_dict[doc['_source']['id']] = {"modified":doc['_source']["modified"], "errors":doc['_source']["errors"]}
+        docs_dict[doc['_source']['id']] = {"modified":doc['_source']["modified"], "errors":doc['_source'].get("errors", [])}
     return docs_dict
+
+def get_all_ids_from_raw(v):
+    es = elastic_connection(v)
+    elastic_conf = v.get("elastic")
+    query = {"query":{"bool":{"must":[],"must_not":[],"should":[]}}}
+    docs = get_docs(es, index=elastic_conf.get('raw_index'), _source=['site_id', "id", "modified", "errors"], query=query)
+
+    docs_dict = {}
+    print ("raw ids")
+    for doc in docs:
+        print (doc['_source']['id'])
+        docs_dict[doc['_source']['id']] = {"modified":doc.get('_source',{}).get("modified"), "site_id": doc.get('_source',{}).get("site_id"), "errors":doc.get('_source',{}).get("errors", [])}
+    return docs_dict
+
+def get_all_ids_from_searchui(v):
+    es = elastic_connection(v)
+    elastic_conf = v.get("elastic")
+    query = {"query":{"bool":{"must":[],"must_not":[],"should":[]}}}
+    docs = get_docs(es, index=elastic_conf.get('searchui_target_index'), _source=['site_id', "id", "modified", "errors"], query=query)
+
+    docs_dict = {}
+    print ("searchui ids")
+    for doc in docs:
+        print (doc['_source']['id'])
+        docs_dict[doc['_source']['id']] = {"modified":doc.get('_source',{}).get("modified"), "errors":doc.get('_source',{}).get("errors", [])}
+    return docs_dict
+
+def get_doc_from_raw_idx(v, doc_id):
+    es = elastic_connection(v)
+    elastic_conf = v.get("elastic")
+    try:
+        res = es.get(index=elastic_conf["raw_index"], id=doc_id)
+    except Exception:
+        return None
+
+    doc = {
+        "raw_value": res["_source"]["raw_value"],
+        "web_html": res["_source"].get("web_html", ""),
+        "pdf_text": res["_source"].get("pdf_text", ""),
+        "_source": res["_source"],
+    }
+
+    return doc

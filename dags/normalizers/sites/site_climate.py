@@ -16,7 +16,7 @@ from datetime import date, timedelta
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("climate-adapt.eea.europa.eu")
+@register_facets_normalizer("climate")
 def normalize_climate(doc, config):
     logger.info("NORMALIZE CLIMATE")
     logger.info(f"RS: {doc['raw_value'].get('review_state')}")
@@ -51,7 +51,7 @@ def normalize_climate(doc, config):
     return normalized_doc
 
 
-@register_nlp_preprocessor("climate-adapt.eea.europa.eu")
+@register_nlp_preprocessor("climate")
 def preprocess_climate(doc, config):
     dict_doc = common_preprocess(doc, config)
 

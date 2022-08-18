@@ -1,5 +1,3 @@
-from urllib.parse import urlparse
-
 SITE_CRAWLERS = {}
 DOC_CRAWLERS = {}
 

@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("biodiversity.europa.eu")
+@register_facets_normalizer("bise")
 def normalize_biodiversity_europa_eu(doc, config):
     logger.info("NORMALIZE BISE")
     logger.info(doc["raw_value"].get("@id", ""))
@@ -62,7 +62,7 @@ def normalize_biodiversity_europa_eu(doc, config):
     return normalized_doc
 
 
-@register_nlp_preprocessor("biodiversity.europa.eu")
+@register_nlp_preprocessor("bise")
 def preprocess_biodiversity_europa_eu(doc, config):
     dict_doc = common_preprocess(doc, config)
 

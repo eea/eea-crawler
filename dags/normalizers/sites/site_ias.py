@@ -15,7 +15,7 @@ import logging
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("ias.eea.europa.eu")
+@register_facets_normalizer("ias")
 def normalize_ias(doc, config):
     logger.info("NORMALIZE IAS")
     logger.info(doc["raw_value"].get("@id", ""))
@@ -53,7 +53,7 @@ def normalize_ias(doc, config):
     return normalized_doc
 
 
-@register_nlp_preprocessor("ias.eea.europa.eu")
+@register_nlp_preprocessor("ias")
 def preprocess_ias(doc, config):
     dict_doc = common_preprocess(doc, config)
 

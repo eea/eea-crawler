@@ -130,4 +130,5 @@ def crawl_doc(v, site, site_config, doc_id, handler=None):
         doc_errors.append("pdf")
 
     raw_doc = prepare_doc_for_rabbitmq(doc, scraped, pdf_text, doc_errors, site, site_config)
-    handler(v, raw_doc)
+    if handler:
+        handler(v, raw_doc)

@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("forest.eea.europa.eu")
+@register_facets_normalizer("fise")
 def normalize_forest(doc, config):
     logger.info("NORMALIZE FISE")
     logger.info(doc["raw_value"].get("@id", ""))
@@ -79,7 +79,7 @@ def normalize_forest(doc, config):
     return normalized_doc
 
 
-@register_nlp_preprocessor("forest.eea.europa.eu")
+@register_nlp_preprocessor("fise")
 def preprocess_forest(doc, config):
     dict_doc = common_preprocess(doc, config)
 

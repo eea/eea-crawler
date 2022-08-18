@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("www.eea.europa.eu")
+@register_facets_normalizer("eea")
 def normalize_eea_europa_eu(doc, config):
     logger.info("NORMALIZE EEA")
     if doc["raw_value"]["@type"] == "Plone Site":
@@ -26,7 +26,7 @@ def normalize_eea_europa_eu(doc, config):
     return normalized_doc
 
 
-@register_nlp_preprocessor("www.eea.europa.eu")
+@register_nlp_preprocessor("eea")
 def preprocess_eea_europa_eu(doc, config):
     dict_doc = common_preprocess(doc, config)
 
