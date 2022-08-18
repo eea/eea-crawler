@@ -8,17 +8,15 @@ import requests
 from airflow.decorators import dag, task
 from airflow.utils.dates import days_ago
 
-from crawlers.registry import get_site_crawler, get_doc_crawler
 from lib import rabbitmq
+from normalizers import normalizer
 
-from tasks.helpers import simple_dag_param_to_dict
 from tasks.helpers import (
     dag_param_to_dict,
     load_variables,
     get_params,
     get_item
 )
-from tasks.debug import debug_value
 
 logger = logging.getLogger(__file__)
 
@@ -39,25 +37,24 @@ default_dag_params = {
 
 default_args = {"owner": "airflow"}
 
-def send_to_rabbitmq(v, raw_doc):
+def send_to_rabbitmq(v, doc):
     print("send_to_rabbitmq:")
-    print(raw_doc)
+    print(doc)
     rabbitmq_config = v.get("rabbitmq")
-    rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
+    rabbitmq_config["queue"] = rabbitmq_config["searchui_queue"]
+
+    rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
 
 
 @task 
-def crawl_doc(doc_id, task_params):
-    print(doc_id)
+def preprocess_doc(task_params):
     print(task_params)
-    v = task_params["variables"]
-    site_id = task_params["site"]
-    site_config_v = task_params["variables"]["Sites"][site_id]
-    site_config = task_params["variables"][site_config_v]
-    crawl_type = site_config.get("type", "plone_rest_api")
-    crawler = get_doc_crawler(crawl_type)
-
-    crawler(v, site_id, site_config, doc_id, send_to_rabbitmq)
+    v = task_params.get("params", {}).get("variables",{})
+    site_id = task_params.get("params", {}).get("site")
+    doc_id = task_params.get("item")
+    print(doc_id)
+    print(site_id)
+    normalizer.preprocess_doc(v, doc_id, site_id, send_to_rabbitmq)
 
 @dag(
     default_args=default_args,
@@ -71,7 +68,7 @@ def crawl_doc(doc_id, task_params):
     optional: trigger facets_2_prepare_doc_for_search_ui and
     nlp_2_prepare_doc_for_nlp""",
 )
-def d3_crawl_fetch_for_id(item=default_dag_params):
+def d5_prepare_doc_for_searchui(item=default_dag_params):
     """
         ### get info about an url
 
@@ -79,10 +76,7 @@ def d3_crawl_fetch_for_id(item=default_dag_params):
         optional: trigger facets_2_prepare_doc_for_search_ui and
         nlp_2_prepare_doc_for_nlp
     """
-    xc_dag_params = dag_param_to_dict(item, default_dag_params)
-    xc_params = get_params(xc_dag_params)
-    xc_params = load_variables(xc_params)
-    xc_item = get_item(xc_dag_params)
-    crawl_doc(xc_item, xc_params)
+    preprocess_doc(item)
 
-crawl_fetch_for_id_dag = d3_crawl_fetch_for_id()
+
+prepare_doc_for_searchui_dag = d5_prepare_doc_for_searchui()

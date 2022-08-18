@@ -36,7 +36,8 @@ def send_to_rabbitmq(v, raw_doc):
 
 def doc_handler(v, site, site_config, doc_id, handler=None):
     pool_name = simple_val_to_pool(site, "crawl_with_query")
-    task_params = {"item": doc_id}
+    task_params = {"item": doc_id, "params":{"site":site}}
+
     trigger_dag('d3_crawl_fetch_for_id', task_params, pool_name)
 
 @task
@@ -61,7 +62,6 @@ def parse_all_documents(task_params, pool_name):
 
 #def crawl_doc(v, site, sdi_conf, metadataIdentifier, handler=None):
 #def crawl_doc(v, site, site_config, doc_id, handler=None):
-
     parse_all_documents(task_params['variables'], site_id, site_config, handler, send_to_rabbitmq)
 
 @dag(
@@ -72,9 +72,7 @@ def parse_all_documents(task_params, pool_name):
     tags=["crawl"],
 )
 def d2_crawl_site(item=default_dag_params):
-    debug_value(item)
     xc_dag_params = dag_param_to_dict(item, default_dag_params)
-    debug_value(xc_dag_params)
     xc_params = get_params(xc_dag_params)
     xc_params = load_variables(xc_params)
     xc_site_id = get_site(xc_params)

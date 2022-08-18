@@ -6,15 +6,11 @@ if __package__ is None or __package__ == '':
     sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
     from lib import variables
     from lib import rabbitmq
-    from lib import elastic
 else:
     from ..lib import variables
     from ..lib import rabbitmq
-    from ..lib import elastic
 
 from normalizers import normalizer
-from normalizers.registry import get_facets_normalizer, get_nlp_preprocessor
-from normalizers.lib.nlp import preprocess_split_doc, add_embeddings_to_doc
 
 def send_to_rabbitmq(v, doc):
     rabbitmq_config = v.get("rabbitmq")
@@ -22,68 +18,7 @@ def send_to_rabbitmq(v, doc):
     rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
 
 def prepare_doc(v, doc_id, site_id, doc_handler):
-    print(f"{site_id} - {doc_id}")
-    facets_normalizer = get_facets_normalizer(site_id)
-    nlp_preprocessor = get_nlp_preprocessor(site_id)
-    nlp_services = v.get("nlp_services")
-
-    sites = v.get("Sites")
-    site_config_variable = sites.get(site_id, None)
-    site_config = v.get(site_config_variable)
-
-    normalizers_config = v.get(
-        site_config.get("normalizers_variable", "default_normalizers")
-    )
-
-    config = {
-        "normalizers": normalizers_config,
-        "nlp": site_config.get("nlp_preprocessing", None),
-        "site": site_config,
-    }
-    raw_doc = elastic.get_doc_from_raw_idx(v, doc_id)
-    #print(raw_doc)
-    #import pdb; pdb.set_trace()
-    raw_doc["raw_value"]["about"] = doc_id
-    normalized_doc = facets_normalizer(raw_doc, config)
-    if normalized_doc:
-        haystack_data = nlp_preprocessor(raw_doc, config)
-        normalized_doc["fulltext"] = haystack_data.get("text", "")
-
-        normalized_doc["site_id"] = raw_doc["raw_value"].get("site_id")
-
-        normalized_doc = preprocess_split_doc(
-            normalized_doc,
-            config["nlp"]["text"],
-            field="fulltext",
-            field_name="nlp_500",
-            split_length=500,
-        )
-        normalized_doc = add_embeddings_to_doc(
-            normalized_doc, nlp_services["embedding"], field_name="nlp_500"
-        )
-
-        # normalized_doc = preprocess_split_doc(
-        #     normalized_doc,
-        #     config["nlp"]["text"],
-        #     field="fulltext",
-        #     field_name="nlp_250",
-        #     split_length=250,
-        # )
-        # normalized_doc = add_embeddings_to_doc(
-        #     normalized_doc, nlp_services["embedding"], field_name="nlp_250"
-        # )
-
-        # normalized_doc = preprocess_split_doc(
-        #     normalized_doc,
-        #     config["nlp"]["text"],
-        #     field="fulltext",
-        #     field_name="nlp_100",
-        #     split_length=100,
-        # )
-        # normalized_doc = add_embeddings_to_doc(
-        #     normalized_doc, nlp_services["embedding"], field_name="nlp_100"
-        # )
-        doc_handler(v, normalized_doc)
+    normalizer.preprocess_doc(v, doc_id, site_id, doc_handler)
 
 def prepare_docs():
     v = variables.load_variables_from_disk('../variables.json')
