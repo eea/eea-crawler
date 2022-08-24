@@ -13,6 +13,7 @@ def get_variable(variable, variables={}):
 def get_all_variables():
     variables = {}
     variables["elastic"] = Variable.get("elastic", deserialize_json=True)
+    variables["headless_chrome"] = Variable.get("headless_chrome", deserialize_json=True)
     variables["elastic_settings"] = Variable.get("elastic_settings", deserialize_json=True)
     variables["elastic_mapping"] = Variable.get("elastic_mapping", deserialize_json=True)
     variables["elastic_raw_mapping"] = Variable.get("elastic_raw_mapping", deserialize_json=True)

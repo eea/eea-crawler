@@ -44,20 +44,28 @@ def send_to_rabbitmq(v, raw_doc):
     print(raw_doc)
     rabbitmq_config = v.get("rabbitmq")
     rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
+    errors = raw_doc.get("errors",[])
+    if len(errors) > 0:
+        msg = ", ".join(errors)
+        logger.warning(f"Error while {msg}, check the logs above")
 
+        raise Exception(f"WARNING: Error while {msg}")
 
 @task 
-def crawl_doc(doc_id, task_params):
+def crawl_doc(task_params):
+    v = task_params.get("params", {}).get("variables",{})
+    site_id = task_params.get("params", {}).get("site")
+    doc_id = task_params.get("item")
+
     print(doc_id)
     print(task_params)
-    v = task_params["variables"]
-    site_id = task_params["site"]
-    site_config_v = task_params["variables"]["Sites"][site_id]
-    site_config = task_params["variables"][site_config_v]
+    site_config_v = v["Sites"][site_id]
+    site_config = v[site_config_v]
     crawl_type = site_config.get("type", "plone_rest_api")
     crawler = get_doc_crawler(crawl_type)
 
     crawler(v, site_id, site_config, doc_id, send_to_rabbitmq)
+
 
 @dag(
     default_args=default_args,
@@ -79,10 +87,6 @@ def d3_crawl_fetch_for_id(item=default_dag_params):
         optional: trigger facets_2_prepare_doc_for_search_ui and
         nlp_2_prepare_doc_for_nlp
     """
-    xc_dag_params = dag_param_to_dict(item, default_dag_params)
-    xc_params = get_params(xc_dag_params)
-    xc_params = load_variables(xc_params)
-    xc_item = get_item(xc_dag_params)
-    crawl_doc(xc_item, xc_params)
+    crawl_doc(item)
 
 crawl_fetch_for_id_dag = d3_crawl_fetch_for_id()

@@ -171,7 +171,7 @@ def scrape(v, site_config, doc_id):
         s_url = url_without_api
         scrape_with_js = site_config.get("scrape_with_js", False)
         scrape = True
-
+    web_html = ""
     if scrape:
         if site_config.get("avoid_cache_web", False):
             dt = datetime.now()

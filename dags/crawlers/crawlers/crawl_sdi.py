@@ -28,14 +28,15 @@ def parse_all_documents(v, site, sdi_conf, handler=None, doc_handler=None):
     path = sdi_conf.get("path")
     es_sdi = sdi_es(sdi_conf)
     docs = elastic.get_docs(es=es_sdi, query=query, path=path)
-    
+    print("SDI DOCS")
+    print (docs)
     es_docs = elastic.get_all_ids_from_raw_for_site(v, site)
     print("ES DOCS")
     print(es_docs)
     for doc in docs:
         doc_id = doc['_source']['metadataIdentifier']
         doc_modified = doc['_source']['changeDate']
-        es_doc_modified = es_docs.get(doc_id, None).get("modified","")
+        es_doc_modified = es_docs.get(doc_id, {}).get("modified",None)
         print("DOC:")
         print(doc_id)
         print (es_doc_modified)

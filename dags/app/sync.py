@@ -16,11 +16,12 @@ else:
 def sync():
     v = variables.load_variables_from_disk('../variables.json')
     elastic.create_raw_index(v)
+    elastic.create_search_index(v)
     es = elastic.elastic_connection(v)
     elastic_conf = v.get("elastic")
-    elastic.backup_indices(es, [elastic_conf['raw_index']])
+    elastic.backup_indices(es, [elastic_conf['raw_index'],elastic_conf['searchui_target_index']])
 
-    crawl("sdi")
+    #crawl("sdi")
 
 if __name__ == "__main__":
     sync()

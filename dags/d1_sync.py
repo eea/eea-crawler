@@ -10,7 +10,7 @@ from lib import elastic
 default_args = {"owner": "airflow"}
 
 
-default_dag_params = {"params": {"Sites": ["ias", "sdi","industry"]}}
+default_dag_params = {"params": {"Sites": ["ias", "sdi","industry", "bise", "climate", "eionet","energy","fise", "wise_freshwater", "wise_marine"]}}
 @task
 def create_raw_index(task_params):
     v = task_params.get("variables", {})
@@ -18,7 +18,6 @@ def create_raw_index(task_params):
     es = elastic.elastic_connection(v)
     elastic_conf = v.get("elastic")
     elastic.backup_indices(es, [elastic_conf['raw_index']])
-    pass
 
 @task
 def trigger_all_crawlers(task_params):
@@ -30,8 +29,6 @@ def trigger_all_crawlers(task_params):
         print (site)
         print (crawl_config)
         trigger_dag('d2_crawl_site', crawl_config, "default_pool")
-
-    pass
 
 @dag(
     default_args=default_args,
