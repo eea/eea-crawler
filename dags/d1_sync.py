@@ -29,9 +29,13 @@ default_dag_params = {
 def create_raw_index(task_params):
     v = task_params.get("variables", {})
     elastic.create_raw_index(v)
+    elastic.create_search_index(v)
+
     es = elastic.elastic_connection(v)
     elastic_conf = v.get("elastic")
-    elastic.backup_indices(es, [elastic_conf["raw_index"]])
+    elastic.backup_indices(
+        es, [elastic_conf["raw_index"], elastic_conf["searchui_target_index"]]
+    )
 
 
 @task
