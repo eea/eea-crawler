@@ -89,7 +89,8 @@ def crawl_doc(v, site, sdi_conf, metadataIdentifier, handler=None):
         children = [children]
     for child_id in children:
         child_doc = crawl_for_metadata_identifier(v, sdi_conf, child_id)
-        doc["children"].append(child_doc)
+        if child_doc is not None:
+            doc["children"].append(child_doc)
 
     raw_doc = prepare_doc_for_rabbitmq(doc, site)
 
