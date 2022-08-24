@@ -13,6 +13,7 @@
         "wise_marine": "config_wise_marine"
     },
     "config_bise": {
+        "type":"plone_rest_api",
         "concurrency": 2,
         "nlp_preprocessing": {
             "text": {
@@ -73,6 +74,7 @@
         "url_api_part": "api"
     },
     "config_climate": {
+        "type":"plone_rest_api",
         "avoid_cache_api": true,
         "avoid_cache_web": true,
         "concurrency": 4,
@@ -117,6 +119,7 @@
         "url_api_part": ""
     },
     "config_eea": {
+        "type":"plone_rest_api",
         "languages": [
             "de",
             "ar",
@@ -237,6 +240,7 @@
         "url_api_part": "api/SITE"
     },
     "config_eionet": {
+        "type":"plone_rest_api",
         "avoid_cache_api": true,
         "avoid_cache_web": true,
         "concurrency": 1,
@@ -273,6 +277,7 @@
         "url_api_part": ""
     },
     "config_energy": {
+        "type":"plone_rest_api",
         "location_rules_fallback": "Webpage",
         "nlp_preprocessing": {
             "text": {
@@ -309,6 +314,7 @@
         "url_api_part": "api"
     },
     "config_fise": {
+        "type":"plone_rest_api",
         "nlp_preprocessing": {
             "text": {
                 "split_length": 500
@@ -363,6 +369,7 @@
         "url_api_part": "api"
     },
     "config_ias": {
+        "type":"plone_rest_api",
         "avoid_cache_api": true,
         "avoid_cache_web": true,
         "concurrency": 4,
@@ -393,6 +400,7 @@
         "url_api_part": ""
     },
     "config_industry": {
+        "type":"plone_rest_api",
         "nlp_preprocessing": {
             "text": {
                 "split_length": 500
@@ -445,19 +453,13 @@
         "url_api_part": "api"
     },
     "config_sdi": {
-        "_endpoint": "https://galliwasp.eea.europa.eu/catalogue/datahub/api/search/records/_search",
-        "_query": {
-            "query": {
-                "query_string": {
-                    "query": "+resourceType:series"
-                }
-            },
-            "track_total_hits": true
-        },
+        "type":"sdi",
         "authorization": "<AUTHORIZATION>",
         "custom_dag": "sdi_1_crawl",
         "custom_task_id": "crawl_sdi",
-        "endpoint": "https://galliwasp.eea.europa.eu/catalogue/srv/api/search/records/_search",
+        "endpoint": "galliwasp.eea.europa.eu",
+        "port": 443,
+        "path":"catalogue/srv/api/search/records",
         "metadata_query": {
             "_source": {
                 "excludes": [
@@ -487,8 +489,36 @@
             }
         },
         "normalizers_variable": "sdi_normalizers",
+        "query_remove": {
+            "_source": ["metadataIdentifier", "changeDate"],
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "resourceType": "series"
+                            }
+                        },
+                        {
+                            "match": {
+                                "groupPublished": "datahub"
+                            }
+                        }
+                    ],
+"must_not": [
+{
+    "match": {
+    "metadataIdentifier": "43ba4d57-6290-43e4-941e-6c4eab713eda"
+    }
+}
+]
+                }
+            },
+            "size": 10000,
+            "track_total_hits": true
+        },
         "query": {
-            "_source": "metadataIdentifier",
+            "_source": ["metadataIdentifier", "changeDate"],
             "query": {
                 "bool": {
                     "must": [
@@ -511,8 +541,9 @@
         "url": "https://galliwasp.eea.europa.eu/catalogue/datahub"
     },
     "config_wise_freshwater": {
+        "type":"plone_rest_api",
         "fix_items_url": {
-            "with_api": "water.europa.eu/api/++api++/freshwater",
+            "with_api": "water.europa.eu/freshwater-api/++api++",
             "without_api": "water.europa.eu/freshwater"
         },
         "nlp_preprocessing": {
@@ -560,6 +591,12 @@
         "url_api_part": ""
     },
     "config_wise_marine": {
+        "type":"plone_rest_api",
+        "fix_items_url": {
+            "with_api": "water.europa.eu/marine/++api++",
+            "without_api": "water.europa.eu/marine"
+        },
+
         "concurrency": 4,
         "location_rules_fallback": "Webpage",
         "nlp_preprocessing": {
@@ -653,7 +690,7 @@
             ]
         },
         "url": "https://water.europa.eu/marine",
-        "url_api_part": ""
+        "url_api_part": "++api++"
     },
     "default_normalizers": {
         "//": "Normalise missing properties with the given values",
@@ -1712,5 +1749,8 @@
             "raw_value"
         ],
         "whiteMap": {}
+    },
+    "headless_chrome":{
+        "endpoint": "http://localhost:30000/content"
     }
 }
