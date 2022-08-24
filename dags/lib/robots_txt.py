@@ -1,5 +1,6 @@
 from urllib import robotparser
 
+
 def init(site_config):
     if site_config.get("ignore_robots_txt", False):
         return False
@@ -11,6 +12,7 @@ def init(site_config):
     rp.set_url(robots_url)
     rp.read()
     return rp
+
 
 def test_url(rp, url):
     if not rp:

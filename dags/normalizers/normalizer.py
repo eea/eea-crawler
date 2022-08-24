@@ -2,15 +2,20 @@ from lib import elastic
 from normalizers.registry import get_facets_normalizer, get_nlp_preprocessor
 from normalizers.lib.nlp import preprocess_split_doc, add_embeddings_to_doc
 
+
 def parse_all_documents(v, handler, doc_handler):
-    raw_docs = elastic.get_all_ids_from_raw(v) 
+    raw_docs = elastic.get_all_ids_from_raw(v)
     search_docs = elastic.get_all_ids_from_searchui(v)
     for raw_doc in raw_docs.keys():
         should_index = True
-        if len(raw_docs[raw_doc].get("errors")) > 0 and search_docs.get(raw_doc, None) is not None:
+        if (
+            len(raw_docs[raw_doc].get("errors")) > 0
+            and search_docs.get(raw_doc, None) is not None
+        ):
             should_index = False
         if should_index:
             handler(v, raw_doc, raw_docs[raw_doc]["site_id"], doc_handler)
+
 
 def preprocess_doc(v, doc_id, site_id, doc_handler):
     print(f"{site_id} - {doc_id}")
@@ -34,8 +39,8 @@ def preprocess_doc(v, doc_id, site_id, doc_handler):
         "site": site_config,
     }
     raw_doc = elastic.get_doc_from_raw_idx(v, doc_id)
-    #print(raw_doc)
-    #import pdb; pdb.set_trace()
+    # print(raw_doc)
+    # import pdb; pdb.set_trace()
     raw_doc["raw_value"]["about"] = doc_id
     normalized_doc = facets_normalizer(raw_doc, config)
     if normalized_doc:

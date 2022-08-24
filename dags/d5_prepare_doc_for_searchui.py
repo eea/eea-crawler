@@ -15,7 +15,7 @@ from tasks.helpers import (
     dag_param_to_dict,
     load_variables,
     get_params,
-    get_item
+    get_item,
 )
 
 logger = logging.getLogger(__file__)
@@ -37,6 +37,7 @@ default_dag_params = {
 
 default_args = {"owner": "airflow"}
 
+
 def send_to_rabbitmq(v, doc):
     print("send_to_rabbitmq:")
     print(doc)
@@ -46,15 +47,16 @@ def send_to_rabbitmq(v, doc):
     rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
 
 
-@task 
+@task
 def preprocess_doc(task_params):
     print(task_params)
-    v = task_params.get("params", {}).get("variables",{})
+    v = task_params.get("params", {}).get("variables", {})
     site_id = task_params.get("params", {}).get("site")
     doc_id = task_params.get("item")
     print(doc_id)
     print(site_id)
     normalizer.preprocess_doc(v, doc_id, site_id, send_to_rabbitmq)
+
 
 @dag(
     default_args=default_args,

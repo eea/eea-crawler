@@ -1,7 +1,4 @@
-from crawlers.registry import (
-    register_site_crawler,
-    register_doc_crawler,
-)
+from crawlers.registry import register_site_crawler, register_doc_crawler
 
 from datetime import datetime
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -16,14 +13,17 @@ from lib import elastic
 
 SKIP_EXTENSIONS = ["png", "svg", "jpg", "gif", "eps"]
 
+
 @register_site_crawler("plone_rest_api")
 def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
     rp = robots_txt.init(site_config)
 
-    queries = plone_rest_api.build_queries_list(site_config, {"query_size":500})
+    queries = plone_rest_api.build_queries_list(
+        site_config, {"query_size": 500}
+    )
 
     es_docs = elastic.get_all_ids_from_raw_for_site(v, site)
-    
+
     portal_types = site_config.get("portal_types", [])
 
     cnt = 0
@@ -47,12 +47,12 @@ def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
                     skip = True
 
             if not skip:
-#                import pdb; pdb.set_trace()
+                #                import pdb; pdb.set_trace()
                 es_doc = es_docs.get(doc_id, {})
                 es_doc_modified = es_doc.get("modified", None)
                 es_doc_errors = es_doc.get("errors", None)
 
-#                if es_doc_modified == doc_modified:
+                #                if es_doc_modified == doc_modified:
                 if es_doc_modified == doc_modified and len(es_doc_errors) == 0:
                     print("Document did not change, skip indexing")
                 else:
@@ -67,9 +67,12 @@ def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
     print("REMOVE FROM ES, DOCS THAT ARE NOT PRESENT IN PLONE:")
     for doc_id in es_docs.keys():
         print(doc_id)
-        elastic.delete_doc(es, elastic_conf.get('raw_index'), doc_id)
+        elastic.delete_doc(es, elastic_conf.get("raw_index"), doc_id)
 
-def prepare_doc_for_rabbitmq(doc, scraped, pdf_text, doc_errors, site, site_config):
+
+def prepare_doc_for_rabbitmq(
+    doc, scraped, pdf_text, doc_errors, site, site_config
+):
 
     raw_doc = {}
     raw_doc["id"] = doc.get("id", "")
@@ -82,7 +85,6 @@ def prepare_doc_for_rabbitmq(doc, scraped, pdf_text, doc_errors, site, site_conf
     if pdf_text:
         raw_doc["pdf_text"] = pdf_text
 
-    
     raw_doc["original_id"] = doc["id"]
     raw_doc["site_id"] = site
     raw_doc["errors"] = doc_errors
@@ -129,6 +131,8 @@ def crawl_doc(v, site, site_config, doc_id, handler=None):
         errors.append("converting pdf file")
         doc_errors.append("pdf")
 
-    raw_doc = prepare_doc_for_rabbitmq(doc, scraped, pdf_text, doc_errors, site, site_config)
+    raw_doc = prepare_doc_for_rabbitmq(
+        doc, scraped, pdf_text, doc_errors, site, site_config
+    )
     if handler:
         handler(v, raw_doc)

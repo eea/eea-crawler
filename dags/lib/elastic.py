@@ -7,7 +7,8 @@ import json
 
 BLOCK_WRITE_TRUE = {"settings": {"index.blocks.write": True}}
 BLOCK_WRITE_FALSE = {"settings": {"index.blocks.write": False}}
-SKIP_IN_PATH = ['', None, "None"]
+SKIP_IN_PATH = ["", None, "None"]
+
 
 @query_params(
     "_source",
@@ -53,24 +54,25 @@ SKIP_IN_PATH = ['', None, "None"]
     "typed_keys",
     "version",
 )
-def search(es, body=None, index='', doc_type=None, params=[], headers=None, path=None):
-        """customized search for elastic endpoints that are published in a path"""
-        # from is a reserved word so it cannot be used, use from_ instead
-        if "from_" in params:
-            params["from"] = params.pop("from_")
-        path = f'{path}/{index}'
-        path = "/".join([part for part in path.split("/") if part not in SKIP_IN_PATH])
-        full_path = f'/{path}/_search'
+def search(
+    es, body=None, index="", doc_type=None, params=[], headers=None, path=None
+):
+    """customized search for elastic endpoints that are published in a path"""
+    # from is a reserved word so it cannot be used, use from_ instead
+    if "from_" in params:
+        params["from"] = params.pop("from_")
+    path = f"{path}/{index}"
+    path = "/".join(
+        [part for part in path.split("/") if part not in SKIP_IN_PATH]
+    )
+    full_path = f"/{path}/_search"
 
-        return es.transport.perform_request(
-            "POST",
-            full_path,
-            params=params,
-            headers=headers,
-            body=body,
-        )
+    return es.transport.perform_request(
+        "POST", full_path, params=params, headers=headers, body=body
+    )
 
-def backup_index(es, index, sufix='backup'):
+
+def backup_index(es, index, sufix="backup"):
     bu_index = f"{index}_{sufix}"
     bu_alias = f"{index}_backups"
     es.indices.put_settings(json.dumps(BLOCK_WRITE_TRUE), index)
@@ -78,23 +80,19 @@ def backup_index(es, index, sufix='backup'):
     es.indices.put_settings(json.dumps(BLOCK_WRITE_FALSE), index)
     es.indices.put_alias(bu_index, bu_alias)
 
-def backup_indices(es, indices, cnt = 3):
+
+def backup_indices(es, indices, cnt=3):
     now = datetime.now()
     ts = now.strftime("%Y_%m_%d_%H_%M_%S")
     for index in indices:
         backup_index(es, index, ts)
     delete_old_indeces_for_index(es, index, cnt)
 
+
 def create_index(es, index, mapping, settings, add_embedding=False):
     if add_embedding:
-        mapping["embedding"] = {
-            "type": "dense_vector",
-            "dims": 768,
-        }
-    body = {
-        "mappings": {"properties": mapping},
-        "settings": settings,
-    }
+        mapping["embedding"] = {"type": "dense_vector", "dims": 768}
+    body = {"mappings": {"properties": mapping}, "settings": settings}
 
     try:
         es.indices.create(index=index, body=body)
@@ -105,7 +103,10 @@ def create_index(es, index, mapping, settings, add_embedding=False):
             raise (e)
     return True
 
-def get_docs(es, index=None, query=None, _source=None, path=None, scroll_size=10000):
+
+def get_docs(
+    es, index=None, query=None, _source=None, path=None, scroll_size=10000
+):
     data = search(
         es=es,
         path=path,
@@ -132,29 +133,29 @@ def get_docs(es, index=None, query=None, _source=None, path=None, scroll_size=10
             # Get the number of results that returned in the last scroll
             scroll_size = len(data["hits"]["hits"])
 
-def get_doc_by_id(es, item, path=None, index=None, headers=None, params=None, field=None, excludes=None):
+
+def get_doc_by_id(
+    es,
+    item,
+    path=None,
+    index=None,
+    headers=None,
+    params=None,
+    field=None,
+    excludes=None,
+):
     try:
         if field is None:
             res = es.get(index=index, id=item)
         else:
-            query = {
-                "query": {
-                    "bool": {
-                        "must": [
-                            {
-                                "match": {}
-                            }
-                        ]
-                    }
-                }
-            }
-            query['query']['bool']['must'][0]['match'][field]=item
+            query = {"query": {"bool": {"must": [{"match": {}}]}}}
+            query["query"]["bool"]["must"][0]["match"][field] = item
             if excludes:
-                query['_source']={'excludes':excludes}
-            print (query)
+                query["_source"] = {"excludes": excludes}
+            print(query)
             res = search(es=es, path=path, body=query)
             print(res)
-            res = res['hits']['hits'][0]
+            res = res["hits"]["hits"][0]
     except Exception as e:
         print("EXCEPTION:")
         print(item)
@@ -164,89 +165,147 @@ def get_doc_by_id(es, item, path=None, index=None, headers=None, params=None, fi
     doc = res["_source"]
     return doc
 
+
 def delete_index(es, index):
     es.indices.delete(index=index, ignore=[400, 404])
+
 
 def get_backups_for_index(es, index):
     bu_alias = f"{index}_backups"
     indices = []
     if es.indices.exists_alias(bu_alias):
-        bu_indices = es.indices.get(bu_alias) 
+        bu_indices = es.indices.get(bu_alias)
         for idx in bu_indices.keys():
-            indices.append({'index': idx, 'creation_date': bu_indices[idx]['settings']['index']['creation_date']})
-    indices = sorted(indices, key=lambda d:d['creation_date'], reverse=True)
+            indices.append(
+                {
+                    "index": idx,
+                    "creation_date": bu_indices[idx]["settings"]["index"][
+                        "creation_date"
+                    ],
+                }
+            )
+    indices = sorted(indices, key=lambda d: d["creation_date"], reverse=True)
     return indices
+
 
 def delete_old_indeces_for_index(es, index, cnt=3):
     bu_indices = get_backups_for_index(es, index)
     for idx in bu_indices[cnt:]:
-        delete_index(es, idx['index'])
+        delete_index(es, idx["index"])
+
 
 def delete_doc(es, index, doc_id):
     es.delete(index, id=doc_id)
 
+
 def create_raw_index(variables):
     es = elastic_connection(variables)
 
-    elastic_raw_mapping = variables.get('elastic_raw_mapping',None)
+    elastic_raw_mapping = variables.get("elastic_raw_mapping", None)
     elastic_settings = variables.get("elastic_settings", None)
     elastic = variables.get("elastic", None)
-    create_index(es, index=elastic["raw_index"],  mapping=elastic_raw_mapping, settings=elastic_settings)
+    create_index(
+        es,
+        index=elastic["raw_index"],
+        mapping=elastic_raw_mapping,
+        settings=elastic_settings,
+    )
+
 
 def create_search_index(variables):
     es = elastic_connection(variables)
 
-    elastic_search_mapping = variables.get('elastic_mapping',None)
+    elastic_search_mapping = variables.get("elastic_mapping", None)
     elastic_settings = variables.get("elastic_settings", None)
     elastic = variables.get("elastic", None)
-    create_index(es, index=elastic["searchui_target_index"],  mapping=elastic_search_mapping, settings=elastic_settings)
+    create_index(
+        es,
+        index=elastic["searchui_target_index"],
+        mapping=elastic_search_mapping,
+        settings=elastic_settings,
+    )
+
 
 def elastic_connection(variables):
     elastic = variables.get("elastic", None)
-    econf = {
-        "host": elastic["host"],
-        "port": elastic["port"],
-    }
+    econf = {"host": elastic["host"], "port": elastic["port"]}
 
     es = Elasticsearch([econf])
     return es
 
+
 def get_all_ids_from_raw_for_site(v, site):
     es = elastic_connection(v)
     elastic_conf = v.get("elastic")
-    query = {"query":{"bool":{"must":[{"match":{"site_id":site}}],"must_not":[],"should":[]}}}
-    docs = get_docs(es, index=elastic_conf.get('raw_index'), _source=['site_id', "id", "modified", "errors"], query=query)
+    query = {
+        "query": {
+            "bool": {
+                "must": [{"match": {"site_id": site}}],
+                "must_not": [],
+                "should": [],
+            }
+        }
+    }
+    docs = get_docs(
+        es,
+        index=elastic_conf.get("raw_index"),
+        _source=["site_id", "id", "modified", "errors"],
+        query=query,
+    )
 
     docs_dict = {}
     for doc in docs:
-        docs_dict[doc['_source']['id']] = {"modified":doc['_source']["modified"], "errors":doc['_source'].get("errors", [])}
+        docs_dict[doc["_source"]["id"]] = {
+            "modified": doc["_source"]["modified"],
+            "errors": doc["_source"].get("errors", []),
+        }
     return docs_dict
+
 
 def get_all_ids_from_raw(v):
     es = elastic_connection(v)
     elastic_conf = v.get("elastic")
-    query = {"query":{"bool":{"must":[],"must_not":[],"should":[]}}}
-    docs = get_docs(es, index=elastic_conf.get('raw_index'), _source=['site_id', "id", "modified", "errors"], query=query)
+    query = {"query": {"bool": {"must": [], "must_not": [], "should": []}}}
+    docs = get_docs(
+        es,
+        index=elastic_conf.get("raw_index"),
+        _source=["site_id", "id", "modified", "errors"],
+        query=query,
+    )
 
     docs_dict = {}
-    print ("raw ids")
+    print("raw ids")
     for doc in docs:
-        print (doc['_source']['id'])
-        docs_dict[doc['_source']['id']] = {"modified":doc.get('_source',{}).get("modified"), "site_id": doc.get('_source',{}).get("site_id"), "errors":doc.get('_source',{}).get("errors", [])}
+        print(doc["_source"]["id"])
+        docs_dict[doc["_source"]["id"]] = {
+            "modified": doc.get("_source", {}).get("modified"),
+            "site_id": doc.get("_source", {}).get("site_id"),
+            "errors": doc.get("_source", {}).get("errors", []),
+        }
     return docs_dict
+
 
 def get_all_ids_from_searchui(v):
     es = elastic_connection(v)
     elastic_conf = v.get("elastic")
-    query = {"query":{"bool":{"must":[],"must_not":[],"should":[]}}}
-    docs = get_docs(es, index=elastic_conf.get('searchui_target_index'), _source=['site_id', "id", "modified", "errors"], query=query)
+    query = {"query": {"bool": {"must": [], "must_not": [], "should": []}}}
+    docs = get_docs(
+        es,
+        index=elastic_conf.get("searchui_target_index"),
+        _source=["site_id", "id", "modified", "errors"],
+        query=query,
+    )
 
     docs_dict = {}
-    print ("searchui ids")
+    print("searchui ids")
     for doc in docs:
-        print (doc['_source']['id'])
-        docs_dict[doc['_source']['id']] = {"modified":doc.get('_source',{}).get("modified"), "errors":doc.get('_source',{}).get("errors", [])}
+        print(doc["_source"]["id"])
+        docs_dict[doc["_source"]["id"]] = {
+            "modified": doc.get("_source", {}).get("modified"),
+            "errors": doc.get("_source", {}).get("errors", []),
+        }
     return docs_dict
+
 
 def get_doc_from_raw_idx(v, doc_id):
     es = elastic_connection(v)

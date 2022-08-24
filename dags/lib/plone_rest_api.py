@@ -8,6 +8,7 @@ from urllib.parse import urlunsplit
 
 logger = logging.getLogger(__file__)
 
+
 def get_api_url(site_config, url):
     if url.find("www.eea.europa.eu") > -1:
         if url.find("/api/"):
@@ -26,7 +27,9 @@ def get_api_url(site_config, url):
 
     if site_config["url_api_part"] in url:
         logger.info(
-            "Found url_api_part (%s) in url: %s", site_config["url_api_part"], url
+            "Found url_api_part (%s) in url: %s",
+            site_config["url_api_part"],
+            url,
         )
         return url
 
@@ -62,6 +65,7 @@ def get_no_api_url(site_config, url):
 
     return f"{protocol}://{ret_url}"
 
+
 def build_queries_list(site_config, query_config):
     url = site_config["url"].strip("/")
     if site_config.get("fix_items_url", None):
@@ -92,6 +96,7 @@ def build_queries_list(site_config, query_config):
         ]
     return queries
 
+
 @retry(wait=wait_exponential(), stop=stop_after_attempt(3))
 def request_with_retry(url, method="get", data=None):
     print("Query:")
@@ -109,22 +114,25 @@ def request_with_retry(url, method="get", data=None):
 
     return resp.text
 
+
 def execute_query(query):
     while True:
         resp = request_with_retry(query)
         docs = json.loads(resp)
-        for doc in docs['items']:
-            yield(doc)
+        for doc in docs["items"]:
+            yield (doc)
         next_query = docs.get("batching", {}).get("next", False)
         if next_query:
             query = next_query
         else:
             break
 
+
 def get_docs(query):
     docs = execute_query(query)
     for doc in docs:
-        yield(doc)
+        yield (doc)
+
 
 def get_doc_from_plone(site_config, doc_id):
     url_with_api = get_api_url(site_config, doc_id)
@@ -139,6 +147,7 @@ def get_doc_from_plone(site_config, doc_id):
     r = request_with_retry(r_url)
 
     return r
+
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
 def scrape_with_retry(v, url, js=False):
@@ -162,6 +171,7 @@ def scrape_with_retry(v, url, js=False):
 
     return downloaded
 
+
 def scrape(v, site_config, doc_id):
     url_without_api = get_no_api_url(site_config, doc_id)
     scrape = False
@@ -179,15 +189,13 @@ def scrape(v, site_config, doc_id):
             #         dt.split("T")[0], "%Y-%m-%d"
             #     )
             s_url = f"{url_without_api}?scrape={dt}"
-        web_html = scrape_with_retry(
-            v,
-            s_url,
-            scrape_with_js,
-        )
+        web_html = scrape_with_retry(v, s_url, scrape_with_js)
     return web_html
 
 
 FIELD_MARKERS = {"file": {"content-type", "download", "filename"}}
+
+
 def is_field_of_type(field, _type):
     if not isinstance(field, dict):
         return False
@@ -203,6 +211,7 @@ def fix_download_url(download_url, source_url):
         return download_url.replace("@@download", "at_download")
     return download_url
 
+
 def extract_attachments(json_doc, nlp_service_params):
     url = json_doc["id"]
     params = nlp_service_params["converter"]
@@ -210,13 +219,7 @@ def extract_attachments(json_doc, nlp_service_params):
     logger.info("Extract attachments %s %s", json_doc, url)
 
     converter_dsn = urlunsplit(
-        (
-            "http",
-            params["host"] + ":" + params["port"],
-            params["path"],
-            "",
-            "",
-        )
+        ("http", params["host"] + ":" + params["port"], params["path"], "", "")
     )
 
     text_fragments = []
@@ -249,6 +252,7 @@ def extract_attachments(json_doc, nlp_service_params):
     logger.info("Retrieved file content: %r", text)
 
     return text
+
 
 def extract_pdf(v, site_config, doc):
     pdf_text = ""

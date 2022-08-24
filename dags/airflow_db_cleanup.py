@@ -365,9 +365,7 @@ def cleanup_function(**context):
             )
 
         else:
-            query = query.filter(
-                age_check_column <= max_date,
-            )
+            query = query.filter(age_check_column <= max_date)
 
         if PRINT_DELETES:
             entries_to_delete = query.all()

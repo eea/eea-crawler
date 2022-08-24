@@ -1,6 +1,7 @@
 import json
 from eea.rabbitmq.client import RabbitMQConnector
 
+
 def send_to_rabbitmq(doc, config):
     rabbit_config = {
         "rabbit_host": config["host"],

@@ -16,7 +16,7 @@ from tasks.helpers import (
     dag_param_to_dict,
     load_variables,
     get_params,
-    get_item
+    get_item,
 )
 from tasks.debug import debug_value
 
@@ -39,21 +39,23 @@ default_dag_params = {
 
 default_args = {"owner": "airflow"}
 
+
 def send_to_rabbitmq(v, raw_doc):
     print("send_to_rabbitmq:")
     print(raw_doc)
     rabbitmq_config = v.get("rabbitmq")
     rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
-    errors = raw_doc.get("errors",[])
+    errors = raw_doc.get("errors", [])
     if len(errors) > 0:
         msg = ", ".join(errors)
         logger.warning(f"Error while {msg}, check the logs above")
 
         raise Exception(f"WARNING: Error while {msg}")
 
-@task 
+
+@task
 def crawl_doc(task_params):
-    v = task_params.get("params", {}).get("variables",{})
+    v = task_params.get("params", {}).get("variables", {})
     site_id = task_params.get("params", {}).get("site")
     doc_id = task_params.get("item")
 
@@ -88,5 +90,6 @@ def d3_crawl_fetch_for_id(item=default_dag_params):
         nlp_2_prepare_doc_for_nlp
     """
     crawl_doc(item)
+
 
 crawl_fetch_for_id_dag = d3_crawl_fetch_for_id()
