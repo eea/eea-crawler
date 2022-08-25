@@ -67,19 +67,20 @@ def get_merged_ranges(ranges):
     years.sort()
     merged_ranges = []
     current_range = {}
-    for year in range(min(years), max(years) + 2):
-        if current_range.get('start', None) is None:
-            if year in years:
-                current_range['start'] = year
-        else:
-            if year not in years:
-                current_range['end'] = year - 1
-                merged_ranges.append(current_range)
-                current_range = {}
-    if not has_from:
-        del(merged_ranges[0]['start'])
-    if not has_to:
-        del(merged_ranges[-1]['end'])
+    if len(years) > 0:
+        for year in range(min(years), max(years) + 2):
+            if current_range.get('start', None) is None:
+                if year in years:
+                    current_range['start'] = year
+            else:
+                if year not in years:
+                    current_range['end'] = year - 1
+                    merged_ranges.append(current_range)
+                    current_range = {}
+        if not has_from:
+            del(merged_ranges[0]['start'])
+        if not has_to:
+            del(merged_ranges[-1]['end'])
     return merged_ranges
 
 def get_years_from_ranges(ranges):
