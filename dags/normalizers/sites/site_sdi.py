@@ -42,26 +42,57 @@ def capitalise_list(sdi_list, field="default"):
 def simplify_list_from_tree(sdi_list):
     return [val.split("^")[-1].title() for val in sdi_list or []]
 
-
-def get_years_from_ranges(ranges):
-    print("GET_YEARS")
-    print(ranges)
+def get_merged_ranges(ranges):
+    has_from = True
+    has_to = True
     years = []
     for time_range in ranges:
         # TODO: check default min & max for time coverage
-        r_from_str = time_range.get("gte", "2010-12-31T23:00:00.000Z")
-        r_to_str = time_range.get("lte", "2022-12-31T23:00:00.000Z")
+        r_from_str = time_range.get("start").get("date", None)
+        r_to_str = time_range.get("end").get("date", None)
+        if r_from_str is None:
+            has_from = False
+            r_from_str = "2010-01-01"
+        if r_to_str is None:
+            has_to = False
+            r_to_str = f"{datetime.now().year}-01-01"
         r_from = datetime.strptime(r_from_str.split("T")[0], "%Y-%m-%d")
         r_to = datetime.strptime(r_to_str.split("T")[0], "%Y-%m-%d")
-        r_from = r_from + timedelta(days=1)
-        r_to = r_to - timedelta(days=1)
         y_from = r_from.year
         y_to = r_to.year
-        print(y_from)
-        print(y_to)
-        print(list(range(y_from, y_to)))
         for year in list(range(y_from, y_to + 1)):
-            print(year)
+            if year not in years:
+                years.append(year)
+
+    years.sort()
+    merged_ranges = []
+    current_range = {}
+    for year in range(min(years), max(years) + 2):
+        if current_range.get('start', None) is None:
+            if year in years:
+                current_range['start'] = year
+        else:
+            if year not in years:
+                current_range['end'] = year - 1
+                merged_ranges.append(current_range)
+                current_range = {}
+    if not has_from:
+        del(merged_ranges[0]['start'])
+    if not has_to:
+        del(merged_ranges[-1]['end'])
+    return merged_ranges
+
+def get_years_from_ranges(ranges):
+    years = []
+    for time_range in ranges:
+        # TODO: check default min & max for time coverage
+        r_from_str = time_range.get("start").get("date", "2010-01-01")
+        r_to_str = time_range.get("end").get("date", f"{datetime.now().year}-01-01")
+        r_from = datetime.strptime(r_from_str.split("T")[0], "%Y-%m-%d")
+        r_to = datetime.strptime(r_to_str.split("T")[0], "%Y-%m-%d")
+        y_from = r_from.year
+        y_to = r_to.year
+        for year in list(range(y_from, y_to + 1)):
             if year not in years:
                 years.append(year)
 
@@ -120,10 +151,12 @@ def pre_normalize_sdi(doc, config):
         doc["raw_value"].get("th_regions", [])
     )
     doc["raw_value"]["time_coverage"] = get_years_from_ranges(
-        doc["raw_value"].get("resourceTemporalExtentDateRange", [])
+        doc["raw_value"].get("resourceTemporalExtentDetails", [])
+    )
+    doc["raw_value"]["merged_time_coverage_range"] = get_merged_ranges(
+        doc["raw_value"].get("resourceTemporalExtentDetails", [])
     )
 
-    print(doc)
     return doc
 
 
@@ -134,7 +167,7 @@ def normalize_sdi(doc, config):
     normalized_doc = common_normalizer(doc, config)
     normalized_doc["cluster_name"] = "sdi"
     tc = get_years_from_ranges(
-        doc["raw_value"].get("resourceTemporalExtentDateRange", [])
+        doc["raw_value"].get("resourceTemporalExtentDetails", [])
     )
     normalized_doc["time_coverage"] = [str(y) for y in tc]
     normalized_doc = add_counts(normalized_doc)
