@@ -1,19 +1,42 @@
 {
-    "Sites": {
-        "bise": "config_bise",
-        "climate": "config_climate",
-        "eea": "config_eea",
-        "eionet": "config_eionet",
-        "energy": "config_energy",
-        "fise": "config_fise",
-        "ias": "config_ias",
-        "industry": "config_industry",
-        "sdi": "config_sdi",
-        "wise_freshwater": "config_wise_freshwater",
-        "wise_marine": "config_wise_marine"
+    "app_datahub": {
+        "Sites": {
+            "sdi": "config_sdi_test"
+        },
+        "elastic_config": {
+            "elastic": "elastic_datahub",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_s3",
+        "rabbitmq_config": "rabbitmq_datahub"
+    },
+    "app_global_search": {
+        "Sites": {
+            "bise": "config_bise",
+            "climate": "config_climate",
+            "copernicus": "config_copernicus",
+            "eea": "config_eea",
+            "eionet": "config_eionet",
+            "energy": "config_energy",
+            "fise": "config_fise",
+            "ias": "config_ias",
+            "industry": "config_industry",
+            "sdi": "config_sdi",
+            "wise_freshwater": "config_wise_freshwater",
+            "wise_marine": "config_wise_marine"
+        },
+        "elastic_config": {
+            "elastic": "elastic_global_search",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_default",
+        "rabbitmq_config": "rabbitmq_global_search"
     },
     "config_bise": {
-        "type":"plone_rest_api",
         "concurrency": 2,
         "nlp_preprocessing": {
             "text": {
@@ -70,11 +93,11 @@
                 ".footerWrapper"
             ]
         },
+        "type": "plone_rest_api",
         "url": "https://biodiversity.europa.eu",
         "url_api_part": "api"
     },
     "config_climate": {
-        "type":"plone_rest_api",
         "avoid_cache_api": true,
         "avoid_cache_web": true,
         "concurrency": 4,
@@ -106,20 +129,33 @@
             ]
         },
         "normalizers_variable": "default_normalizers",
-        "scrape_pages": true,
+        "scrape_pages": false,
         "scrape_with_js": true,
-        "trafilatura": {
-            "remove_by_selector": [
-                ".header",
-                "#portal-breadcrumbs",
-                "footer"
-            ]
-        },
+        "type": "plone_rest_api",
         "url": "https://climate-adapt.eea.europa.eu",
         "url_api_part": ""
     },
+    "config_copernicus": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "ignore_robots_txt": true,
+        "nlp_preprocessing": {
+            "text": {
+                "split_length": 500
+            }
+        },
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": []
+        },
+        "type": "plone_rest_api",
+        "url": "https://clmsdemo.devel6cph.eea.europa.eu",
+        "url_api_part": "api"
+    },
     "config_eea": {
-        "type":"plone_rest_api",
         "languages": [
             "de",
             "ar",
@@ -161,13 +197,13 @@
                     "contact",
                     "rights"
                 ],
+                "split_length": 500,
                 "whitelist": [
                     "description",
                     "key_message",
                     "summary",
                     "text"
-                ],
-                "split_length": 500
+                ]
             }
         },
         "normalizers_variable": "default_normalizers",
@@ -207,11 +243,10 @@
                 ".breadcrumb",
                 "#portal-breadcrumbs",
                 ".footer-wrapper",
-                "#footer-wrapper",
-                ".qrbox.featured",
-                ".colophonWrapper"
+                "#footer-wrapper"
             ]
         },
+        "type": "plone_rest_api",
         "url": "http://www.eea.europa.eu",
         "url_api_part": "api/SITE"
     },
@@ -222,13 +257,13 @@
                     "contact",
                     "rights"
                 ],
+                "split_length": 500,
                 "whitelist": [
                     "description",
                     "key_message",
                     "summary",
                     "text"
-                ],
-                "split_length": 500
+                ]
             }
         },
         "normalizers_variable": "default_normalizers",
@@ -240,7 +275,6 @@
         "url_api_part": "api/SITE"
     },
     "config_eionet": {
-        "type":"plone_rest_api",
         "avoid_cache_api": true,
         "avoid_cache_web": true,
         "concurrency": 1,
@@ -270,6 +304,7 @@
                 "#portal-footer-wrapper"
             ]
         },
+        "type": "plone_rest_api",
         "types_blacklist": [
             "Event"
         ],
@@ -277,7 +312,6 @@
         "url_api_part": ""
     },
     "config_energy": {
-        "type":"plone_rest_api",
         "location_rules_fallback": "Webpage",
         "nlp_preprocessing": {
             "text": {
@@ -310,11 +344,11 @@
                 ".footer"
             ]
         },
+        "type": "plone_rest_api",
         "url": "https://climate-energy.eea.europa.eu",
         "url_api_part": "api"
     },
     "config_fise": {
-        "type":"plone_rest_api",
         "nlp_preprocessing": {
             "text": {
                 "split_length": 500
@@ -365,11 +399,11 @@
                 ".footer"
             ]
         },
+        "type": "plone_rest_api",
         "url": "https://forest.eea.europa.eu",
         "url_api_part": "api"
     },
     "config_ias": {
-        "type":"plone_rest_api",
         "avoid_cache_api": true,
         "avoid_cache_web": true,
         "concurrency": 4,
@@ -396,11 +430,11 @@
                 "#portal-footer-wrapper"
             ]
         },
+        "type": "plone_rest_api",
         "url": "https://ias.eea.europa.eu",
         "url_api_part": ""
     },
     "config_industry": {
-        "type":"plone_rest_api",
         "nlp_preprocessing": {
             "text": {
                 "split_length": 500
@@ -449,17 +483,15 @@
                 "#footer"
             ]
         },
+        "type": "plone_rest_api",
         "url": "https://industry.eea.europa.eu",
         "url_api_part": "api"
     },
     "config_sdi": {
-        "type":"sdi",
-        "authorization": "<AUTHORIZATION>",
+        "authorization": "AIRFLOW_VAR_SDI_AUTH",
         "custom_dag": "sdi_1_crawl",
         "custom_task_id": "crawl_sdi",
         "endpoint": "galliwasp.eea.europa.eu",
-        "port": 443,
-        "path":"catalogue/srv/api/search/records",
         "metadata_query": {
             "_source": {
                 "excludes": [
@@ -489,36 +521,13 @@
             }
         },
         "normalizers_variable": "sdi_normalizers",
-        "query_remove": {
-            "_source": ["metadataIdentifier", "changeDate"],
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "match": {
-                                "resourceType": "series"
-                            }
-                        },
-                        {
-                            "match": {
-                                "groupPublished": "datahub"
-                            }
-                        }
-                    ],
-"must_not": [
-{
-    "match": {
-    "metadataIdentifier": "43ba4d57-6290-43e4-941e-6c4eab713eda"
-    }
-}
-]
-                }
-            },
-            "size": 10000,
-            "track_total_hits": true
-        },
+        "path": "/catalogue/srv/api/search/records",
+        "port": 443,
         "query": {
-            "_source": ["metadataIdentifier", "changeDate"],
+            "_source": [
+                "metadataIdentifier",
+                "changeDate"
+            ],
             "query": {
                 "bool": {
                     "must": [
@@ -538,10 +547,77 @@
             "size": 10000,
             "track_total_hits": true
         },
+        "type": "sdi",
+        "url": "https://galliwasp.eea.europa.eu/catalogue/datahub"
+    },
+    "config_sdi_test": {
+        "_endpoint": "https://galliwasp.eea.europa.eu/catalogue/datahub/api/search/records/_search",
+        "_query": {
+            "query": {
+                "query_string": {
+                    "query": "+resourceType:series"
+                }
+            },
+            "track_total_hits": true
+        },
+        "authorization": "AIRFLOW_VAR_SDI_AUTH",
+        "custom_dag": "sdi_1_crawl",
+        "custom_task_id": "crawl_sdi",
+        "endpoint": "galliwasp.eea.europa.eu",
+        "metadata_query": {
+            "_source": {
+                "excludes": [
+                    "*.data"
+                ]
+            },
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "metadataIdentifier": "<metadataIdentifier>"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "nlp_preprocessing": {
+            "text": {
+                "blacklist": [],
+                "split_length": 500,
+                "whitelist": [
+                    "resourceTitleObject.default",
+                    "resourceAbstractObject.default"
+                ]
+            }
+        },
+        "normalizers_variable": "sdi_normalizers",
+        "path": "/catalogue/srv/api/search/records",
+        "port": 443,
+        "query": {
+            "_source": [
+                "metadataIdentifier",
+                "changeDate"
+            ],
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "resourceType": "series"
+                            }
+                        }
+                    ]
+                }
+            },
+            "size": 10000,
+            "track_total_hits": true
+        },
+        "type": "sdi",
         "url": "https://galliwasp.eea.europa.eu/catalogue/datahub"
     },
     "config_wise_freshwater": {
-        "type":"plone_rest_api",
         "fix_items_url": {
             "with_api": "water.europa.eu/freshwater-api/++api++",
             "without_api": "water.europa.eu/freshwater"
@@ -587,17 +663,16 @@
                 ".footerWrapper"
             ]
         },
+        "type": "plone_rest_api",
         "url": "https://water.europa.eu/freshwater",
         "url_api_part": ""
     },
     "config_wise_marine": {
-        "type":"plone_rest_api",
+        "concurrency": 4,
         "fix_items_url": {
             "with_api": "water.europa.eu/marine/++api++",
             "without_api": "water.europa.eu/marine"
         },
-
-        "concurrency": 4,
         "location_rules_fallback": "Webpage",
         "nlp_preprocessing": {
             "text": {
@@ -689,8 +764,9 @@
                 ".footer-wrapper"
             ]
         },
+        "type": "plone_rest_api",
         "url": "https://water.europa.eu/marine",
-        "url_api_part": "++api++"
+        "url_api_part": ""
     },
     "default_normalizers": {
         "//": "Normalise missing properties with the given values",
@@ -927,14 +1003,19 @@
         ],
         "whiteMap": {}
     },
-    "elastic": {
+    "elastic_datahub": {
         "host": "elastic",
-        "nlp_target_index": "data_nlp",
+        "port": 9200,
+        "raw_index": "datahub_raw",
+        "searchui_target_index": "datahub_searchui"
+    },
+    "elastic_global_search": {
+        "host": "elastic",
         "port": 9200,
         "raw_index": "data_raw",
         "searchui_target_index": "data_searchui"
     },
-    "elastic_mapping": {
+    "elastic_mapping_default": {
         "SearchableText": {
             "copy_to": [
                 "did_you_mean",
@@ -1217,31 +1298,7 @@
         "modified": {
             "type": "date"
         },
-        "nlp_100": {
-            "properties": {
-                "embedding": {
-                    "dims": 768,
-                    "type": "dense_vector"
-                },
-                "text": {
-                    "type": "text"
-                }
-            },
-            "type": "nested"
-        },
-        "nlp_250": {
-            "properties": {
-                "embedding": {
-                    "dims": 768,
-                    "type": "dense_vector"
-                },
-                "text": {
-                    "type": "text"
-                }
-            },
-            "type": "nested"
-        },
-        "nlp_500": {
+        "nlp": {
             "properties": {
                 "embedding": {
                     "dims": 768,
@@ -1463,7 +1520,7 @@
             "type": "text"
         }
     },
-    "elastic_raw_mapping": {
+    "elastic_raw_mapping_default": {
         "@type": {
             "analyzer": "none",
             "fielddata": true,
@@ -1499,7 +1556,7 @@
             "type": "text"
         }
     },
-    "elastic_settings": {
+    "elastic_settings_default": {
         "index": {
             "analysis": {
                 "analyzer": {
@@ -1553,8 +1610,7 @@
                     },
                     "freetext": {
                         "char_filter": [
-                            "html_strip",
-                            "strip_urls"
+                            "html_strip"
                         ],
                         "filter": [
                             "lowercase",
@@ -1590,12 +1646,6 @@
                             ". =>  "
                         ],
                         "type": "mapping"
-                    },
-                    "strip_urls": {
-                        "type": "pattern_replace",
-                        "pattern":  "(https?://.*?)(?=\\s|$)",
-                        "replacement": "",
-                        "flags": "CASE_INSENSITIVE|MULTILINE"
                     }
                 },
                 "filter": {
@@ -1667,21 +1717,47 @@
             }
         }
     },
-    "nlp_services": {
+    "headless_chrome": {
+        "endpoint": "http://headless-chrome-api:3000/content"
+    },
+    "nlp_services_default": {
         "converter": {
-            "host": "nlp-searchlib",
+            "_host": "10.120.10.204",
+            "_port": "60022",
+            "host": "192.168.100.5",
             "path": "api/converter",
             "port": "8000"
         },
         "embedding": {
-            "host": "nlp-searchlib",
+            "_host": "10.120.10.204",
+            "_port": "60022",
+            "host": "192.168.100.5",
             "path": "api/embedding",
             "port": "8000"
         }
     },
-    "rabbitmq": {
+    "nlp_services_s3": {
+        "converter": {
+            "host": "10.120.10.204",
+            "path": "api/converter",
+            "port": "60022"
+        },
+        "embedding": {
+            "host": "10.120.10.204",
+            "path": "api/embedding",
+            "port": "60022"
+        }
+    },
+    "rabbitmq_datahub": {
         "host": "rabbitmq",
-        "nlp_queue": "queue_nlp",
+        "password": "guest",
+        "port": "5672",
+        "queue": "queue_raw_data_datahub",
+        "searchui_queue": "queue_searchui_datahub",
+        "username": "guest"
+    },
+    "rabbitmq_global_search": {
+        "host": "rabbitmq",
         "password": "guest",
         "port": "5672",
         "queue": "queue_raw_data",
@@ -1749,8 +1825,5 @@
             "raw_value"
         ],
         "whiteMap": {}
-    },
-    "headless_chrome":{
-        "endpoint": "http://localhost:30000/content"
     }
 }
