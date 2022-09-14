@@ -85,8 +85,10 @@ def backup_indices(es, indices, cnt=3):
     now = datetime.now()
     ts = now.strftime("%Y_%m_%d_%H_%M_%S")
     for index in indices:
+        print("DELETE")
+        print(index)
         backup_index(es, index, ts)
-    delete_old_indeces_for_index(es, index, cnt)
+        delete_old_indeces_for_index(es, index, cnt)
 
 
 def create_index(es, index, mapping, settings, add_embedding=False):

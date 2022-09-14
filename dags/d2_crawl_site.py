@@ -54,10 +54,9 @@ def parse_all_documents(task_params, pool_name):
     site_config = task_params["variables"][site_config_v]
     crawl_type = site_config.get("type", "plone_rest_api")
     parse_all_documents = get_site_crawler(crawl_type)
-
     handler = get_doc_crawler(crawl_type)
 
-    if not task_params["fast"]:
+    if not task_params.get("fast", None):
         handler = doc_handler
 
     # def crawl_doc(v, site, sdi_conf, metadataIdentifier, handler=None):

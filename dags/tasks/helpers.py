@@ -143,6 +143,9 @@ def find_site_by_url(url, sites=None, variables={}):
 
 @task
 def load_variables(task_params):
-    variables = get_all_variables()
+    print(task_params)
+    app_name = task_params["app"]
+    conf_name = f"app_{app_name}"
+    variables = get_all_variables(conf_name)
     task_params["variables"] = variables
     return task_params

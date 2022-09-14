@@ -28,8 +28,8 @@ def send_to_rabbitmq(v, raw_doc):
     rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
 
 
-def crawl(site):
-    v = variables.load_variables_from_disk("../variables.json")
+def crawl(site, app):
+    v = variables.load_variables_from_disk("../variables.json", app)
     sites = v.get("Sites")
     site_config_variable = sites.get(site, None)
     site_config = v.get(site_config_variable)

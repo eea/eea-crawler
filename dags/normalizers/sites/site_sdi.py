@@ -42,6 +42,12 @@ def capitalise_list(sdi_list, field="default"):
 def simplify_list_from_tree(sdi_list):
     return [val.split("^")[-1].title() for val in sdi_list or []]
 
+
+def get_year_from_date(date_str):
+    # return datetime.strptime(date_str.split("T")[0], "%Y-%m-%d")
+    return int(date_str[:4])
+
+
 def get_merged_ranges(ranges):
     has_from = True
     has_to = True
@@ -56,10 +62,8 @@ def get_merged_ranges(ranges):
         if r_to_str is None:
             has_to = False
             r_to_str = f"{datetime.now().year}-01-01"
-        r_from = datetime.strptime(r_from_str.split("T")[0], "%Y-%m-%d")
-        r_to = datetime.strptime(r_to_str.split("T")[0], "%Y-%m-%d")
-        y_from = r_from.year
-        y_to = r_to.year
+        y_from = get_year_from_date(r_from_str)
+        y_to = get_year_from_date(r_to_str)
         for year in list(range(y_from, y_to + 1)):
             if year not in years:
                 years.append(year)
@@ -69,30 +73,32 @@ def get_merged_ranges(ranges):
     current_range = {}
     if len(years) > 0:
         for year in range(min(years), max(years) + 2):
-            if current_range.get('start', None) is None:
+            if current_range.get("start", None) is None:
                 if year in years:
-                    current_range['start'] = year
+                    current_range["start"] = year
             else:
                 if year not in years:
-                    current_range['end'] = year - 1
+                    current_range["end"] = year - 1
                     merged_ranges.append(current_range)
                     current_range = {}
         if not has_from:
-            del(merged_ranges[0]['start'])
+            del merged_ranges[0]["start"]
         if not has_to:
-            del(merged_ranges[-1]['end'])
+            del merged_ranges[-1]["end"]
     return merged_ranges
+
 
 def get_years_from_ranges(ranges):
     years = []
+    print(ranges)
     for time_range in ranges:
         # TODO: check default min & max for time coverage
         r_from_str = time_range.get("start").get("date", "2010-01-01")
-        r_to_str = time_range.get("end").get("date", f"{datetime.now().year}-01-01")
-        r_from = datetime.strptime(r_from_str.split("T")[0], "%Y-%m-%d")
-        r_to = datetime.strptime(r_to_str.split("T")[0], "%Y-%m-%d")
-        y_from = r_from.year
-        y_to = r_to.year
+        r_to_str = time_range.get("end").get(
+            "date", f"{datetime.now().year}-01-01"
+        )
+        y_from = get_year_from_date(r_from_str)
+        y_to = get_year_from_date(r_to_str)
         for year in list(range(y_from, y_to + 1)):
             if year not in years:
                 years.append(year)

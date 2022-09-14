@@ -14,8 +14,8 @@ else:
     from ..lib import elastic
 
 
-def sync():
-    v = variables.load_variables_from_disk("../variables.json")
+def sync(app):
+    v = variables.load_variables_from_disk("../variables.json", app)
     elastic.create_raw_index(v)
     elastic.create_search_index(v)
     es = elastic.elastic_connection(v)
@@ -24,11 +24,11 @@ def sync():
         es, [elastic_conf["raw_index"], elastic_conf["searchui_target_index"]]
     )
 
-    # crawl("sdi")
+    crawl("sdi", app)
 
 
 if __name__ == "__main__":
-    sync()
+    sync("datahub")
 
 
 """

@@ -11,6 +11,8 @@ logger = logging.getLogger(__file__)
 POOL_NAME = "prepare_for_searchui"
 POOL_SLOTS = 16
 
+from lib import rabbitmq
+
 from tasks.helpers import dag_param_to_dict, load_variables, get_params
 
 from tasks.pool import CreatePoolOperator
@@ -19,7 +21,15 @@ from tasks.debug import debug_value
 default_args = {"owner": "airflow"}
 
 
-default_dag_params = {"item": "", "params": {}}
+default_dag_params = {"item": "", "params": {"app": "datahub"}}
+
+
+def send_to_rabbitmq(v, doc):
+    print("send_to_rabbitmq:")
+    print(doc)
+    rabbitmq_config = v.get("rabbitmq")
+    rabbitmq_config["queue"] = rabbitmq_config["searchui_queue"]
+    rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
 
 
 def doc_handler(v, doc_id, site_id, doc_handler):
@@ -30,9 +40,13 @@ def doc_handler(v, doc_id, site_id, doc_handler):
 
 @task
 def parse_all_documents(task_params):
-    handler = doc_handler
+    handler = normalizer.preprocess_doc
+    if not task_params.get("fast", None):
+        handler = doc_handler
 
-    normalizer.parse_all_documents(task_params["variables"], handler, None)
+    normalizer.parse_all_documents(
+        task_params["variables"], handler, send_to_rabbitmq
+    )
 
 
 @dag(

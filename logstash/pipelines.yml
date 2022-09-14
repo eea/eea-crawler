@@ -8,5 +8,8 @@
 - pipeline.id: searchui_data
   path.config: "/usr/share/logstash/pipeline/searchui_data.conf"
 
-- pipeline.id: nlp_data
-  path.config: "/usr/share/logstash/pipeline/nlp_data.conf"
+- pipeline.id: raw_data_datahub
+  path.config: "/usr/share/logstash/pipeline/raw_data_datahub.conf"
+
+- pipeline.id: searchui_data_datahub
+  path.config: "/usr/share/logstash/pipeline/searchui_data_datahub.conf"
