@@ -1,7 +1,7 @@
 {
     "app_datahub": {
         "Sites": {
-            "sdi": "config_sdi_test"
+            "sdi": "config_sdi"
         },
         "elastic_config": {
             "elastic": "elastic_datahub",
@@ -77,6 +77,7 @@
             "location_rules_fallback": "Webpage",
             "whitelist": [
                 "Document",
+                "Page",
                 "CompositePage",
                 "File",
                 "News Item",
@@ -124,6 +125,7 @@
                 "eea.climateadapt.indicator",
                 "eea.climateadapt.adaptationoption",
                 "Document",
+                "Page",
                 "eea.climateadapt.video",
                 "eea.climateadapt.c3sindicator"
             ]
@@ -221,6 +223,7 @@
             "Data",
             "DavizVisualization",
             "Document",
+            "Page",
             "Fiche",
             "EEAFigure",
             "File",
@@ -288,6 +291,7 @@
             "whitelist": [
                 "Collection",
                 "Page",
+                "Document",
                 "Folder",
                 "File",
                 "News Item",
@@ -330,6 +334,7 @@
             ],
             "whitelist": [
                 "Document",
+                "Page",
                 "File",
                 "News Item",
                 "visualization"
@@ -380,6 +385,7 @@
             "location_rules_fallback": "Webpage",
             "whitelist": [
                 "Document",
+                "Page",
                 "News Item",
                 "basic_data_factsheet",
                 "european_union_factsheet",
@@ -417,6 +423,7 @@
             "blacklist": [],
             "whitelist": [
                 "Document",
+                "Page",
                 "News Item"
             ]
         },
@@ -471,7 +478,8 @@
             ],
             "location_rules_fallback": "Webpage",
             "whitelist": [
-                "Document"
+                "Document",
+                "Page"
             ]
         },
         "normalizers_variable": "default_normalizers",
@@ -641,6 +649,7 @@
             "location_rules_fallback": "Webpage",
             "whitelist": [
                 "Document",
+                "Page",
                 "File",
                 "News Item",
                 "visualization",
@@ -749,6 +758,7 @@
             ],
             "whitelist": [
                 "Document",
+                "Page",
                 "File",
                 "country_factsheet"
             ]
