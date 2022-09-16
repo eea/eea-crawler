@@ -11,7 +11,7 @@ logger = logging.getLogger(__file__)
 
 def get_api_url(site_config, url):
     if url.find("www.eea.europa.eu") > -1:
-        if url.find("/api/"):
+        if url.find("/api/") > -1:
             return url
 
     if site_config.get("fix_items_url", None):
@@ -60,7 +60,7 @@ def get_no_api_url(site_config, url):
 
     # Handle languages
     if url.find("www.eea.europa.eu") > -1:
-        if url.find("/api/"):
+        if url.find("/api/") > -1:
             ret_url = "/".join(ret_url.split("/api/"))
 
     return f"{protocol}://{ret_url}"
