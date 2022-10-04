@@ -17,7 +17,12 @@ def parse_all_documents(v, handler, doc_handler):
             handler(v, raw_doc, raw_docs[raw_doc]["site_id"], doc_handler)
 
 
-def preprocess_doc(v, doc_id, site_id, doc_handler):
+def get_raw_doc_by_id(v, doc_id):
+    raw_doc = elastic.get_doc_from_raw_idx(v, doc_id)
+    return raw_doc
+
+
+def preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler):
     print(f"{site_id} - {doc_id}")
     facets_normalizer = get_facets_normalizer(site_id)
     nlp_preprocessor = get_nlp_preprocessor(site_id)
@@ -38,7 +43,6 @@ def preprocess_doc(v, doc_id, site_id, doc_handler):
         "nlp": site_config.get("nlp_preprocessing", None),
         "site": site_config,
     }
-    raw_doc = elastic.get_doc_from_raw_idx(v, doc_id)
     # print(raw_doc)
     # import pdb; pdb.set_trace()
     raw_doc["raw_value"]["about"] = doc_id

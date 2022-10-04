@@ -7,7 +7,9 @@ from lib import elastic
 default_args = {"owner": "airflow"}
 
 
-default_dag_params = {"params": {"app": "datahub"}}
+default_dag_params = {
+    "params": {"app": "datahub", "enable_prepare_docs": False}
+}
 
 
 @task
@@ -36,6 +38,9 @@ def trigger_all_crawlers(task_params):
                 "site": site,
                 "fast": task_params.get("fast", False),
                 "app": app,
+                "enable_prepare_docs": task_params.get(
+                    "enable_prepare_docs", False
+                ),
             }
         }
         print(site)

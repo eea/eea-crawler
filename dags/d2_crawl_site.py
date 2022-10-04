@@ -34,7 +34,14 @@ def send_to_rabbitmq(v, raw_doc):
 
 def doc_handler(v, site, site_config, doc_id, handler=None):
     pool_name = simple_val_to_pool(site, "crawl_with_query")
-    task_params = {"item": doc_id, "params": {"site": site, "variables": v}}
+    task_params = {
+        "item": doc_id,
+        "params": {
+            "site": site,
+            "variables": v,
+            "enable_prepare_docs": v.get("enable_prepare_docs", False),
+        },
+    }
 
     trigger_dag("d3_crawl_fetch_for_id", task_params, pool_name)
 
@@ -49,6 +56,9 @@ def get_site(task_params):
 @task
 def parse_all_documents(task_params, pool_name):
     print(task_params)
+    task_params["variables"]["enable_prepare_docs"] = task_params.get(
+        "enable_prepare_docs", False
+    )
     site_id = task_params["site"]
     site_config_v = task_params["variables"]["Sites"][site_id]
     site_config = task_params["variables"][site_config_v]

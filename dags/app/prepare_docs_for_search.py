@@ -21,7 +21,8 @@ def send_to_rabbitmq(v, doc):
 
 
 def prepare_doc(v, doc_id, site_id, doc_handler):
-    normalizer.preprocess_doc(v, doc_id, site_id, doc_handler)
+    raw_doc = normalizer.get_raw_doc_by_id(v, doc_id)
+    normalizer.preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler)
 
 
 def prepare_docs():

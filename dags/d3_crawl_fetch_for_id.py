@@ -19,6 +19,8 @@ from tasks.helpers import (
     get_item,
 )
 from tasks.debug import debug_value
+from lib.pool import create_pool
+from lib.dagrun import trigger_dag
 
 logger = logging.getLogger(__file__)
 
@@ -66,7 +68,28 @@ def crawl_doc(task_params):
     crawl_type = site_config.get("type", "plone_rest_api")
     crawler = get_doc_crawler(crawl_type)
 
-    crawler(v, site_id, site_config, doc_id, send_to_rabbitmq)
+    doc = crawler(v, site_id, site_config, doc_id, send_to_rabbitmq)
+
+    print("check preprocess")
+    if task_params["params"].get("enable_prepare_docs", False):
+        print("preprocess enabled")
+        if len(doc.get("errors")) == 0:
+            print("there were no errors at crawling, we can preprocess")
+            logger.info("preprocess enabled")
+            create_pool("prepare_for_searchui", 16)
+            task_params_prepare = {
+                "item": doc_id,
+                "params": {
+                    "raw_doc": doc.get("raw_doc"),
+                    "site": site_id,
+                    "variables": v,
+                },
+            }
+            trigger_dag(
+                "d5_prepare_doc_for_searchui",
+                task_params_prepare,
+                "prepare_for_searchui",
+            )
 
 
 @dag(

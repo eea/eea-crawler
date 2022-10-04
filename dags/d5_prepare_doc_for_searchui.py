@@ -55,7 +55,10 @@ def preprocess_doc(task_params):
     doc_id = task_params.get("item")
     print(doc_id)
     print(site_id)
-    normalizer.preprocess_doc(v, doc_id, site_id, send_to_rabbitmq)
+    raw_doc = task_params["params"].get("raw_doc", False)
+    if not raw_doc:
+        raw_doc = normalizer.get_raw_doc_by_id(v, doc_id)
+    normalizer.preprocess_doc(v, doc_id, site_id, raw_doc, send_to_rabbitmq)
 
 
 @dag(

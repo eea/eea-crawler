@@ -68,6 +68,10 @@ def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
     for doc_id in es_docs.keys():
         print(doc_id)
         elastic.delete_doc(es, elastic_conf.get("raw_index"), doc_id)
+        if v.get("enable_prepare_docs", False):
+            elastic.delete_doc(
+                es, elastic_conf.get("searchui_target_index"), doc_id
+            )
 
 
 def prepare_doc_for_rabbitmq(
@@ -136,3 +140,5 @@ def crawl_doc(v, site, site_config, doc_id, handler=None):
     )
     if handler:
         handler(v, raw_doc)
+
+    return {"raw_doc": raw_doc, "errors": doc_errors}

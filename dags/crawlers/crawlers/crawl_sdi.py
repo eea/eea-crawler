@@ -54,6 +54,10 @@ def parse_all_documents(v, site, sdi_conf, handler=None, doc_handler=None):
     for doc_id in es_docs.keys():
         print(doc_id)
         elastic.delete_doc(es, elastic_conf.get("raw_index"), doc_id)
+        if v.get("enable_prepare_docs", False):
+            elastic.delete_doc(
+                es, elastic_conf.get("searchui_target_index"), doc_id
+            )
 
 
 def crawl_for_metadata_identifier(v, sdi_conf, metadataIdentifier):
@@ -96,3 +100,4 @@ def crawl_doc(v, site, sdi_conf, metadataIdentifier, handler=None):
 
     if handler:
         handler(v, raw_doc)
+    return {"raw_doc": raw_doc, "errors": []}
