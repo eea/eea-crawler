@@ -63,7 +63,13 @@ def common_preprocess(doc, config):
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
 def preprocess_split_doc(
-    doc, config, field="text", field_name="nlp", split_length=500
+    doc,
+    config,
+    field="text",
+    field_name="nlp",
+    split_length=500,
+    split_respect_sentence_boundry=True,
+    split_overlap=0,
 ):
     preprocessor = PreProcessor(
         clean_empty_lines=True,
@@ -72,7 +78,8 @@ def preprocess_split_doc(
         split_by="word",
         # split_length=config["split_length"],
         split_length=split_length,
-        split_respect_sentence_boundary=True,
+        split_respect_sentence_boundary=split_respect_sentence_boundry,
+        split_overlap=split_overlap,
     )
     tmp_doc = {"content": doc.get(field, "")}
     #    doc["content"] = doc.get('text', '')

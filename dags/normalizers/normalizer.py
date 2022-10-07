@@ -70,6 +70,8 @@ def preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler):
             field="fulltext",
             field_name="nlp_250",
             split_length=250,
+            split_overlap=50,
+            split_respect_sentence_boundry=False,
         )
         normalized_doc = add_embeddings_to_doc(
             normalized_doc, nlp_services["embedding"], field_name="nlp_250"
