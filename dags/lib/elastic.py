@@ -76,7 +76,7 @@ def backup_index(es, index, sufix="backup"):
     bu_index = f"{index}_{sufix}"
     bu_alias = f"{index}_backups"
     es.indices.put_settings(json.dumps(BLOCK_WRITE_TRUE), index)
-    es.indices.clone(index, bu_index, params={"timeout":"60s"})
+    es.indices.clone(index, bu_index, params={"timeout": "60s"})
     es.indices.put_settings(json.dumps(BLOCK_WRITE_FALSE), index)
     es.indices.put_alias(bu_index, bu_alias)
 

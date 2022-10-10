@@ -82,17 +82,17 @@ def build_queries_list(site_config, query_config):
     if site_config.get("portal_types", None):
         # queries = []
         queries = [
-            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
+            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
             for portal_type in site_config["portal_types"]
         ]
         if site_config.get("languages", None):
             for language in site_config.get("languages"):
                 queries.append(
-                    f"{url}/{language}/@search?b_size={query_config['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date"
+                    f"{url}/{language}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&show_inactive=true&sort_order=reverse&sort_on=Date"
                 )
     else:
         queries = [
-            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date"
+            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&show_inactive=true&sort_order=reverse&sort_on=Date"
         ]
     return queries
 

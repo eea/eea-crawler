@@ -35,7 +35,7 @@ def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
             skip = False
             doc_id = plone_rest_api.get_no_api_url(site_config, doc["@id"])
             print(doc_id)
-            doc_modified = doc["modified"]
+            doc_modified = doc["modification_date"]
 
             if not robots_txt.test_url(rp, doc_id):
                 skip = True
