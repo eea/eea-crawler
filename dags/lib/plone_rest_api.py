@@ -104,10 +104,17 @@ def request_with_retry(url, method="get", data=None):
     print("-------------")
     logger.info("Fetching %s", url)
     handler = getattr(requests, method)
-    resp = handler(
-        url, headers={"Accept": "application/json"}, data=json.dumps(data)
-    )
-    logger.info("Response: %s", resp.text)
+    resp = ""
+    try:
+        resp = handler(
+            url,
+            headers={"Accept": "application/json"},
+            data=json.dumps(data),
+            timeout=120,
+        )
+        logger.info("Response: %s", resp.text)
+    except:
+        logger.info("Timeout")
 
     assert json.loads(resp.text)  # test if response is json
     logger.info("Response is valid json")

@@ -58,7 +58,10 @@ def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
                 if es_doc_modified == doc_modified and len(es_doc_errors) == 0:
                     print("Document did not change, skip indexing")
                 else:
-                    print("Indexing")
+                    print("Should be indexed")
+                    print(es_doc_modified)
+                    print(doc_modified)
+                    print(es_doc_errors)
                     handler(v, site, site_config, doc_id, doc_handler)
                 if es_doc_modified is not None or es_doc_errors is not None:
                     del es_docs[doc_id]
