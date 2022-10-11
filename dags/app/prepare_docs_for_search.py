@@ -15,9 +15,11 @@ from normalizers import normalizer
 
 
 def send_to_rabbitmq(v, doc):
-    rabbitmq_config = v.get("rabbitmq")
-    rabbitmq_config["queue"] = rabbitmq_config["searchui_queue"]
-    rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
+    index_name = v.get("elastic", {}).get("searchui_target_index", None)
+    if index_name is not None:
+        raw_doc["index_name"] = index_name
+        rabbitmq_config = v.get("rabbitmq")
+        rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
 
 
 def prepare_doc(v, doc_id, site_id, doc_handler):

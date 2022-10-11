@@ -27,16 +27,17 @@ default_dag_params = {"item": "", "params": {"app": "datahub"}}
 def send_to_rabbitmq(v, doc):
     print("send_to_rabbitmq:")
     print(doc)
-    rabbitmq_config = v.get("rabbitmq")
-    rabbitmq_config["queue"] = rabbitmq_config["searchui_queue"]
-    rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
 
+    index_name = v.get("elastic", {}).get("searchui_target_index",None)
+    if index_name is not None:
+      doc['index_name'] = index_name
+      rabbitmq_config = v.get("rabbitmq")
+      rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
 
 def doc_handler(v, doc_id, site_id, doc_handler):
     task_params = {"item": doc_id, "params": {"site": site_id, "variables": v}}
     print(task_params)
     trigger_dag("d5_prepare_doc_for_searchui", task_params, POOL_NAME)
-
 
 @task
 def parse_all_documents(task_params):

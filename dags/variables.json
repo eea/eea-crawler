@@ -16,7 +16,6 @@
         "Sites": {
             "bise": "config_bise",
             "climate": "config_climate",
-            "copernicus": "config_copernicus",
             "eea": "config_eea",
             "eionet": "config_eionet",
             "energy": "config_energy",
@@ -26,6 +25,19 @@
             "sdi": "config_sdi",
             "wise_freshwater": "config_wise_freshwater",
             "wise_marine": "config_wise_marine"
+        },
+        "elastic_config": {
+            "elastic": "elastic_global_search",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_default",
+        "rabbitmq_config": "rabbitmq_global_search"
+    },
+    "app_gs": {
+        "Sites": {
+            "eea": "config_eea"
         },
         "elastic_config": {
             "elastic": "elastic_global_search",
@@ -1761,16 +1773,14 @@
         "host": "rabbitmq",
         "password": "guest",
         "port": "5672",
-        "queue": "queue_raw_data_datahub",
-        "searchui_queue": "queue_searchui_datahub",
+        "queue": "search_queue",
         "username": "guest"
     },
     "rabbitmq_global_search": {
         "host": "rabbitmq",
         "password": "guest",
         "port": "5672",
-        "queue": "queue_raw_data",
-        "searchui_queue": "queue_searchui",
+        "queue": "search_queue",
         "username": "guest"
     },
     "sdi_normalizers": {

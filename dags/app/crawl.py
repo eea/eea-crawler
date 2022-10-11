@@ -24,8 +24,11 @@ from crawlers.registry import get_site_crawler, get_doc_crawler
 
 
 def send_to_rabbitmq(v, raw_doc):
-    rabbitmq_config = v.get("rabbitmq")
-    rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
+    index_name = v.get("elastic", {}).get("raw_index", None)
+    if index_name is not None:
+        raw_doc["index_name"] = index_name
+        rabbitmq_config = v.get("rabbitmq")
+        rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
 
 
 def crawl(site, app):
