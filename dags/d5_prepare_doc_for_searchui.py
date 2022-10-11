@@ -41,12 +41,12 @@ default_args = {"owner": "airflow"}
 def send_to_rabbitmq(v, doc):
     print("send_to_rabbitmq:")
     print(doc)
-    index_name = v.get("elastic", {}).get("searchui_target_index",None)
+    index_name = v.get("elastic", {}).get("searchui_target_index", None)
     if index_name is not None:
-      doc['index_name'] = index_name
-      rabbitmq_config = v.get("rabbitmq")
+        doc["index_name"] = index_name
+        rabbitmq_config = v.get("rabbitmq")
 
-      rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
+        rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
 
 
 @task

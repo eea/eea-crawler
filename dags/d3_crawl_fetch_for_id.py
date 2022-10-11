@@ -46,11 +46,11 @@ def send_to_rabbitmq(v, raw_doc):
     print("send_to_rabbitmq:")
     print(raw_doc)
 
-    index_name = v.get("elastic", {}).get("raw_index",None)
+    index_name = v.get("elastic", {}).get("raw_index", None)
     if index_name is not None:
-      raw_doc['index_name'] = index_name
-      rabbitmq_config = v.get("rabbitmq")
-      rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
+        raw_doc["index_name"] = index_name
+        rabbitmq_config = v.get("rabbitmq")
+        rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
 
     errors = raw_doc.get("errors", [])
     if len(errors) > 0:

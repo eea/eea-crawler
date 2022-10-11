@@ -28,11 +28,11 @@ default_dag_params = {"params": {"site": "sdi", "fast": True}}
 def send_to_rabbitmq(v, raw_doc):
     print("send_to_rabbitmq:")
     print(raw_doc)
-    index_name = v.get("elastic", {}).get("raw_index",None)
+    index_name = v.get("elastic", {}).get("raw_index", None)
     if index_name is not None:
-      raw_doc['index_name'] = index_name
-      rabbitmq_config = v.get("rabbitmq")
-      rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
+        raw_doc["index_name"] = index_name
+        rabbitmq_config = v.get("rabbitmq")
+        rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
 
 
 def doc_handler(v, site, site_config, doc_id, handler=None):

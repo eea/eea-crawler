@@ -131,7 +131,6 @@ def crawl_doc(v, site, site_config, doc_id, handler=None):
             logger.exception("Error scraping the page")
             errors.append("scraping the page")
             doc_errors.append("web")
-
     pdf_text = ""
     try:
         pdf_text = plone_rest_api.extract_pdf(v, site_config, doc)

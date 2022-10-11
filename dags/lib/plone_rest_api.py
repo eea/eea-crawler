@@ -220,6 +220,7 @@ def fix_download_url(download_url, source_url):
 
 
 def extract_attachments(json_doc, nlp_service_params):
+
     url = json_doc["id"]
     params = nlp_service_params["converter"]
 
@@ -281,7 +282,6 @@ def extract_pdf(v, site_config, doc):
             logger.info(site_config.get("pdf_days_limit"))
             if delta > site_config.get("pdf_days_limit"):
                 should_extract_pdf = False
-    should_extract_pdf = False
     if should_extract_pdf:
         logger.info("EXTRACT PDF")
         pdf_text = extract_attachments(doc, nlp_service_params)
