@@ -27,13 +27,13 @@
             "wise_marine": "config_wise_marine"
         },
         "elastic_config": {
-            "elastic": "elastic_global_search",
+            "elastic": "elastic_global_search_local",
             "elastic_mapping": "elastic_mapping_default",
             "elastic_raw_mapping": "elastic_raw_mapping_default",
             "elastic_settings": "elastic_settings_default"
         },
-        "nlp_config": "nlp_services_default",
-        "rabbitmq_config": "rabbitmq_global_search"
+        "nlp_config": "nlp_services_s3",
+        "rabbitmq_config": "rabbitmq_global_search_local"
     },
     "app_gs": {
         "Sites": {
@@ -45,16 +45,11 @@
             "elastic_raw_mapping": "elastic_raw_mapping_default",
             "elastic_settings": "elastic_settings_default"
         },
-        "nlp_config": "nlp_services_default",
+        "nlp_config": "nlp_services_s3",
         "rabbitmq_config": "rabbitmq_global_search"
     },
     "config_bise": {
         "concurrency": 2,
-        "nlp_preprocessing": {
-            "text": {
-                "split_length": 500
-            }
-        },
         "normalize": {
             "blacklist": [],
             "location_rules": [
@@ -114,11 +109,6 @@
         "avoid_cache_api": true,
         "avoid_cache_web": true,
         "concurrency": 4,
-        "nlp_preprocessing": {
-            "text": {
-                "split_length": 500
-            }
-        },
         "normalize": {
             "blacklist": [],
             "whitelist": [
@@ -154,11 +144,6 @@
         "avoid_cache_web": true,
         "concurrency": 4,
         "ignore_robots_txt": true,
-        "nlp_preprocessing": {
-            "text": {
-                "split_length": 500
-            }
-        },
         "normalizers_variable": "default_normalizers",
         "scrape_pages": true,
         "scrape_with_js": true,
@@ -210,7 +195,6 @@
                     "contact",
                     "rights"
                 ],
-                "split_length": 500,
                 "whitelist": [
                     "description",
                     "key_message",
@@ -271,7 +255,6 @@
                     "contact",
                     "rights"
                 ],
-                "split_length": 500,
                 "whitelist": [
                     "description",
                     "key_message",
@@ -292,11 +275,6 @@
         "avoid_cache_api": true,
         "avoid_cache_web": true,
         "concurrency": 1,
-        "nlp_preprocessing": {
-            "text": {
-                "split_length": 500
-            }
-        },
         "normalize": {
             "blacklist": [],
             "whitelist": [
@@ -328,11 +306,6 @@
     },
     "config_energy": {
         "location_rules_fallback": "Webpage",
-        "nlp_preprocessing": {
-            "text": {
-                "split_length": 500
-            }
-        },
         "normalize": {
             "blacklist": [],
             "location_rules": [
@@ -365,11 +338,6 @@
         "url_api_part": "api"
     },
     "config_fise": {
-        "nlp_preprocessing": {
-            "text": {
-                "split_length": 500
-            }
-        },
         "normalize": {
             "blacklist": [],
             "location_rules": [
@@ -425,11 +393,6 @@
         "avoid_cache_web": true,
         "concurrency": 4,
         "ignore_robots_txt": true,
-        "nlp_preprocessing": {
-            "text": {
-                "split_length": 500
-            }
-        },
         "normalize": {
             "blacklist": [],
             "whitelist": [
@@ -453,11 +416,6 @@
         "url_api_part": ""
     },
     "config_industry": {
-        "nlp_preprocessing": {
-            "text": {
-                "split_length": 500
-            }
-        },
         "normalize": {
             "blacklist": [],
             "location_rules": [
@@ -532,7 +490,6 @@
         "nlp_preprocessing": {
             "text": {
                 "blacklist": [],
-                "split_length": 500,
                 "whitelist": [
                     "resourceTitleObject.default",
                     "resourceAbstractObject.default"
@@ -604,7 +561,6 @@
         "nlp_preprocessing": {
             "text": {
                 "blacklist": [],
-                "split_length": 500,
                 "whitelist": [
                     "resourceTitleObject.default",
                     "resourceAbstractObject.default"
@@ -640,11 +596,6 @@
         "fix_items_url": {
             "with_api": "water.europa.eu/freshwater-api/++api++",
             "without_api": "water.europa.eu/freshwater"
-        },
-        "nlp_preprocessing": {
-            "text": {
-                "split_length": 500
-            }
         },
         "normalize": {
             "blacklist": [],
@@ -694,11 +645,6 @@
             "without_api": "water.europa.eu/marine"
         },
         "location_rules_fallback": "Webpage",
-        "nlp_preprocessing": {
-            "text": {
-                "split_length": 500
-            }
-        },
         "normalize": {
             "blacklist": [],
             "location_rules": [
@@ -1032,6 +978,12 @@
     },
     "elastic_global_search": {
         "host": "elastic",
+        "port": 9200,
+        "raw_index": "data_raw_new",
+        "searchui_target_index": "data_searchui_new"
+    },
+    "elastic_global_search_local": {
+        "host": "localhost",
         "port": 9200,
         "raw_index": "data_raw",
         "searchui_target_index": "data_searchui"
@@ -1743,18 +1695,29 @@
     },
     "nlp_services_default": {
         "converter": {
-            "_host": "10.120.10.204",
-            "_port": "60022",
-            "host": "192.168.100.5",
+            "host": "nlp-searchlib",
             "path": "api/converter",
             "port": "8000"
         },
         "embedding": {
-            "_host": "10.120.10.204",
-            "_port": "60022",
-            "host": "192.168.100.5",
+            "host": "nlp-searchlib",
             "path": "api/embedding",
+            "dest_field_name": "nlp_250",
             "port": "8000"
+        },
+        "split": {
+            "clean_empty_lines": true,
+            "clean_header_footer": false,
+            "clean_whitespace": true,
+            "dest_field_name": "nlp_250",
+            "fulltext_field": "fulltext",
+            "host": "nlp-searchlib",
+            "path": "api/split",
+            "port": "8000",
+            "split_by": "word",
+            "split_length": 250,
+            "split_overlap": 50,
+            "split_respect_sentence_boundary": false
         }
     },
     "nlp_services_s3": {
@@ -1766,7 +1729,22 @@
         "embedding": {
             "host": "10.120.10.204",
             "path": "api/embedding",
+            "dest_field_name": "nlp_250",
             "port": "60022"
+        },
+        "split": {
+            "clean_empty_lines": true,
+            "clean_header_footer": false,
+            "clean_whitespace": true,
+            "dest_field_name": "nlp_250",
+            "fulltext_field": "fulltext",
+            "host": "10.120.10.204",
+            "path": "api/split",
+            "port": "60022",
+            "split_by": "word",
+            "split_length": 250,
+            "split_overlap": 50,
+            "split_respect_sentence_boundary": false
         }
     },
     "rabbitmq_datahub": {
@@ -1778,6 +1756,13 @@
     },
     "rabbitmq_global_search": {
         "host": "rabbitmq",
+        "password": "guest",
+        "port": "5672",
+        "queue": "search_queue",
+        "username": "guest"
+    },
+    "rabbitmq_global_search_local": {
+        "host": "localhost",
         "password": "guest",
         "port": "5672",
         "queue": "search_queue",

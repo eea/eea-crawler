@@ -17,9 +17,9 @@ from normalizers import normalizer
 def send_to_rabbitmq(v, doc):
     index_name = v.get("elastic", {}).get("searchui_target_index", None)
     if index_name is not None:
-        raw_doc["index_name"] = index_name
+        doc["index_name"] = index_name
         rabbitmq_config = v.get("rabbitmq")
-        rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
+        rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
 
 
 def prepare_doc(v, doc_id, site_id, doc_handler):
@@ -27,11 +27,11 @@ def prepare_doc(v, doc_id, site_id, doc_handler):
     normalizer.preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler)
 
 
-def prepare_docs():
-    v = variables.load_variables_from_disk("../variables.json")
+def prepare_docs(app):
+    v = variables.load_variables_from_disk("../variables.json", app)
 
     normalizer.parse_all_documents(v, prepare_doc, send_to_rabbitmq)
 
 
 if __name__ == "__main__":
-    prepare_docs()
+    prepare_docs("global_search")

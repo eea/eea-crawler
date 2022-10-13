@@ -2,7 +2,7 @@ import json
 import requests
 
 from tenacity import retry, wait_exponential, stop_after_attempt
-from haystack.preprocessor.preprocessor import PreProcessor
+#from haystack.preprocessor.preprocessor import PreProcessor
 
 from normalizers.lib.normalizers import join_text_fields
 from urllib.parse import urlparse
@@ -64,41 +64,41 @@ def common_preprocess(doc, config):
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
 def preprocess_split_doc(
     doc,
-    config,
-    field="text",
-    field_name="nlp",
-    split_length=500,
-    split_respect_sentence_boundry=True,
-    split_overlap=0,
+    nlp_service,
 ):
-    preprocessor = PreProcessor(
-        clean_empty_lines=True,
-        clean_whitespace=True,
-        clean_header_footer=False,
-        split_by="word",
-        # split_length=config["split_length"],
-        split_length=split_length,
-        split_respect_sentence_boundary=split_respect_sentence_boundry,
-        split_overlap=split_overlap,
+    field_name = nlp_service.get("dest_field_name", "nlp")
+
+    data = {"fulltext": doc.get(nlp_service.get("fulltext_field", "fulltext"), ""),
+        "split_length": nlp_service.get("split_length", 500),
+        "split_respect_sentence_boundry": nlp_service.get("split_respect_sentence_boundry"),
+        "split_overlap":  nlp_service.get("split_overlap", 0),
+        "clean_empty_lines":  nlp_service.get("clean_empty_lines"),
+        "clean_whitespace":  nlp_service.get("clean_whitespace"),
+        "clean_header_footer":  nlp_service.get("clean_header_footer")
+    }
+
+    data = json.dumps(data)
+    r = requests.post(
+        f"http://{nlp_service['host']}:{nlp_service['port']}/{nlp_service['path']}",
+        headers={
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        data=data,
     )
-    tmp_doc = {"content": doc.get(field, "")}
-    #    doc["content"] = doc.get('text', '')
+    docs = json.loads(r.text)["parts"]
 
-    docs = preprocessor.process(tmp_doc)
-
-    # for tmp_doc in docs:
-    #     tmp_doc["id"] = f"{tmp_doc['id']}#{tmp_doc['meta']['_split_id']}"
     doc[field_name] = []
     for tmp_doc in docs:
-        doc[field_name].append({"text": tmp_doc["content"]})
+        doc[field_name].append({"text": tmp_doc})
 
     return doc
 
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
-def add_embeddings_to_doc(doc, nlp_service, field_name="nlp"):
+def add_embeddings_to_doc(doc, nlp_service):
     # data = {'snippets':[doc['text']], "is_passage": True}
-
+    field_name = nlp_service.get("dest_field_name", "nlp")
     data = {"is_passage": True, "snippets": []}
     for content in doc[field_name]:
         data["snippets"].append(content["text"])
