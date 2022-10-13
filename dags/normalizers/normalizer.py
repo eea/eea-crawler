@@ -40,7 +40,7 @@ def preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler):
 
     config = {
         "normalizers": normalizers_config,
-        "nlp": site_config.get("nlp_preprocessing", None),
+        "nlp": site_config.get("nlp_preprocessing", {}),
         "site": site_config,
     }
     # print(raw_doc)

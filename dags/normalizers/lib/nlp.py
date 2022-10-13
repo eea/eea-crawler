@@ -17,8 +17,8 @@ def common_preprocess(doc, config):
         text = join_text_fields(
             text,
             raw_doc,
-            config["nlp"]["text"].get("whitelist", []),
-            config["nlp"]["text"].get("blacklist", []),
+            config.get("nlp",{}).get("text",{}).get("whitelist", []),
+            config.get("nlp",{}).get("text",{}).get("blacklist", []),
         )
     pdf_text = doc.get("pdf_text", "")
 
