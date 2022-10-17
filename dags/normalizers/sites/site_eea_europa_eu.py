@@ -14,6 +14,8 @@ logger = logging.getLogger(__file__)
 @register_facets_normalizer("eea")
 def normalize_eea_europa_eu(doc, config):
     logger.info("NORMALIZE EEA")
+    if doc["raw_value"].get("@type", None) is None:
+        return None
     if doc["raw_value"]["@type"] == "Plone Site":
         return None
     normalized_doc = common_normalizer(doc, config)
