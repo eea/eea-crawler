@@ -24,11 +24,11 @@ def sync(app):
         es, [elastic_conf["raw_index"], elastic_conf["searchui_target_index"]]
     )
 
-    crawl("sdi", app)
+    crawl("eea", app)
 
 
 if __name__ == "__main__":
-    sync("datahub")
+    sync("gs")
 
 
 """

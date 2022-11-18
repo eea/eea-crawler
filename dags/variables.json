@@ -27,13 +27,13 @@
             "wise_marine": "config_wise_marine"
         },
         "elastic_config": {
-            "elastic": "elastic_global_search_local",
+            "elastic": "elastic_global_search",
             "elastic_mapping": "elastic_mapping_default",
             "elastic_raw_mapping": "elastic_raw_mapping_default",
             "elastic_settings": "elastic_settings_default"
         },
         "nlp_config": "nlp_services_s3",
-        "rabbitmq_config": "rabbitmq_global_search_local"
+        "rabbitmq_config": "rabbitmq_global_search"
     },
     "app_gs": {
         "Sites": {
@@ -979,8 +979,14 @@
     "elastic_global_search": {
         "host": "elastic",
         "port": 9200,
+        "raw_index": "data_raw_tmp",
+        "searchui_target_index": "data_searchui_tmp"
+    },
+    "elastic_global_search_s3": {
+        "host": "10.120.10.204",
+        "port": 60168,
         "raw_index": "data_raw_new",
-        "searchui_target_index": "data_searchui_new"
+        "searchui_target_index": "data_searchui_tmp"
     },
     "elastic_global_search_local": {
         "host": "localhost",
@@ -1271,7 +1277,7 @@
         "modified": {
             "type": "date"
         },
-        "nlp": {
+        "nlp_250": {
             "properties": {
                 "embedding": {
                     "dims": 768,
@@ -1700,9 +1706,9 @@
             "port": "8000"
         },
         "embedding": {
+            "dest_field_name": "nlp_250",
             "host": "nlp-searchlib",
             "path": "api/embedding",
-            "dest_field_name": "nlp_250",
             "port": "8000"
         },
         "split": {
@@ -1727,9 +1733,9 @@
             "port": "60022"
         },
         "embedding": {
+            "dest_field_name": "nlp_250",
             "host": "10.120.10.204",
             "path": "api/embedding",
-            "dest_field_name": "nlp_250",
             "port": "60022"
         },
         "split": {
