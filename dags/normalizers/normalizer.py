@@ -42,7 +42,7 @@ def preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler):
         "normalizers": normalizers_config,
         "nlp": site_config.get("nlp_preprocessing", {}),
         "site": site_config,
-        "full_config": v
+        "full_config": v,
     }
     # print(raw_doc)
     # import pdb; pdb.set_trace()
@@ -66,8 +66,7 @@ def preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler):
         # )
 
         normalized_doc = preprocess_split_doc(
-            normalized_doc,
-            nlp_services["split"]
+            normalized_doc, nlp_services["split"]
         )
         normalized_doc = add_embeddings_to_doc(
             normalized_doc, nlp_services["embedding"]

@@ -34,9 +34,11 @@ def send_to_rabbitmq(v, doc):
         rabbitmq_config = v.get("rabbitmq")
         rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
 
+
 def doc_handler_fast(v, doc_id, site_id, doc_handler):
     raw_doc = normalizer.get_raw_doc_by_id(v, doc_id)
     normalizer.preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler)
+
 
 def doc_handler(v, doc_id, site_id, doc_handler):
     task_params = {"item": doc_id, "params": {"site": site_id, "variables": v}}

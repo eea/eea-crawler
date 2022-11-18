@@ -165,10 +165,19 @@ def pre_normalize_sdi(doc, config):
     )
 
     rods = simplify_list(
-        doc["raw_value"].get("th_rod-eionet-europa-eu", []), field="link" 
+        doc["raw_value"].get("th_rod-eionet-europa-eu", []), field="link"
     )
-    
-    doc["raw_value"]["instrument"] = list(set([config.get('full_config',{}).get('obligations',{}).get(rod)['label'] for rod in rods]))
+
+    doc["raw_value"]["instrument"] = list(
+        set(
+            [
+                config.get("full_config", {})
+                .get("obligations", {})
+                .get(rod)["label"]
+                for rod in rods
+            ]
+        )
+    )
     return doc
 
 

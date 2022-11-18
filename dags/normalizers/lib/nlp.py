@@ -2,7 +2,8 @@ import json
 import requests
 
 from tenacity import retry, wait_exponential, stop_after_attempt
-#from haystack.preprocessor.preprocessor import PreProcessor
+
+# from haystack.preprocessor.preprocessor import PreProcessor
 
 from normalizers.lib.normalizers import join_text_fields
 from urllib.parse import urlparse
@@ -17,8 +18,8 @@ def common_preprocess(doc, config):
         text = join_text_fields(
             text,
             raw_doc,
-            config.get("nlp",{}).get("text",{}).get("whitelist", []),
-            config.get("nlp",{}).get("text",{}).get("blacklist", []),
+            config.get("nlp", {}).get("text", {}).get("whitelist", []),
+            config.get("nlp", {}).get("text", {}).get("blacklist", []),
         )
     pdf_text = doc.get("pdf_text", "")
 
@@ -62,19 +63,19 @@ def common_preprocess(doc, config):
 
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
-def preprocess_split_doc(
-    doc,
-    nlp_service,
-):
+def preprocess_split_doc(doc, nlp_service):
     field_name = nlp_service.get("dest_field_name", "nlp")
 
-    data = {"fulltext": doc.get(nlp_service.get("fulltext_field", "fulltext"), ""),
+    data = {
+        "fulltext": doc.get(nlp_service.get("fulltext_field", "fulltext"), ""),
         "split_length": nlp_service.get("split_length", 500),
-        "split_respect_sentence_boundary": nlp_service.get("split_respect_sentence_boundary"),
-        "split_overlap":  nlp_service.get("split_overlap", 0),
-        "clean_empty_lines":  nlp_service.get("clean_empty_lines"),
-        "clean_whitespace":  nlp_service.get("clean_whitespace"),
-        "clean_header_footer":  nlp_service.get("clean_header_footer")
+        "split_respect_sentence_boundary": nlp_service.get(
+            "split_respect_sentence_boundary"
+        ),
+        "split_overlap": nlp_service.get("split_overlap", 0),
+        "clean_empty_lines": nlp_service.get("clean_empty_lines"),
+        "clean_whitespace": nlp_service.get("clean_whitespace"),
+        "clean_header_footer": nlp_service.get("clean_header_footer"),
     }
 
     data = json.dumps(data)
