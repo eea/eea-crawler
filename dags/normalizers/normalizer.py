@@ -42,6 +42,7 @@ def preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler):
         "normalizers": normalizers_config,
         "nlp": site_config.get("nlp_preprocessing", {}),
         "site": site_config,
+        "full_config": v
     }
     # print(raw_doc)
     # import pdb; pdb.set_trace()
