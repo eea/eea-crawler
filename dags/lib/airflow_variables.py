@@ -40,6 +40,12 @@ def get_all_variables(conf_name):
     variables["headless_chrome"] = Variable.get(
         "headless_chrome", deserialize_json=True
     )
+    try:
+        variables["obligations"] = Variable.get(
+            "obligations", deserialize_json=True
+        )
+    except:
+        variables["obligations"] = {}
 
     for site in variables["Sites"].keys():
         variables[variables["Sites"][site]] = Variable.get(
