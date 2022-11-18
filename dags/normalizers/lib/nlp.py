@@ -70,7 +70,7 @@ def preprocess_split_doc(
 
     data = {"fulltext": doc.get(nlp_service.get("fulltext_field", "fulltext"), ""),
         "split_length": nlp_service.get("split_length", 500),
-        "split_respect_sentence_boundry": nlp_service.get("split_respect_sentence_boundry"),
+        "split_respect_sentence_boundary": nlp_service.get("split_respect_sentence_boundary"),
         "split_overlap":  nlp_service.get("split_overlap", 0),
         "clean_empty_lines":  nlp_service.get("clean_empty_lines"),
         "clean_whitespace":  nlp_service.get("clean_whitespace"),
