@@ -1076,6 +1076,15 @@
             "fielddata": true,
             "type": "text"
         },
+        "dataset_formats": {
+            "analyzer": "none",
+            "copy_to": [
+                "did_you_mean",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
+        },
         "description": {
             "analyzer": "english_stop_analyzer",
             "fields": {
@@ -4406,7 +4415,8 @@
             "spatial",
             "places",
             "raw_value",
-            "instrument"
+            "instrument",
+            "dataset_formats"
         ],
         "whiteMap": {}
     }

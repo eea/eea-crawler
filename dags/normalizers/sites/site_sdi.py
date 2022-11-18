@@ -107,6 +107,17 @@ def get_years_from_ranges(ranges):
     return years
 
 
+def get_formats(datasets):
+    formats = []
+    for dataset in datasets:
+        dataset_formats = dataset.get("format", [])
+        if type(dataset_formats) != list:
+            dataset_formats = [dataset_formats]
+        for dataset_format in dataset_formats:
+            formats.append(dataset_format)
+    return formats
+
+
 def pre_normalize_sdi(doc, config):
     doc["raw_value"]["site_id"] = "sdi"
     doc["raw_value"] = simplify_elements(doc["raw_value"], "")
@@ -168,6 +179,9 @@ def pre_normalize_sdi(doc, config):
         doc["raw_value"].get("th_rod-eionet-europa-eu", []), field="link"
     )
 
+    doc["raw_value"]["dataset_formats"] = get_formats(
+        doc["raw_value"].get("children", [])
+    )
     doc["raw_value"]["instrument"] = list(
         set(
             [
