@@ -16,18 +16,47 @@ import logging
 
 logger = logging.getLogger(__file__)
 """
-identificationInfo/*/citation/*/title                                                       resourceTitleObject
-identificationInfo/*/abstract                                                               resourceAbstractObject
-identificationInfo/*/descriptiveKeywords (Continents, Countries, sea regions of the world)  allKeywords/th_regions
-identificationInfo/*/descriptiveKeywords (EEA keywords list)
-identificationInfo/*/extent/*/temporalExtent
-identificationInfo/*/topicCategory
-identificationInfo/*/graphicOverview
-hierarchyLevel + extra hierarchyLevelName if more details needed
-identificationInfo/*/resourceMaintenance
+data series main query
+----------------------
+changeDate -> check if there were any update
 
-resourceDate/publication
-th_eea-topics/default
+
+data series mapping in airflow
+------------------------------
+metadataIdentifier -> about, original_id, id
+agg_associated -> children (datasets)
+isPublishedToAll -> hasWorkflowState
+resourceDate || publicationDateForResource || createDate -> issued
+overview[..].url -> overview.url
+th_rod-eionet-europa-eu -> rod, instrument
+th_eea-topics -> topic
+th_gemet_tree -> gemet
+cl_spatialRepresentationType -> spatialRepresentationType
+th_regions -> spatial, places
+resourceTemporalExtentDetails -> time_coverage
+resourceAbstractObject.default -> description
+resourceTitleObject.default -> title, label
+mainLanguage -> language
+
+
+dataset mapping in airflow
+--------------------------
+format -> dataset_formats
+
+
+dataset mapping (only on frontend)
+-----------------------------
+format
+resourceTemporalExtentDetails
+resourceTitleObject
+resourceType
+link
+link.name
+link.protocol
+link.url
+link.description
+link.function
+
 """
 
 
