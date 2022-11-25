@@ -1,21 +1,6 @@
-from datetime import datetime, timedelta
-from urllib.parse import urlparse
-
-from normalizers.registry import (
-    register_facets_normalizer,
-    register_nlp_preprocessor,
-)
-from normalizers.lib.normalizers import (
-    common_normalizer,
-    check_blacklist_whitelist,
-    simplify_elements,
-    add_counts,
-)
-from normalizers.lib.nlp import common_preprocess
-import logging
-
-logger = logging.getLogger(__file__)
 """
+Mapping of fields from the sdi elastic endpoint
+
 data series main query
 ----------------------
 changeDate -> check if there were any update
@@ -56,8 +41,25 @@ link.protocol
 link.url
 link.description
 link.function
-
 """
+
+from datetime import datetime, timedelta
+from urllib.parse import urlparse
+
+from normalizers.registry import (
+    register_facets_normalizer,
+    register_nlp_preprocessor,
+)
+from normalizers.lib.normalizers import (
+    common_normalizer,
+    check_blacklist_whitelist,
+    simplify_elements,
+    add_counts,
+)
+from normalizers.lib.nlp import common_preprocess
+import logging
+
+logger = logging.getLogger(__file__)
 
 
 def simplify_list(sdi_list, field="default"):
