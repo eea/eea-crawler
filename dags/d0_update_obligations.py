@@ -53,8 +53,8 @@ def test_variable():
 
 @dag(
     default_args=default_args,
-    start_date=days_ago(2),
-    schedule_interval=None,
+    start_date=days_ago(1),
+    schedule_interval="@daily",
     description="test",
     tags=["test"],
 )

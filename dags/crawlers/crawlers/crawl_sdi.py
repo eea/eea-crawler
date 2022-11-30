@@ -24,10 +24,15 @@ def parse_all_documents(v, site, sdi_conf, handler=None, doc_handler=None):
     query = sdi_conf.get("query")
     path = sdi_conf.get("path")
     es_sdi = sdi_es(sdi_conf)
+    threshold = sdi_conf.get("threshold", 25)
+    ignore_delete_threshold = v.get("ignore_delete_threshold", False)
+    print("SDI QUERY")
+    print(query)
     docs = elastic.get_docs(es=es_sdi, query=query, path=path)
     print("SDI DOCS")
     print(docs)
     es_docs = elastic.get_all_ids_from_raw_for_site(v, site)
+    prev_es_docs_len = len(es_docs)
     print("ES DOCS")
     print(es_docs)
     for doc in docs:
@@ -47,17 +52,31 @@ def parse_all_documents(v, site, sdi_conf, handler=None, doc_handler=None):
         if es_doc_modified is not None:
             del es_docs[doc_id]
 
-    es = elastic.elastic_connection(v)
-    elastic_conf = v.get("elastic")
+    to_delete_es_docs_len = len(es_docs)
 
-    print("REMOVE FROM ES, DOCS THAT ARE NOT PRESENT IN SDI:")
-    for doc_id in es_docs.keys():
-        print(doc_id)
-        elastic.delete_doc(es, elastic_conf.get("raw_index"), doc_id)
-        if v.get("enable_prepare_docs", False):
-            elastic.delete_doc(
-                es, elastic_conf.get("searchui_target_index"), doc_id
-            )
+    should_delete_old_docs = True
+
+    if prev_es_docs_len == 0:
+        should_delete_old_docs = True
+    else:
+        diff = to_delete_es_docs_len * 100 / prev_es_docs_len
+        if diff > threshold:
+            should_delete_old_docs = False
+
+    if should_delete_old_docs or ignore_delete_threshold:
+        es = elastic.elastic_connection(v)
+        elastic_conf = v.get("elastic")
+
+        print("REMOVE FROM ES, DOCS THAT ARE NOT PRESENT IN SDI:")
+        for doc_id in es_docs.keys():
+            print(doc_id)
+            elastic.delete_doc(es, elastic_conf.get("raw_index"), doc_id)
+            if v.get("enable_prepare_docs", False):
+                elastic.delete_doc(
+                    es, elastic_conf.get("searchui_target_index"), doc_id
+                )
+    else:
+        raise Exception("WARNING: Too many documents to be deleted")
 
 
 def crawl_for_metadata_identifier(v, sdi_conf, metadataIdentifier):

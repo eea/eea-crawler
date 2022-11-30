@@ -81,12 +81,25 @@ def backup_index(es, index, sufix="backup"):
     es.indices.put_alias(bu_index, bu_alias)
 
 
+def update_index_ts(es, index):
+    now = int(datetime.now().timestamp() * 1000)
+    ts_alias = f"updated_at_{now}"
+    aliases = (
+        es.indices.get_alias(index).get(index, {}).get("aliases", {}).keys()
+    )
+    print(aliases)
+    for alias in aliases:
+        if alias.startswith("updated_at_"):
+            print("remove_alias")
+            es.indices.delete_alias(index, alias)
+    es.indices.put_alias(index, ts_alias)
+
+
 def backup_indices(es, indices, cnt=3):
     now = datetime.now()
     ts = now.strftime("%Y_%m_%d_%H_%M_%S")
     for index in indices:
-        print("DELETE")
-        print(index)
+        update_index_ts(es, index)
         backup_index(es, index, ts)
         delete_old_indeces_for_index(es, index, cnt)
 

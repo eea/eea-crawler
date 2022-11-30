@@ -62,6 +62,9 @@ def parse_all_documents(task_params, pool_name):
     task_params["variables"]["enable_prepare_docs"] = task_params.get(
         "enable_prepare_docs", False
     )
+    task_params["variables"]["ignore_delete_threshold"] = task_params.get(
+        "ignore_delete_threshold", False
+    )
     site_id = task_params["site"]
     site_config_v = task_params["variables"]["Sites"][site_id]
     site_config = task_params["variables"][site_config_v]

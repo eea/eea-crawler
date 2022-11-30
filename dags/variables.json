@@ -523,6 +523,7 @@
             "size": 10000,
             "track_total_hits": true
         },
+        "threshold": 35,
         "type": "sdi",
         "url": "https://galliwasp.eea.europa.eu/catalogue/datahub"
     },
@@ -973,14 +974,14 @@
     "elastic_datahub": {
         "host": "elastic",
         "port": 9200,
-        "raw_index": "datahub_raw_rod",
-        "searchui_target_index": "datahub_searchui_rod"
+        "raw_index": "datahub_raw",
+        "searchui_target_index": "datahub_searchui"
     },
     "elastic_global_search": {
         "host": "elastic",
         "port": 9200,
         "raw_index": "data_raw_new",
-        "searchui_target_index": "data_searchui_new"
+        "searchui_target_index": "data_searchui_fb_multiset"
     },
     "elastic_global_search_local": {
         "host": "localhost",
@@ -4299,6 +4300,14 @@
             "label": "Regulation on the Governance of the Energy Union and Climate Action"
         },
         "http://rod.eionet.europa.eu/obligations/820": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/690",
+            "label": "Regulation on the Governance of the Energy Union and Climate Action"
+        },
+        "http://rod.eionet.europa.eu/obligations/821": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/690",
+            "label": "Regulation on the Governance of the Energy Union and Climate Action"
+        },
+        "http://rod.eionet.europa.eu/obligations/822": {
             "instrument": "http://rod.eionet.europa.eu/instruments/690",
             "label": "Regulation on the Governance of the Energy Union and Climate Action"
         },

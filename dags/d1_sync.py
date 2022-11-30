@@ -37,6 +37,9 @@ def trigger_all_crawlers(task_params):
             "params": {
                 "site": site,
                 "fast": task_params.get("fast", False),
+                "ignore_delete_threshold": task_params.get(
+                    "ignore_delete_threshold", False
+                ),
                 "app": app,
                 "enable_prepare_docs": task_params.get(
                     "enable_prepare_docs", False
