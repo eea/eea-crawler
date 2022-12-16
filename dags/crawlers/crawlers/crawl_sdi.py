@@ -26,6 +26,8 @@ def parse_all_documents(v, site, sdi_conf, handler=None, doc_handler=None):
     es_sdi = sdi_es(sdi_conf)
     threshold = sdi_conf.get("threshold", 25)
     ignore_delete_threshold = v.get("ignore_delete_threshold", False)
+    print("SDI CONF")
+    print(sdi_conf)
     print("SDI QUERY")
     print(query)
     docs = elastic.get_docs(es=es_sdi, query=query, path=path)
@@ -43,7 +45,9 @@ def parse_all_documents(v, site, sdi_conf, handler=None, doc_handler=None):
         print(doc_id)
         print(es_doc_modified)
         print(doc_modified)
-        if es_doc_modified == doc_modified:
+        if es_doc_modified == doc_modified and not sdi_conf.get(
+            "fetch_all_docs", False
+        ):
             print("Document did not change, skip indexing")
         else:
             print("Indexing")
@@ -113,6 +117,8 @@ def crawl_doc(v, site, sdi_conf, metadataIdentifier, handler=None):
     for child_id in children:
         child_doc = crawl_for_metadata_identifier(v, sdi_conf, child_id)
         if child_doc is not None:
+            if type(child_doc.get("linkProtocol", [])) != list:
+                child_doc["linkProtocol"] = [child_doc["linkProtocol"]]
             doc["children"].append(child_doc)
 
     raw_doc = prepare_doc_for_rabbitmq(doc, site)
