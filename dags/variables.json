@@ -26,6 +26,7 @@
             "wise_freshwater": "config_wise_freshwater",
             "wise_marine": "config_wise_marine"
         },
+        "allowed_errors_for_doc": 2,
         "elastic_config": {
             "elastic": "elastic_global_search",
             "elastic_mapping": "elastic_mapping_default",
@@ -33,7 +34,8 @@
             "elastic_settings": "elastic_settings_default"
         },
         "nlp_config": "nlp_services_default",
-        "rabbitmq_config": "rabbitmq_global_search"
+        "rabbitmq_config": "rabbitmq_global_search",
+        "skip_doc_cnt": 100
     },
     "app_gs": {
         "Sites": {
@@ -469,6 +471,7 @@
         "custom_dag": "sdi_1_crawl",
         "custom_task_id": "crawl_sdi",
         "endpoint": "galliwasp.eea.europa.eu",
+        "fetch_all_docs": true,
         "metadata_query": {
             "_source": {
                 "excludes": [
@@ -897,7 +900,7 @@
             "http://www.eea.europa.eu/portal_workflow/linguaflow/states/published": "published",
             "http://www.eea.europa.eu/portal_workflow/one_state_workflow/states/published": "published",
             "http://www.eea.europa.eu/portal_workflow/plone_workflow/states/published": "published",
-            "human": "Environment and health ",
+            "human": "Environment and health",
             "ims_indicator": "Indicator",
             "industry": "Industry",
             "landuse": "Land use",
@@ -981,7 +984,7 @@
         "host": "elastic",
         "port": 9200,
         "raw_index": "data_raw_new",
-        "searchui_target_index": "data_searchui_fb_multiset"
+        "searchui_target_index": "data_searchui"
     },
     "elastic_global_search_local": {
         "host": "localhost",
@@ -3229,11 +3232,11 @@
         },
         "http://rod.eionet.europa.eu/obligations/531": {
             "instrument": "http://rod.eionet.europa.eu/instruments/609",
-            "label": "New Bathing Water Directive (consolidated)"
+            "label": "Bathing Water Directive (2006)"
         },
         "http://rod.eionet.europa.eu/obligations/532": {
             "instrument": "http://rod.eionet.europa.eu/instruments/609",
-            "label": "New Bathing Water Directive (consolidated)"
+            "label": "Bathing Water Directive (2006)"
         },
         "http://rod.eionet.europa.eu/obligations/533": {
             "instrument": "http://rod.eionet.europa.eu/instruments/610",
@@ -4169,11 +4172,11 @@
         },
         "http://rod.eionet.europa.eu/obligations/787": {
             "instrument": "http://rod.eionet.europa.eu/instruments/609",
-            "label": "New Bathing Water Directive (consolidated)"
+            "label": "Bathing Water Directive (2006)"
         },
         "http://rod.eionet.europa.eu/obligations/788": {
             "instrument": "http://rod.eionet.europa.eu/instruments/609",
-            "label": "New Bathing Water Directive (consolidated)"
+            "label": "Bathing Water Directive (2006)"
         },
         "http://rod.eionet.europa.eu/obligations/789": {
             "instrument": "http://rod.eionet.europa.eu/instruments/678",
@@ -4428,5 +4431,163 @@
             "dataset_formats"
         ],
         "whiteMap": {}
+    },
+    "theme_taxonomy": {
+        "02sx2jjmd4": {
+            "label": "Fisheries and aquaculture"
+        },
+        "07723e8f6t": {
+            "label": "Pollution"
+        },
+        "4g6nof0mwk": {
+            "label": "Sustainable finance"
+        },
+        "4otlq9kt9v": {
+            "label": "Seas and coasts"
+        },
+        "6icr2anmn4": {
+            "label": "Chemicals"
+        },
+        "6vjrx6dm1j": {
+            "label": "Electric vehicles"
+        },
+        "7j3ao9vwh6": {
+            "label": "Nature protection and restoration"
+        },
+        "7ngc5c6ofw": {
+            "label": "Bathing water quality"
+        },
+        "8n6i7qsodf": {
+            "label": "Extreme weather"
+        },
+        "aabl5pvdgv": {
+            "label": "Nature-based solutions"
+        },
+        "agriculture": {
+            "label": "Agriculture and food"
+        },
+        "air": {
+            "label": "Air pollution"
+        },
+        "biodiversity": {
+            "label": "Biodiversity"
+        },
+        "climate": {
+            "label": "Climate change mitigation"
+        },
+        "climate-change-adaptation": {
+            "label": "Climate change adaptation"
+        },
+        "coast_sea": {
+            "label": "Marine"
+        },
+        "default": {
+            "label": "Default"
+        },
+        "economy": {
+            "label": "Green economy"
+        },
+        "energy": {
+            "label": "Energy"
+        },
+        "esbbbjatw8": {
+            "label": "Forests and forestry"
+        },
+        "fishery": {
+            "label": "Fisheries"
+        },
+        "gcqeu4of1f": {
+            "label": "Resource use and materials"
+        },
+        "gvnhkc6kx7": {
+            "label": "Textiles"
+        },
+        "himvkjl0ok": {
+            "label": "Urban sustainability"
+        },
+        "households": {
+            "label": "Household consumption"
+        },
+        "human": {
+            "label": "Environmental health impacts"
+        },
+        "i87b2jno0c": {
+            "label": "Plastics"
+        },
+        "ifrjqph5cn": {
+            "label": "Production and consumption"
+        },
+        "industry": {
+            "label": "Industry"
+        },
+        "ker3sp99hj": {
+            "label": "Renewable energy"
+        },
+        "l3fwryepgj": {
+            "label": "Road transport"
+        },
+        "landuse": {
+            "label": "Land use"
+        },
+        "lod55xq213": {
+            "label": "Energy efficiency"
+        },
+        "m6sjg6oyuk": {
+            "label": "Buildings and construction"
+        },
+        "natural": {
+            "label": "Natural resources"
+        },
+        "other_issues": {
+            "label": "Various other issues"
+        },
+        "oyiadbllt7": {
+            "label": "Noise"
+        },
+        "policy": {
+            "label": "Policy instruments"
+        },
+        "qh5021piy3": {
+            "label": "Circular economy"
+        },
+        "regions": {
+            "label": "Specific regions"
+        },
+        "scenarios": {
+            "label": "Environmental scenarios"
+        },
+        "soil": {
+            "label": "Soil"
+        },
+        "sustainability-transitions": {
+            "label": "Sustainability solutions"
+        },
+        "technology": {
+            "label": "Environmental technology"
+        },
+        "tourism": {
+            "label": "Tourism"
+        },
+        "transport": {
+            "label": "Transport and mobility"
+        },
+        "urban": {
+            "label": "Urban environment"
+        },
+        "vr0t7tafrf": {
+            "label": "Bioeconomy"
+        },
+        "vr8719ygoe": {
+            "label": "Environmental inequalities"
+        },
+        "waste": {
+            "label": "Waste and recycling"
+        },
+        "water": {
+            "label": "Water"
+        },
+        "x5o5fkk4xy": {
+            "label": "Sustainability challenges"
+        }
     }
 }
