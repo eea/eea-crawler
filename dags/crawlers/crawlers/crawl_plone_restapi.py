@@ -25,7 +25,9 @@ def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
     es_docs = elastic.get_all_ids_from_raw_for_site(v, site)
 
     portal_types = site_config.get("portal_types", [])
-
+    skip_docs = v.get("skip_docs", [])
+    print("skip docs")
+    print(skip_docs)
     cnt = 0
     for query in queries:
         docs = plone_rest_api.get_docs(query)
@@ -47,7 +49,10 @@ def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
             if doc["@type"] == "File":
                 if doc_id.split(".")[-1].lower() in SKIP_EXTENSIONS:
                     skip = True
-
+            if doc_id in skip_docs:
+                print("Document had errors, skip")
+                skip = True
+                del es_docs[doc_id]
             if not skip:
                 #                import pdb; pdb.set_trace()
                 es_doc = es_docs.get(doc_id, {})
@@ -70,13 +75,18 @@ def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
     elastic_conf = v.get("elastic")
 
     print("REMOVE FROM ES, DOCS THAT ARE NOT PRESENT IN PLONE:")
+    print(es_docs.keys())
     for doc_id in es_docs.keys():
         print(doc_id)
         elastic.delete_doc(es, elastic_conf.get("raw_index"), doc_id)
         if v.get("enable_prepare_docs", False):
-            elastic.delete_doc(
-                es, elastic_conf.get("searchui_target_index"), doc_id
-            )
+            try:
+                elastic.delete_doc(
+                    es, elastic_conf.get("searchui_target_index"), doc_id
+                )
+                print("document deleted from search index")
+            except:
+                print("document not found in search index")
 
 
 def prepare_doc_for_rabbitmq(

@@ -16,6 +16,10 @@ def get_all_variables(conf_name):
 
     app_conf = Variable.get(conf_name, deserialize_json=True)
     variables["Sites"] = app_conf.get("Sites")
+    variables["allowed_errors_for_doc"] = app_conf.get(
+        "allowed_errors_for_doc", 3
+    )
+    variables["skip_doc_cnt"] = app_conf.get("skip_doc_cnt", 10)
     elastic_config = app_conf.get("elastic_config")
     variables["elastic"] = Variable.get(
         elastic_config.get("elastic"), deserialize_json=True
@@ -46,6 +50,13 @@ def get_all_variables(conf_name):
         )
     except:
         variables["obligations"] = {}
+
+    try:
+        variables["theme_taxonomy"] = Variable.get(
+            "theme_taxonomy", deserialize_json=True
+        )
+    except:
+        variables["theme_taxonomy"] = {}
 
     for site in variables["Sites"].keys():
         variables[variables["Sites"][site]] = Variable.get(

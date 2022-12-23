@@ -249,6 +249,26 @@ def elastic_connection(variables):
     return es
 
 
+def get_all_ids_with_error(v):
+    es = elastic_connection(v)
+    elastic_conf = v.get("elastic")
+    query = {"query": {"bool": {"must": [{"exists": {"field": "errors"}}]}}}
+    docs = get_docs(
+        es,
+        index=elastic_conf.get("raw_index"),
+        _source=["site_id", "id", "modified", "errors"],
+        query=query,
+    )
+
+    docs_dict = {}
+    for doc in docs:
+        docs_dict[doc["_source"]["id"]] = {
+            "modified": doc["_source"]["modified"],
+            "errors": doc["_source"].get("errors", []),
+        }
+    return docs_dict
+
+
 def get_all_ids_from_raw_for_site(v, site):
     es = elastic_connection(v)
     elastic_conf = v.get("elastic")
