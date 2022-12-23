@@ -36,11 +36,14 @@ def updateNormObj():
             "label": label.toPython(),
             "instrument": instr.toPython(),
         }
-    Variable.set(
-        "obligations",
-        json.dumps(obligations),
-        description="generated variable, don't modify, it will be overwritten",
-    )
+    try:
+        Variable.update("obligations", json.dumps(obligations, indent=4))
+    except:
+        Variable.set(
+            "obligations",
+            json.dumps(obligations, indent=4),
+            description="generated variable, don't modify, it will be overwritten",
+        )
 
 
 @task
@@ -55,8 +58,8 @@ def test_variable():
     default_args=default_args,
     start_date=days_ago(1),
     schedule_interval="@daily",
-    description="test",
-    tags=["test"],
+    description="obligations",
+    tags=["obligations"],
 )
 def d0_update_obligations():
     t1 = updateNormObj()
