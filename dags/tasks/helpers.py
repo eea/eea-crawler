@@ -2,7 +2,7 @@ import collections
 from copy import deepcopy
 from airflow.decorators import task
 from urllib.parse import urlparse
-from lib.variables import get_variable, get_all_variables
+from lib.airflow_variables import get_variable, get_all_variables
 
 
 def merge(dict1, dict2):
@@ -39,8 +39,8 @@ def rebuild(tree):
 
 
 @task
-def dag_param_to_dict(params, defaults={}):
-    return simple_dag_param_to_dict(params, defaults)
+def dag_param_to_dict(task_params, defaults={}):
+    return simple_dag_param_to_dict(task_params, defaults)
 
 
 def simple_dag_param_to_dict(params, defaults={}):
@@ -78,27 +78,24 @@ def simple_dag_param_to_dict(params, defaults={}):
         }
     }
     """
-
     clean_params = rebuild(params)
-
     final_params = merge(defaults, clean_params)
-
     return final_params
 
 
 @task
-def build_items_list(items, params):
-    return [{"item": item, "params": params} for item in items]
+def build_items_list(items, task_params):
+    return [{"item": item, "params": task_params} for item in items]
 
 
 @task
-def get_params(params):
-    return params["params"]
+def get_params(task_params):
+    return task_params["params"]
 
 
 @task
-def get_item(params):
-    return params["item"]
+def get_item(task_params):
+    return task_params["item"]
 
 
 @task
@@ -107,9 +104,9 @@ def get_attr(params, attr):
 
 
 @task
-def set_attr(params, attr, val):
-    params[attr] = val
-    return params
+def set_attr(task_params, attr, val):
+    task_params[attr] = val
+    return task_params
 
 
 @task
@@ -145,7 +142,10 @@ def find_site_by_url(url, sites=None, variables={}):
 
 
 @task
-def load_variables(params):
-    variables = get_all_variables()
-    params["variables"] = variables
-    return params
+def load_variables(task_params):
+    print(task_params)
+    app_name = task_params["app"]
+    conf_name = f"app_{app_name}"
+    variables = get_all_variables(conf_name)
+    task_params["variables"] = variables
+    return task_params

@@ -17,7 +17,7 @@ import logging
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("industry.eea.europa.eu")
+@register_facets_normalizer("industry")
 def normalize_industry(doc, config):
     logger.info("NORMALIZE INDUSTRY")
     logger.info(doc["raw_value"].get("@id", ""))
@@ -32,6 +32,8 @@ def normalize_industry(doc, config):
         logger.info("blacklisted")
         return None
     logger.info("whitelisted")
+
+    doc["raw_value"]["themes"] = ["industry"]
 
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
@@ -48,13 +50,12 @@ def normalize_industry(doc, config):
     )
     logger.info(ct)
     normalized_doc["objectProvides"] = ct
-    normalized_doc["topic"] = "Industry"
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 
 
-@register_nlp_preprocessor("industry.eea.europa.eu")
+@register_nlp_preprocessor("industry")
 def preprocess_industry(doc, config):
     dict_doc = common_preprocess(doc, config)
 

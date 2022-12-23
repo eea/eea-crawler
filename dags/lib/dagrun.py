@@ -28,7 +28,7 @@ def trigger_dag_with_retry(trigger_dag_id, item, pool_name, session):
     for ti in tis:
         ti.pool = pool_name
         session.add(ti)
-        print("ti: %s", ti)
+        print(f"ti: {ti}")
 
 
 @provide_session

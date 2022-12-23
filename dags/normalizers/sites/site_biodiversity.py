@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("biodiversity.europa.eu")
+@register_facets_normalizer("bise")
 def normalize_biodiversity_europa_eu(doc, config):
     logger.info("NORMALIZE BISE")
     logger.info(doc["raw_value"].get("@id", ""))
@@ -36,6 +36,7 @@ def normalize_biodiversity_europa_eu(doc, config):
     if doc["raw_value"]["@type"] == "bise_factsheet":
         doc["raw_value"]["spatial"] = doc["raw_value"]["title"]
 
+    doc["raw_value"]["themes"] = ["biodiversity"]
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
@@ -56,13 +57,12 @@ def normalize_biodiversity_europa_eu(doc, config):
         normalized_doc["objectProvides"] = ["Country fact sheet", "Dashboard"]
     logger.info(normalized_doc["objectProvides"])
     normalized_doc["cluster_name"] = "bise"
-    normalized_doc["topic"] = "Biodiversity - Ecosystems"
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 
 
-@register_nlp_preprocessor("biodiversity.europa.eu")
+@register_nlp_preprocessor("bise")
 def preprocess_biodiversity_europa_eu(doc, config):
     dict_doc = common_preprocess(doc, config)
 

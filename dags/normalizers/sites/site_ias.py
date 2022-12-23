@@ -15,7 +15,7 @@ import logging
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("ias.eea.europa.eu")
+@register_facets_normalizer("ias")
 def normalize_ias(doc, config):
     logger.info("NORMALIZE IAS")
     logger.info(doc["raw_value"].get("@id", ""))
@@ -32,6 +32,8 @@ def normalize_ias(doc, config):
         return None
     logger.info("whitelisted")
 
+    doc["raw_value"]["themes"] = ["biodiversity"]
+
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
@@ -47,13 +49,12 @@ def normalize_ias(doc, config):
             normalized_doc["objectProvides"] = "Map (interactive)"
 
     normalized_doc["cluster_name"] = "ias"
-    normalized_doc["topic"] = "Biodiversity - Ecosystems"
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 
 
-@register_nlp_preprocessor("ias.eea.europa.eu")
+@register_nlp_preprocessor("ias")
 def preprocess_ias(doc, config):
     dict_doc = common_preprocess(doc, config)
 

@@ -356,7 +356,25 @@ def addFormat(doc, raw_doc):
     return doc
 
 
+def update_from_theme_taxonomy(themes, theme_taxonomy):
+    if type(themes) != list:
+        themes = [themes]
+    print("update themes from taxonomy")
+    print(themes)
+    print(theme_taxonomy)
+    updated_themes = [
+        theme_taxonomy.get(theme, {}).get("label", theme) for theme in themes
+    ]
+    print(updated_themes)
+    return updated_themes
+
+
 def common_normalizer(doc, config):
+    doc["raw_value"]["themes"] = update_from_theme_taxonomy(
+        doc["raw_value"].get("themes", []),
+        config.get("full_config", {}).get("theme_taxonomy", {}),
+    )
+
     if doc["raw_value"]["@type"] == "Plone Site":
         return None
     if doc["raw_value"]["@type"] == "File":
@@ -383,8 +401,8 @@ def common_normalizer(doc, config):
     normalized_doc = add_reading_time_and_fulltext(
         normalized_doc,
         doc,
-        config["nlp"]["text"].get("blacklist", []),
-        config["nlp"]["text"].get("whitelist", []),
+        config.get("nlp", {}).get("text", {}).get("whitelist", []),
+        config.get("nlp", {}).get("text", {}).get("blacklist", []),
         config["site"].get("trafilatura", {}),
     )
     normalized_doc = apply_black_map(

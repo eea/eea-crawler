@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("climate-energy.eea.europa.eu")
+@register_facets_normalizer("energy")
 def normalize_energy(doc, config):
     logger.info("NORMALIZE ENERGY")
     logger.info(doc["raw_value"].get("@id", ""))
@@ -33,6 +33,7 @@ def normalize_energy(doc, config):
         return None
     logger.info("whitelisted")
 
+    doc["raw_value"]["themes"] = ["energy"]
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
@@ -60,13 +61,12 @@ def normalize_energy(doc, config):
     normalized_doc["objectProvides"] = ct
 
     normalized_doc["cluster_name"] = "energy"
-    normalized_doc["topic"] = "Energy"
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 
 
-@register_nlp_preprocessor("climate-energy.eea.europa.eu")
+@register_nlp_preprocessor("energy")
 def preprocess_energy(doc, config):
     dict_doc = common_preprocess(doc, config)
 

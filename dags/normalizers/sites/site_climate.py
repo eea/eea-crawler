@@ -16,7 +16,7 @@ from datetime import date, timedelta
 logger = logging.getLogger(__file__)
 
 
-@register_facets_normalizer("climate-adapt.eea.europa.eu")
+@register_facets_normalizer("climate")
 def normalize_climate(doc, config):
     logger.info("NORMALIZE CLIMATE")
     logger.info(f"RS: {doc['raw_value'].get('review_state')}")
@@ -34,12 +34,12 @@ def normalize_climate(doc, config):
         return None
     logger.info("whitelisted")
 
+    doc["raw_value"]["themes"] = ["climate-change-adaptation"]
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
 
     normalized_doc["cluster_name"] = "cca"
-    normalized_doc["topic"] = "Climate change adaptation"
 
     # if doc["raw_value"].get("review_state") == "archived":
     #     # raise Exception("review_state")
@@ -51,7 +51,7 @@ def normalize_climate(doc, config):
     return normalized_doc
 
 
-@register_nlp_preprocessor("climate-adapt.eea.europa.eu")
+@register_nlp_preprocessor("climate")
 def preprocess_climate(doc, config):
     dict_doc = common_preprocess(doc, config)
 

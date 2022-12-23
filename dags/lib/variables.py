@@ -1,33 +1,36 @@
-from airflow.models import Variable
+import json
+import os
 
 
-def get_variable(variable, variables={}):
-    # print("GET VARIABLE")
-    # print(variable)
-    val = variables.get(variable, None)
-    if val:
-        # print("exists in cache")
-        return val
-    else:
-        # print("not found in cache")
-        return Variable.get(variable, deserialize_json=True)
+def load_variables_from_disk(fileName, app_name):
+    conf_name = f"app_{app_name}"
 
+    f = open(fileName)
+    variables = json.load(f)
+    f.close()
+    app_conf = variables.get(conf_name)
+    variables["Sites"] = app_conf.get("Sites")
 
-def get_all_variables():
-    variables = {}
-    variables["elastic"] = Variable.get("elastic", deserialize_json=True)
-    variables["rabbitmq"] = Variable.get("rabbitmq", deserialize_json=True)
-    variables["nlp_services"] = Variable.get(
-        "nlp_services", deserialize_json=True
+    for v_site_conf in variables["Sites"].keys():
+        site_conf = variables["Sites"][v_site_conf]
+        if variables[site_conf].get("authorization", None):
+            variables[site_conf]["authorization"] = os.getenv(
+                variables[site_conf]["authorization"]
+            )
+
+    elastic_config = app_conf.get("elastic_config")
+
+    variables["elastic"] = variables.get(elastic_config.get("elastic"))
+    variables["elastic_mapping"] = variables.get(
+        elastic_config.get("elastic_mapping")
     )
-    variables["Sites"] = Variable.get("Sites", deserialize_json=True)
-    for site in variables["Sites"].keys():
-        variables[variables["Sites"][site]] = Variable.get(
-            variables["Sites"][site], deserialize_json=True
-        )
-        normalizer = variables[variables["Sites"][site]].get(
-            "normalizers_variable", ""
-        )
-        variables[normalizer] = Variable.get(normalizer, deserialize_json=True)
+    variables["elastic_raw_mapping"] = variables.get(
+        elastic_config.get("elastic_raw_mapping")
+    )
+    variables["elastic_settings"] = variables.get(
+        elastic_config.get("elastic_settings")
+    )
 
+    variables["rabbitmq"] = variables.get(app_conf.get("rabbitmq_config"))
+    variables["nlp_services"] = variables.get(app_conf.get("nlp_config"))
     return variables
