@@ -43,6 +43,7 @@ def normalize_forest(doc, config):
         if doc["raw_value"]["parent"]["title"] != "Regions":
             doc["raw_value"]["spatial"] = doc["raw_value"]["parent"]["title"]
 
+    doc["raw_value"]["themes"] = ["biodiversity"]
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
@@ -72,8 +73,6 @@ def normalize_forest(doc, config):
                 "Country fact sheet",
                 "Dashboard",
             ]
-
-    normalized_doc["topic"] = "Biodiversity - Ecosystems"
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

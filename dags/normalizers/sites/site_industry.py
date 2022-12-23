@@ -33,6 +33,8 @@ def normalize_industry(doc, config):
         return None
     logger.info("whitelisted")
 
+    doc["raw_value"]["themes"] = ["industry"]
+
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
@@ -48,7 +50,6 @@ def normalize_industry(doc, config):
     )
     logger.info(ct)
     normalized_doc["objectProvides"] = ct
-    normalized_doc["topic"] = "Industry"
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

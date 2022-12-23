@@ -33,6 +33,7 @@ def normalize_energy(doc, config):
         return None
     logger.info("whitelisted")
 
+    doc["raw_value"]["themes"] = ["energy"]
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
@@ -60,7 +61,6 @@ def normalize_energy(doc, config):
     normalized_doc["objectProvides"] = ct
 
     normalized_doc["cluster_name"] = "energy"
-    normalized_doc["topic"] = "Energy"
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

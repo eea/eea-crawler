@@ -5,6 +5,7 @@ from normalizers.registry import (
     register_nlp_preprocessor,
 )
 from normalizers.lib.normalizers import (
+    update_from_theme_taxonomy,
     common_normalizer,
     check_blacklist_whitelist,
     add_counts,
@@ -43,31 +44,36 @@ def normalize_eionet(doc, config):
     if doc_loc_parts[0] == "etcs" and len(doc_loc_parts) > 1:
         if doc_loc_parts[1] == "etc-atni":
             normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = "Air pollution"
+            normalized_doc["topic"] = ["air"]
 
         if doc_loc_parts[1] == "etc-bd":
             normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = "Biodiversity - Ecosystems"
+            normalized_doc["topic"] = ["biodiversity"]
 
         if doc_loc_parts[1] == "etc-cca":
             normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = "Climate change adaptation"
+            normalized_doc["topic"] = ["climate-change-adaptation"]
 
         if doc_loc_parts[1] == "etc-cme":
             normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = ["Climate change mitigation", "Energy"]
+            normalized_doc["topic"] = ["climate", "energy"]
 
         if doc_loc_parts[1] == "etc-icm":
             normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = "Water and marine environment"
+            normalized_doc["topic"] = ["water", "coast_sea"]
 
         if doc_loc_parts[1] == "etc-uls":
             normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = ["Land use", "Soil"]
+            normalized_doc["topic"] = ["landuse", "soil"]
 
         if doc_loc_parts[1] == "etc-wmge":
             normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = "Resource efficiency and waste"
+            normalized_doc["topic"] = ["waste"]
+
+    normalized_doc["topic"] = update_from_theme_taxonomy(
+        normalized_doc["topic"],
+        config.get("full_config", {}).get("theme_taxonomy", {}),
+    )
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

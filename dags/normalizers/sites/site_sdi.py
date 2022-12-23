@@ -51,6 +51,7 @@ from normalizers.registry import (
     register_nlp_preprocessor,
 )
 from normalizers.lib.normalizers import (
+    update_from_theme_taxonomy,
     common_normalizer,
     check_blacklist_whitelist,
     simplify_elements,
@@ -189,6 +190,18 @@ def pre_normalize_sdi(doc, config):
     )
     doc["raw_value"]["sdi_topics"] = simplify_list(
         doc["raw_value"].get("th_eea-topics", [])
+    )
+    doc["raw_value"]["sdi_topics"] = [
+        topic if topic != "Climate mitigation" else "climate"
+        for topic in doc["raw_value"]["sdi_topics"]
+    ]
+    doc["raw_value"]["sdi_topics"] = [
+        topic if topic != "Climate adaptation" else "climate-change-adaptation"
+        for topic in doc["raw_value"]["sdi_topics"]
+    ]
+    doc["raw_value"]["sdi_topics"] = update_from_theme_taxonomy(
+        doc.get("raw_value", {}).get("sdi_topics", []),
+        config.get("full_config", {}).get("theme_taxonomy", {}),
     )
     doc["raw_value"]["sdi_gemet"] = simplify_list_from_tree(
         doc["raw_value"].get("th_gemet_tree.default", [])

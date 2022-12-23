@@ -34,12 +34,12 @@ def normalize_climate(doc, config):
         return None
     logger.info("whitelisted")
 
+    doc["raw_value"]["themes"] = ["climate-change-adaptation"]
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
 
     normalized_doc["cluster_name"] = "cca"
-    normalized_doc["topic"] = "Climate change adaptation"
 
     # if doc["raw_value"].get("review_state") == "archived":
     #     # raise Exception("review_state")

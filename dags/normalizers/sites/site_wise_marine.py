@@ -36,6 +36,8 @@ def normalize_energy(doc, config):
     if doc["raw_value"]["@type"] == "country_factsheet":
         doc["raw_value"]["spatial"] = doc["raw_value"]["title"]
 
+    doc["raw_value"]["themes"] = ["water", "coast_sea"]
+
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
@@ -58,7 +60,6 @@ def normalize_energy(doc, config):
         normalized_doc["objectProvides"] = ct
 
     normalized_doc["cluster_name"] = "wise-marine"
-    normalized_doc["topic"] = "Water and marine environment"
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc
