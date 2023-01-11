@@ -4,11 +4,34 @@ from airflow.models import Variable
 from airflow.utils.dates import days_ago
 from lib.dagrun import trigger_dag
 from lib.plone_rest_api import request_with_retry
-
+import requests
+from lxml import etree
 
 import json
 
 default_args = {"owner": "airflow"}
+
+
+def get_default_themes():
+    themes = []
+    doc = requests.get(
+        "https://raw.githubusercontent.com/eea/eea.coremetadata/master/eea/coremetadata/profiles/default/taxonomies/topics.xml"
+    )
+
+    tree = etree.fromstring(bytes(doc.text, encoding="utf-8"))
+
+    terms = tree.findall("term", tree.nsmap)
+
+    for term in terms:
+        token = term.findall("termIdentifier", tree.nsmap)[0].text
+        title = (
+            term.findall("caption", tree.nsmap)[0]
+            .findall("langstring[@language='en']", tree.nsmap)[0]
+            .text
+        )
+        themes.append({"token": token, "title": title})
+
+    return themes
 
 
 @task
@@ -20,6 +43,10 @@ def updateThemeTaxonomy():
     data = json.loads(data)
     themes = {}
     for theme in data["items"]:
+        themes[theme["token"]] = {"label": theme["title"]}
+
+    default_themes = get_default_themes()
+    for theme in default_themes:
         themes[theme["token"]] = {"label": theme["title"]}
 
     try:
