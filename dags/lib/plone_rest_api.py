@@ -167,16 +167,18 @@ def scrape_with_retry(v, url, js=False):
             data=f'{{"url":"{url}", "js":true,"raw":true}}',
         )
         downloaded = resp.text
+        status = resp.status_code
     else:
         resp = requests.get(url)
         downloaded = resp.text
+        status = resp.status_code
 
     if magic.from_buffer(downloaded) == "data":
         return None
 
     logger.info("Downloaded: %s", downloaded)
 
-    return downloaded
+    return {"downloaded": downloaded, "status_code": status}
 
 
 def scrape(v, site_config, doc_id):
@@ -188,7 +190,7 @@ def scrape(v, site_config, doc_id):
         s_url = url_without_api
         scrape_with_js = site_config.get("scrape_with_js", False)
         scrape = True
-    web_html = ""
+    response = {}
     if scrape:
         if site_config.get("avoid_cache_web", False):
             dt = datetime.now()
@@ -196,8 +198,8 @@ def scrape(v, site_config, doc_id):
             #         dt.split("T")[0], "%Y-%m-%d"
             #     )
             s_url = f"{url_without_api}?scrape={dt}"
-        web_html = scrape_with_retry(v, s_url, scrape_with_js)
-    return web_html
+        response = scrape_with_retry(v, s_url, scrape_with_js)
+    return response
 
 
 FIELD_MARKERS = {"file": {"content-type", "download", "filename"}}

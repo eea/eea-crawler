@@ -99,7 +99,8 @@ def prepare_doc_for_rabbitmq(
     raw_doc["raw_value"] = doc
 
     if scraped:
-        raw_doc["web_html"] = scraped
+        raw_doc["web_html"] = scraped.get("downloaded", "")
+        raw_doc["status_code"] = scraped.get("status_code", 0)
 
     if pdf_text:
         raw_doc["pdf_text"] = pdf_text
@@ -135,12 +136,19 @@ def crawl_doc(v, site, site_config, doc_id, handler=None):
 
     scraped = ""
     if doc.get("@type", None) != "File":
+        scrape_erros = False
         try:
             scraped = plone_rest_api.scrape(v, site_config, doc_id)
+            if int(scraped.get("status_code", 0)) >= 400:
+                scrape_errors = True
+
         except Exception:
+            scrape_errors = True
+        if scrape_errors:
             logger.exception("Error scraping the page")
             errors.append("scraping the page")
             doc_errors.append("web")
+
     pdf_text = ""
     try:
         pdf_text = plone_rest_api.extract_pdf(v, site_config, doc)
