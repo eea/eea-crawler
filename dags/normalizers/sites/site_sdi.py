@@ -247,7 +247,7 @@ def normalize_sdi(doc, config):
     logger.info("NORMALIZE SDI")
     doc = pre_normalize_sdi(doc, config)
     normalized_doc = common_normalizer(doc, config)
-    normalized_doc["cluster_name"] = "Datahub"
+    normalized_doc["cluster_name"] = "sdi"
     tc = get_years_from_ranges(
         doc["raw_value"].get("resourceTemporalExtentDetails", [])
     )
