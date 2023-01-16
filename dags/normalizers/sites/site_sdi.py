@@ -153,7 +153,7 @@ def get_formats(datasets):
 def pre_normalize_sdi(doc, config):
     doc["raw_value"]["site_id"] = "sdi"
     doc["raw_value"] = simplify_elements(doc["raw_value"], "")
-    doc["raw_value"]["@type"] = "series"
+    doc["raw_value"]["@type"] = "Data set"
     doc["raw_value"]["about"] = doc["raw_value"]["metadataIdentifier"]
     isPublishedToAll = doc["raw_value"].get("isPublishedToAll", "false")
     print("ISPUBLISHED")
@@ -163,6 +163,9 @@ def pre_normalize_sdi(doc, config):
     if isinstance(isPublishedToAll, type(True)):
         isPublishedToAll = str(isPublishedToAll).lower()
     print(isPublishedToAll)
+    
+    isPublishedToAll = "true" #TODO: temporary fix, should be removed
+    
     if isPublishedToAll == "true":
         doc["raw_value"]["review_state"] = "published"
 
@@ -244,7 +247,7 @@ def normalize_sdi(doc, config):
     logger.info("NORMALIZE SDI")
     doc = pre_normalize_sdi(doc, config)
     normalized_doc = common_normalizer(doc, config)
-    normalized_doc["cluster_name"] = "sdi"
+    normalized_doc["cluster_name"] = "Datahub"
     tc = get_years_from_ranges(
         doc["raw_value"].get("resourceTemporalExtentDetails", [])
     )
