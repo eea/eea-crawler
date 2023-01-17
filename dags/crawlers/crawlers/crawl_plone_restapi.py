@@ -136,7 +136,7 @@ def crawl_doc(v, site, site_config, doc_id, handler=None):
 
     scraped = ""
     if doc.get("@type", None) != "File":
-        scrape_erros = False
+        scrape_errors = False
         try:
             scraped = plone_rest_api.scrape(v, site_config, doc_id)
             if int(scraped.get("status_code", 0)) >= 400:

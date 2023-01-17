@@ -163,9 +163,9 @@ def pre_normalize_sdi(doc, config):
     if isinstance(isPublishedToAll, type(True)):
         isPublishedToAll = str(isPublishedToAll).lower()
     print(isPublishedToAll)
-    
-    isPublishedToAll = "true" #TODO: temporary fix, should be removed
-    
+
+    isPublishedToAll = "true"  # TODO: temporary fix, should be removed
+
     if isPublishedToAll == "true":
         doc["raw_value"]["review_state"] = "published"
 
