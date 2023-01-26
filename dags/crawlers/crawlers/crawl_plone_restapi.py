@@ -98,8 +98,9 @@ def prepare_doc_for_rabbitmq(
     raw_doc["@type"] = doc.get("@type", "")
     raw_doc["raw_value"] = doc
 
-    if scraped:
+    if scraped.get("downloaded", None) is not None:
         raw_doc["web_html"] = scraped.get("downloaded", "")
+    if scraped.get("status_code", None) is not None:
         raw_doc["status_code"] = scraped.get("status_code", 0)
 
     if pdf_text:
@@ -133,8 +134,7 @@ def crawl_doc(v, site, site_config, doc_id, handler=None):
 
     doc = json.loads(r)
     doc["id"] = doc_id
-
-    scraped = ""
+    scraped = {}
     if doc.get("@type", None) != "File":
         scrape_errors = False
         try:

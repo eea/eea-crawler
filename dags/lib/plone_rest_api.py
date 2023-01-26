@@ -174,7 +174,7 @@ def scrape_with_retry(v, url, js=False):
         status = resp.status_code
 
     if magic.from_buffer(downloaded) == "data":
-        return None
+        return {"downloaded": None, "status_code": status}
 
     logger.info("Downloaded: %s", downloaded)
 

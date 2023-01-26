@@ -369,7 +369,17 @@ def update_from_theme_taxonomy(themes, theme_taxonomy):
     return updated_themes
 
 
+def merge_themes(doc):
+    original_themes = doc["raw_value"].get("themes", [])
+    taxonomy_themes = [
+        theme["token"] for theme in doc["raw_value"].get("taxonomy_themes", [])
+    ]
+    themes = original_themes + taxonomy_themes
+    return themes
+
+
 def common_normalizer(doc, config):
+    doc["raw_value"]["themes"] = merge_themes(doc)
     doc["raw_value"]["themes"] = update_from_theme_taxonomy(
         doc["raw_value"].get("themes", []),
         config.get("full_config", {}).get("theme_taxonomy", {}),
@@ -436,6 +446,10 @@ def common_normalizer(doc, config):
     normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
     normalized_doc["original_id"] = normalized_doc["about"]
     normalized_doc = strip_fields(normalized_doc)
+    # normalize objects again, after we add values in various ways (for spatial)
+    normalized_doc = apply_norm_obj(
+        normalized_doc, normalizer.get("normObj", {})
+    )
 
     if not normalized_doc.get("description"):
         normalized_doc["description"] = " ".join(
