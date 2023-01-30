@@ -17,7 +17,7 @@ logger = logging.getLogger(__file__)
 
 
 @register_facets_normalizer("wise_freshwater")
-def normalize_industry(doc, config):
+def normalize_freshwater(doc, config):
     logger.info("NORMALIZE FRESHWATER")
     logger.info(doc["raw_value"].get("@id", ""))
     logger.info(doc["raw_value"].get("@type", ""))
@@ -63,7 +63,7 @@ def normalize_industry(doc, config):
 
 
 @register_nlp_preprocessor("wise_freshwater")
-def preprocess_industry(doc, config):
+def preprocess_freshwater(doc, config):
     dict_doc = common_preprocess(doc, config)
 
     return dict_doc
