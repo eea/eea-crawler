@@ -11,7 +11,7 @@ import requests
 from lib import plone_rest_api, robots_txt
 from lib import elastic
 
-SKIP_EXTENSIONS = ["png", "svg", "jpg", "gif", "eps"]
+SKIP_EXTENSIONS = ["png", "svg", "jpg", "gif", "eps", "jpeg"]
 
 
 @register_site_crawler("plone_rest_api")
