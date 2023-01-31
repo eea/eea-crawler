@@ -717,7 +717,7 @@
     "config_wise_marine": {
         "concurrency": 4,
         "fix_items_url": {
-            "with_api": "water.europa.eu/marine/++api++",
+            "with_api": "water.europa.eu/marine-api",
             "without_api": "water.europa.eu/marine"
         },
         "location_rules_fallback": "Webpage",
@@ -1791,6 +1791,2910 @@
             }
         }
     },
+    "errors_datahub": {},
+    "errors_global_search": {
+        "https://biodiversity.europa.eu/resources/case-study-hub/coastal_meadows_finland/tapio-heikkil-baltic-meadow_resize.jpg": {
+            "error_cnt": 2,
+            "skip_cnt": 11
+        },
+        "https://biodiversity.europa.eu/resources/case-study-hub/tapio-heikkil-baltic-meadow.jpeg": {
+            "error_cnt": 2,
+            "skip_cnt": 11
+        },
+        "https://biodiversity.europa.eu/resources/case-study-hub/tapio-heikkil-baltic-meadow_resize.jpg": {
+            "error_cnt": 2,
+            "skip_cnt": 11
+        },
+        "https://climate-adapt.eea.europa.eu/de/data-and-downloads": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://climate-adapt.eea.europa.eu/de/metadata/portals/european-climate-data-explorer-health-focus": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://climate-adapt.eea.europa.eu/en/data-and-downloads": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://climate-adapt.eea.europa.eu/en/metadata/portals/european-climate-data-explorer-health-focus": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://climate-adapt.eea.europa.eu/es/data-and-downloads": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://climate-adapt.eea.europa.eu/es/metadata/portals/european-climate-data-explorer-health-focus": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://climate-adapt.eea.europa.eu/fr/data-and-downloads": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://climate-adapt.eea.europa.eu/fr/metadata/portals/european-climate-data-explorer-health-focus": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://climate-adapt.eea.europa.eu/it/data-and-downloads": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://climate-adapt.eea.europa.eu/it/metadata/portals/european-climate-data-explorer-health-focus": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://climate-adapt.eea.europa.eu/pl/data-and-downloads": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://climate-adapt.eea.europa.eu/pl/metadata/portals/european-climate-data-explorer-health-focus": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://forest.eea.europa.eu/data/connectors/cnct_basic_fe2020_keyfacts_forest_per_capita": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://forest.eea.europa.eu/data/connectors/cnct_countryfact_eurostat_forest_per_capita": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://forest.eea.europa.eu/data/connectors/cnct_eufact_clc_forest_per_capita": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://forest.eea.europa.eu/data/connectors/cnct_forest_per_capita": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://forest.eea.europa.eu/data/csvs/csv_forest-per-capita.csv": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://forest.eea.europa.eu/data/visualizations/vis_basic_fe2020_keyfacts_forest_per_capita": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://forest.eea.europa.eu/data/visualizations/vis_eufact_clc_forest_per_capita": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://industry.eea.europa.eu/explore/explore-data-map": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/about-us/tenders/negotiated-procedures/production-of-policy-briefs-for/production-of-policy-briefs-for-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/code/software-development/apidoc": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/code/software-development/apidoc/eea-api-documentation": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data-providers-and-partners/apice": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/air-emissions-viewer-lrtap": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/drought-impact-on-ecosystems-in": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/ecosystem-extent-accounts": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/eea-greenhouse-gas-projections-data-viewer": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/emissions-nec-directive-viewer": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/emissions-trading-viewer-old": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/floodplain-areas": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/greenhouse-gases-viewer": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/greenhouse-gases-viewer-old": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/impact-of-soil-sealing-in": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/land-accounts": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/land-productivity-dynamics": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/land-take-in-floodplains-of": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/land-take-in-functional-urban": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/land-take-in-protected-areas": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/land-take-in-urban-floodplains": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/land-take-in-urban-protected": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/landscape-fragmentation-in-functional-urban": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/monitoring-of-co2-emissions-from": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/soil-moisture": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/vegetation-productivity-anomalies-under-drought-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/data-viewers/vegetation-productivity-loss-under-drought": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/data-and-maps/data/external/apice": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/et/about-us/who/governance/intro": {
+            "error_cnt": 2,
+            "skip_cnt": 44
+        },
+        "https://www.eea.europa.eu/help/glossary/european-species-listed-under-article/apium-bermejoi": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/help/glossary/european-species-listed-under-article/apium-repens": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/help/glossary/gemet-environmental-thesaurus/apiculture": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/lt/about-us/apie-mus": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/publications/european-marine-litter-assessment/interactive-maps": {
+            "error_cnt": 2,
+            "skip_cnt": 26
+        },
+        "https://www.eea.europa.eu/soer/2010/europe-and-the-world/megatrends/key-facts": {
+            "error_cnt": 2,
+            "skip_cnt": 15
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-12-national-summary-dashboards/breeding-population-and-distribution-trends": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-12-national-summary-dashboards/conservation-measures": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-12-national-summary-dashboards/data-quality-and-completeness": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-12-national-summary-dashboards/general-information-on-bird-species-populations": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-12-national-summary-dashboards/general-information-on-natura-2020-network": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-12-national-summary-dashboards/implementation-of-international-species-plans": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-12-national-summary-dashboards/information-related-to-annex-ii-species": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-12-national-summary-dashboards/main-pressures-and-threats": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-12-national-summary-dashboards/natura-2000-coverage": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-12-national-summary-dashboards/winter-population-trends": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-17-national-summary-dashboards/condition-of-habitat": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-17-national-summary-dashboards/conservation-measures": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-17-national-summary-dashboards/conservation-status-and-trends": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-17-national-summary-dashboards/data-quality-and-completeness": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-17-national-summary-dashboards/general-information-on-habitats-and-species": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-17-national-summary-dashboards/general-information-on-natura-2000-network": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-17-national-summary-dashboards/information-on-annex-v-species": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-17-national-summary-dashboards/main-pressures-and-threats": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eea.europa.eu/themes/biodiversity/state-of-nature-in-the-eu/article-17-national-summary-dashboards/natura-2000-coverage": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/etcs/etc-atni/products/etc-atni-reports/etc-atni-report-08-2020-understanding-air-quality-trends-in-europe-focus-on-the-relative-contribution-of-changes-in-emission-of-activity-sectors-natural-fraction-and-meteorological-variability": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner": {
+            "error_cnt": 2,
+            "skip_cnt": 43
+        },
+        "https://www.eionet.europa.eu/planner/21st-joint-eionet-unece-task-force-on-emission-inventories-projections": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/21st-joint-eionet-unece-task-force-on-emission-inventories-projections-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/21st-joint-eionet-unece-task-force-on-emission-inventories-projections-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/21st-joint-eionet-unece-task-force-on-emission-inventories-projections-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/25th-copernicus-working-group-meeting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/a-decade-of-industrial-pollution-data-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/a-guide-to-air-quality-sensors-2013-new-tools-for-assessing-air-quality": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/action-plan-summaries-df-7-and-df-10": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/activities-involving-the-use-of-mercury": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/adaptation-challenges-and-opportunities-for-the-european-energy-system": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/adaptation-challenges-and-opportunities-for-the-european-energy-system-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/adaptation-challenges-and-opportunities-for-the-european-energy-system-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/adaptation-challenges-and-opportunities-for-the-european-energy-system-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/air-pollution-and-climate-change-interaction": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/air-pollution-country-factsheets": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/air-quality-directive-ipr-reporting-obligations-package-b-g": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/air-quality-directive-ipr-reporting-obligations-package-h-k": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/air-quality-directive-ipr-reporting-obligations-package-preliminary-b-c": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/air-quality-directive-reporting-obligations-package-b-g": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/air-quality-directive-reporting-obligations-package-h-k": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/air-quality-directive-reporting-obligations-package-preliminary-b-c": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/air-quality-in-europe-2013-2019-report": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/air-quality-in-europe-2013-2019-report-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/air-quality-in-europe-2013-2019-report-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/air-quality-in-europe-2013-2019-report-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/annual-european-union-greenhouse-gas-inventory-1990-2017-and-inventory-report-2019-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/annual-european-union-greenhouse-gas-inventory-1990-2018-and-inventory-report-2020": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/annual-joint-emep-eea-inventory-review-report": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/annual-report-on-eu-emissions-inventory-report-under-the-convention-on-long-range-transboundary-air-pollution-lrtap": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/annual-report-on-eu-emissions-inventory-report-under-the-convention-on-long-range-transboundary-air-pollution-lrtap-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/annual-report-on-eu-emissions-inventory-report-under-the-convention-on-long-range-transboundary-air-pollution-lrtap-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/annual-report-on-eu-emissions-inventory-report-under-the-convention-on-long-range-transboundary-air-pollution-lrtap-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/application-of-the-emissions-trading-directive-2003-87-ec-article-21": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/application-of-the-emissions-trading-directive-2003-87-ec-article-21-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/approximated-eu-ghg-inventory-proxy-ghg-estimates-for-2018-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/approximated-greenhouse-gas-inventories": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/approximated-greenhouse-gas-inventories-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/are-we-losing-resources-when-managing-waste-in-europe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/are-we-losing-resources-when-managing-waste-in-europe-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/are-we-losing-resources-when-managing-waste-in-europe-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/assessing-the-effectiveness-of-eu-policy-on-large-combustion-plants-in-reducing-air-pollutant-emissions-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/bathing-water-directive-reporting-obligations": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/bathing-water-directive-reporting-obligations-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/bathing-water-quality-2013-country-reports-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/biennial-reports-and-national-communications-mmr": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/birds-directive": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/briefing-europe2019s-consumption-in-a-circular-economy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/bureau": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/bureau-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/bureau-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/bureau-4": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/bureau-5": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/bureau-6": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/bureau-7": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/bureau-8": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/cancelled-34th-epa-network-plenary-meeting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/cancelled-joint-mb-sc-nfp-event": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/cancelled-management-board": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/cancelled-nrc-lusp": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/cancelled-nrc-soe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/cancelled-nrc-transport": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/cancelled-soer-2020-event-malta": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/cancelled-soer-2020-presentation-at-miljmlsdagarna": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/cancelled-soer-event-belgium": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/cancelled-soer-event-estonia": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/cancelled-soer-event-norway": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/cancelled-webinar-nrc-agriculture": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/chemicals-expert-group": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/chemicals-in-european-waters-2013-knowledge-developments-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/circular-economy-status-report": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/circular-economy-status-report-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/circular-economy-status-report-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/citizen-science-tools-for-assessing-air-quality-2013-application-of-low-cost-measurement-devices": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/clean-air-forum": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/climate-and-energy-country-profiles": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/climate-change-adaptation-in-the-agriculture-sector-in-europe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/climate-change-adaptation-in-the-agriculture-sector-in-europe-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/climate-change-adaptation-in-the-agriculture-sector-in-europe-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/climate-change-adaptation-in-the-agriculture-sector-in-europe-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/clrtap": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/co2-emissions-from-new-passenger-cars": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/concluded-transfers-under-the-effort-sharing-decision": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/concluded-transfers-under-the-effort-sharing-decision-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/construction-and-demolition-waste-challenges-and-opportunities-in-a-circular-economy-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/construction-and-demolition-waste-state-of-play": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/construction-and-demolition-waste-state-of-play-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/construction-and-demolition-waste-state-of-play-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-air-quality-in-europe-2020": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-air-quality-in-europe-2020-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-annual-eu-lrtap-convention-emission-inventory-report-1990-2018": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-annual-eu-lrtap-convention-emission-inventory-report-1990-2018-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-bathing-water-management": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-bathing-water-management-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-biodegradable-plastics-2013-solution-or-threat": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-biodegradable-plastics-2013-solution-or-threat-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-clc-consultation-process": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-cross-border-regional-cooperation-for-deployment-of-renewable-energy-sources": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-cross-border-regional-cooperation-for-deployment-of-renewable-energy-sources-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-cutting-greenhouse-gas-emissions-through-circular-economy-actions-in-the-building-sector": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-cutting-greenhouse-gas-emissions-through-circular-economy-actions-in-the-building-sector-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-deadline-state-of-nature-report": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-eea-water-quality-indicators": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-eea-water-quality-indicators-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-from-drivers-of-change-to-narratives-for-change": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-from-drivers-of-change-to-narratives-for-change-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-fuel-quality-monitoring-in-the-eu-in-2018": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-fuel-quality-monitoring-in-the-eu-in-2018-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-global-climate-change-impacts-and-the-supply-of-agricultural-commodities-to-europe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-global-climate-change-impacts-and-the-supply-of-agricultural-commodities-to-europe-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-greenhouse-gas-intensities-of-transport-fuels-in-the-eu-in-2018": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-greenhouse-gas-intensities-of-transport-fuels-in-the-eu-in-2018-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-greenhouse-gas-intensities-of-transport-fuels-in-the-eu-in-2018-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-greenhouse-gas-intensities-of-transport-fuels-in-the-eu-in-2018-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-health-risks-caused-by-environmental-noise": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-health-risks-caused-by-environmental-noise-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-knowledge-for-action": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-life-cycle-benefits-of-renewable-electricity-generation": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-life-cycle-benefits-of-renewable-electricity-generation-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-nature-based-solutions-and-ecosystem-based-approaches": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-nature-based-solutions-and-ecosystem-based-approaches-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-preliminary-estimates-of-ghg-emissions-energy-2019": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-preliminary-estimates-of-ghg-emissions-energy-2019-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-preliminary-estimates-of-ghg-emissions-energy-2019-copy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-preliminary-estimates-of-ghg-emissions-energy-2019-copy-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-state-of-nature-report": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-sustainable-european-cities": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-sustainable-european-cities-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-the-case-for-increasing-recycling-2013-estimating-the-maximum-potential-for-recycling-in-europe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-the-case-for-increasing-recycling-2013-estimating-the-maximum-potential-for-recycling-in-europe-copy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-transport-and-environment-2020": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-transport-and-environment-2020-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-trends-and-projections-2020-report": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-trends-and-projections-2020-report-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-urban-adaptation-in-europe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-urban-adaptation-in-europe-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-urban-waste-water-and-on-water-reuse-indicators": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-urban-waste-water-and-on-water-reuse-indicators-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-water-and-agriculture": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/consultation-water-and-agriculture-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/contaminants-in-europe2019s-seas-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/convention-on-the-conservation-of-european-wildlife-and-natural-habitats-reporting-under-resolution-no-8-2012": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/copert-5-3-training": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/copert-webinar": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/country-factsheets-on-resource-efficiency-and-circular-economy-in-europe-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/country-profiles-methodology": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/country-profiles-methodology-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/country-profiles-methodology-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/country-report-on-implementation-and-use-of-infrastructures-for-spatial-information": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/covid-19-debate-covid-19-and-nature-2013-the-planetary-boundaries": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/d-information-on-the-assessment-methods-articles-8-and-9-2013-for-fixed-and-indicative-measurements": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/d1b-information-on-the-assessment-methods-articles-8-and-9-2013-for-models-and-objective-estimation": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/deadline-2020-nrc-flis-project-proposal": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/deadline-call-for-interest-to-test-the-reportnet-3.0": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/deadline-comments-eea-briefing-biodegradable-plastics": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/deadline-modernisation-working-group-questionnaire": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/deadline-nrc-noise-comments-end-inspire-data-model": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/deadline-nrc-survey": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/deadline-written-feedback-draft-eea-eionet-strategy-2021-2030": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/drivers-of-change-and-implications-on-european-production-and-consumption-systems": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/drivers-of-change-and-implications-on-european-production-and-consumption-systems-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/drivers-of-change-and-implications-on-european-production-and-consumption-systems-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/e-prtr-and-lcp-integrated-reporting-webinar": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/e-prtr-and-lcp-reporting-obligations": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/e-prtr-data-reporting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/e-prtr-regulation": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/e1a-2013-information-on-primary-validated-assessment-data-2013-measurements-article-10-air-quality-directive-ipr": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/e1a-information-on-primary-validated-assessment-data-2013-measurements-article-10": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/e1b-information-on-primary-validated-assessment-data-modelled-article-10": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-25th-anniversary-event": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-25th-anniversary-publication-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-briefing-covid-19-and-environment": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-bureau-meeting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-bureau-meeting-tentative": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-bureau-meeting-tentative-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-bureau-meeting-tentative-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-bureau-meeting-tentative-4": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-bureau-meeting-tentative-5": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-closed": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-closed-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-closed-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-closed-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-closed-4": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-closed-5": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-eionet-evaluation-meeting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-newsletter-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-newsletter-published-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-newsletter-published-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-newsletter-published-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-report-2018urban-adaptation-in-europe2019": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-report-2018urban-adaptation-in-europe2019-copy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-report-201cmonitoring-and-evaluation-of-national-adaptation-policies-throughout-the-policy-cycle201d": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-report-monitoring-and-evaluation-of-national-adaptation-policies-throughout-the-policy-cycle": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-report-state-of-nature": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-report-towards-a-cleaner-mediterranean": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-report-urban-adaptation-in-europe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-signals-2020-2013-towards-zero-pollution-in-europe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-single-programming-document-2020-2022": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-single-programming-document-2020-2022-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-single-programming-document-2020-2022-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-story-map-on-climate-impacts-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eea-unep-map-report-2018towards-a-cleaner-mediterranean-a-decade-of-progress-monitoring-horizon-2020-regional-initiative2019": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eeacademy-ceu-summer-school-2019": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eeacademy-eni-summer-school-on-integrated-environmental-assessment": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eionet-abc": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eionet-abc-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eionet-abc-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eionet-core-data-flows-2018": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eionet-core-data-flows-2018-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eionet-core-data-flows-2018-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eionet-core-data-flows-2018-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eionet-working-group-soil-contamination": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/emep-eea-air-pollutant-emission-inventory-guidebook-2019-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/emerald-network": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/emerald-network-reporting-obligation": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/emerging-chemical-risks-in-europe-2014-2018pfas2019-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/emission-trends-and-drivers-in-the-effort-sharing-sectors": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/energy-community-2013-reporting-on-combustion-plants": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eni-seis-ii-south-indicators": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/environment-and-well-being-how-environment-social-and-health-factors-interact-to-deliver-quality-of-life-across-europe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/environment-and-well-being-how-environment-social-and-health-factors-interact-to-deliver-quality-of-life-across-europe-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/environment-and-well-being-how-environment-social-and-health-factors-interact-to-deliver-quality-of-life-across-europe-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/environmental-quality-standards-directive-2013-watch-list": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/environmental-quality-standards-watch-list-overlaps-with-wise-4": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/etc-coordination-meeting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eunis-revision": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eunis-revision-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/eunis-revision-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/europe2019s-urban-air-quality-2014-re-assessing-implementation-challenges-in-cities-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/european-air-quality-city-ranking": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/european-bathing-water-quality-in-2018-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/european-days-for-sustainable-circular-economy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/ex-post-evaluation-of-climate-policies-2013-invitation-to-review-draft-guidance-document": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/financial-and-technology-support-provided-to-developing-countries": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/first-soer-2020-stakeholder-interaction-process-sip1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/flis-virtual-marketplace": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/floodplains-important-ecosystems-and-mitigators-of-flood-risk": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/floodplains-important-ecosystems-and-mitigators-of-flood-risk-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/floodplains-important-ecosystems-and-mitigators-of-flood-risk-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/floodplains-important-ecosystems-and-mitigators-of-flood-risk-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/floods-directive-2013-preliminary-flood-risk-assessment-and-areas-of-potential-significant-flood-risk": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/fluorinated-gases-f-gases-reporting-by-undertakings-regulation-2014": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/fluorinated-gases-f-gases-reporting-obligations": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/fluorinated-gases-f-gases-verification-reporting-bulk-imports": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/fluorinated-gases-f-gases-verification-reporting-bulk-imports-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/fluorinated-gases-f-gases-verification-reporting-equipment-imports": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/fluorinated-greenhouse-gases-2019-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/fuel-quality-directive-article-7a": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/fuel-quality-directive-article-7a-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/fuel-quality-directive-article-8-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/fuel-quality-directive-article-8-1-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/g-information-on-the-attainment-of-environmental-objectives-article-12": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/ghg-inventories": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/ghg-projections": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/green-week": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/greenhouse-gas-inventories": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/greenhouse-gas-inventories-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/greenhouse-gas-inventories-unfccc": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/greenhouse-gas-inventories-unfccc-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/greenhouse-gas-monitoring-mechanism-mmr": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/habitats-directive": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/heavy-duty-vehicles-hdv-regulation-reporting-obligations": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/human-biomonitoring": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/human-biomonitoring-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/human-biomonitoring-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/impacts-of-circular-economy-actions-on-decarbonisation": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/impacts-of-fiscal-incentives-on-passenger-car-emissions-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/impacts-of-renewable-energy-on-air-pollutant-emissions": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/impacts-of-renewable-energy-on-air-pollutant-emissions-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/impacts-of-renewable-energy-on-air-pollutant-emissions-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/indicator-lsi-010-phenology-growing-seasons-length": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/industrial-pollution": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/industrial-pollution-country-profiles": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/industrial-pollution-country-profiles-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/industrial-pollution-country-profiles-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/industrial-pollution-country-profiles-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/industrial-waste-water-in-europe-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/informal-webinar": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/integrated-emission-management-techniques-applied-in-mineral-oil-and-gas-refineries-under-ied-2010-75-eu": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/key-trends-and-drivers-in-greenhouse-gas-emissions-policy-co-benefits-and-the-importance-of-a-sustainable-mrv-system": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/kick-off-meeting-eionet-core-data-flow-review": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/kick-off-meeting-nrc-review": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/knowledge-for-action": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/land-productivity-indicator-2013-lsi-009": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/land-productivity-indicator-lsi-009": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/land-productivity-indicator-lsi-009-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/land-take-indicator-csi-014-lsi-001": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/land-take-indicator-csi-014-lsi-001-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/land-take-indicator-csi-014-lsi-001-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/land-use-land-use-change-and-forestry-lulucf": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/land-use-land-use-change-and-forestry-lulucf-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/launch-of-the-e-prtr-and-lcp-integrated-reporting-data-flow-on-the-cdr-platform": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/launch-of-the-european-environment-2014-state-and-outlook-2020-report-soer-2020": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/lrtap-convention-2013-adjustment": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/lrtap-convention-2013-informative-inventory-report": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/lrtap-convention-2013-informative-inventory-report-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/lrtap-convention-2013-national-emission-inventories": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/lrtap-convention-2013-projected-emissions": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/lrtap-convention-reporting-obligations": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/management-board": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/management-board-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/management-board-tentative": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/management-board-tentative-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/management-board-tentative-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/managing-bio-waste-in-europe-turning-challenges-into-opportunities": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/managing-bio-waste-in-europe-turning-challenges-into-opportunities-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/managing-bio-waste-in-europe-turning-challenges-into-opportunities-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/mapping-europe2019s-ecosystems-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-indicator-consultation-2013-mar-001-csi-049": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-indicator-consultation-2013-mar-001-csi-049-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-indicator-consultation-2013-mar-001-csi-049-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-indicators": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-indicators-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-indicators-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-indicators-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-indicators-4": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-indicators-second-batch-2019": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-indicators-third-batch-2019": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-indicators-third-batch-2019-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-indicators-third-batch-2019-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-messages-ii": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-messages-ii-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-messages-ii-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-messages-ii-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/marine-strategy-framework-directive-msfd-monitoring-programmes-article-11": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/mb": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/mb-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/mb-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/mb-meeting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/mb-seminar": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/mercury-regulation-copy-of-the-report-under-article-21-of-the-minamata-convention": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/mercury-regulation-import-restrictions-2013-mercury-and-mercury-mixtures-non-waste": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/mercury-regulation-import-restrictions-2013-mercury-as-waste": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/monitoring-and-reporting-of-average-co2-emissions-light-commercial-vehicles": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/monitoring-and-reporting-of-average-co2-emissions-light-commercial-vehicles-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/monitoring-and-reporting-of-average-co2-emissions-passenger-cars": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/monitoring-co2-emissions-from-new-passenger-cars-and-vans-in-2017-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/monitoring-co2-emissions-from-new-passenger-cars-new-vans-and-new-heavy-duty-vehicles-in-2018": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/monitoring-of-implementation-and-use-of-infrastructures-for-spatial-information": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/monitoring-of-implementation-and-use-of-infrastructures-for-spatial-information-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/monitoring-reporting-and-evaluation-of-climate-change-adaptation-policies": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/monitoring-reporting-and-evaluation-of-climate-change-adaptation-policies-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/monitoring-reporting-and-evaluation-of-climate-change-adaptation-policies-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/more-national-climate-actions-expected-but-how-effective-are-the-existing-ones-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/msfd-progress-on-implementation-of-programmes-of-measures": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/mwg-webinar": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/national-adaptation-actions": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/national-emission-ceiling-directive-necd-2013-impact-monitoring-data": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/national-emission-ceiling-directive-necd-2013-informative-inventory-report-iir": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/national-emission-ceiling-directive-necd-2013-national-air-pollution-control-programmes": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/national-emission-ceiling-directive-necd-2013-policies-and-measures-pams": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/national-emission-ceiling-directive-necd-2013-projected-emissions-by-aggregated-nfr-sectors": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/national-emission-ceiling-directive-necd-reporting-obligations": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/national-policies-and-measures-climate-change-mitigation": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/national-policies-and-measures-climate-change-mitigation-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nationally-designated-areas": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nationally-designated-areas-cdda": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nationally-designated-areas-cdda-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/natura-2000-sites-scis-sacs-habitats-directive": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/natura-2000-sites-scis-sacs-habitats-directive-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/natura-2000-sites-spas-birds-directive": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/natura-2000-sites-spas-birds-directive-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/natura2000-and-emerald-network": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/natural-capital-accounting-in-support-of-policymaking-in-europe-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nec-directive-reporting-status-2019": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nec-directive-reporting-status-2019-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nec-directive-reporting-status-2019-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nec-directive-reporting-status-2019-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/necd-2013-informative-inventory-report": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/necd-reporting-obligations-2013-national-emission-inventories-and-adjustment": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-4": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-5": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-group": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-meeting-tentative": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-meeting-tentative-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-webinar": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-webinar-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-webinar-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-webinar-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-webinar-4": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-eionet-webinar-5": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nfp-pre-meeting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nitrates-directive-2013-report": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/noise-country-factsheets": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/noise-in-europe-2013-2019-report": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/noise-in-europe-2013-2019-report-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/noise-in-europe-2013-2019-report-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/noise-in-europe-2013-2019-report-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-agriculture-webinars": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-air-quality": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-air-quality-201ccity-ranking201d": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-biodiversity-and-freshwater": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-cciva": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-com-webinar": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-communication": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-communications": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-eis": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-energy-and-nrc-mitigation": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-environment-and-health": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-environment-and-health-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-flis": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-flis-focus-group-webinar": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-forest": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-land-cover": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-land-cover-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-marine": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-mitigation": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-noise": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-soe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-soe-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-soe-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-soe-training-on-visualization": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-soe-webinar-cancelled": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-soil": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-soil-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-waste": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-water": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nrc-webinar-on-climate-adapt": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nutrient-enrichment-and-eutrophication-in-europe2019s-seas": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nutrient-enrichment-and-eutrophication-in-europe2019s-seas-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nutrient-enrichment-and-eutrophication-in-europe2019s-seas-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/nutrient-enrichment-and-eutrophication-in-europe2019s-seas-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/ozone-depleting-substances-2019-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/ozone-depleting-substances-ods-reporting-by-undertakings-article-27": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/ozone-depleting-substances-ods-reporting-by-undertakings-article-27-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/paving-the-way-for-a-circular-economy-insights-on-status-and-potentials-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/pesticides-in-europe2019s-waters": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/pesticides-in-europe2019s-waters-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/pesticides-in-europe2019s-waters-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/physical-water-accounts-database": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/physical-water-accounts-database-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/physical-water-accounts-database-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/physical-water-accounts-of-europe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/policy-dialogue-online-climate-change-is-the-eu-prepared": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/postponed-soer-2020-event-slovenia": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/postponed-soer-event-slovakia": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/press-briefing-health-and-environment": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/press-conference-health-and-environment": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/preventing-plastic-waste-in-europe-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/projections-greenhouse-gas-emissions-and-removals": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/projections-greenhouse-gas-emissions-and-removals-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/protected-areas-briefing": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/public-feedback-deadline-eea-eionet-strategy-2021-2030": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/publication-air-quality-viewer": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/quality-and-greenhouse-gas-intensities-of-transport-fuels-in-the-eu-in-2017": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/quality-and-greenhouse-gas-intensities-of-transport-fuels-in-the-eu-in-2017-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/quality-and-greenhouse-gas-intensities-of-transport-fuels-in-the-eu-in-2017-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/quality-and-greenhouse-gas-intensities-of-transport-fuels-in-the-eu-in-2017-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/questionnaire-lulucf-regulation-2013-support-to-the-ec2019s-implementation-and-monitoring-and-compliance-framework": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/questionnaire-on-biowaste-in-europe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/questionnaire-on-biowaste-in-europe-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/questionnaire-on-biowaste-in-europe-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/reducing-loss-of-resources-from-waste-management-is-key-to-strengthening-the-circular-economy-in-europe-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/renewable-energy-in-europe-2013-2019-recent-growth-and-knock-on-effects": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/renewable-energy-in-europe-2013-2019-recent-growth-and-knock-on-effects-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/renewable-energy-in-europe-2013-2019-recent-growth-and-knock-on-effects-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/renewable-energy-in-europe-key-for-climate-objectives-but-air-pollution-needs-attention-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-biodegradable-and-compostable-plastics": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-building-a-coherent-trans-european-nature-network": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-cutting-ghg-through-ce-actions-in-the-buildings-sector": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-drivers-of-change-of-relevance-for-europe2019s-environment-and-sustainability": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-emerging-challenges-of-waste-management-in-europe-the-limits-of-recycling": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-european-bathing-water-quality": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-healthy-environment-healthy-lives": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-is-europe-living-within-the-limits-of-our-planet": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-launch-monitoring-co2-emissions-from-passenger-cars-and-vans-in-2018": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-launch-trends-and-drivers-of-eu-greenhouse-gas-emissions": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-lrtap": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-managing-bio-waste-in-europe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-marine-messages-ii": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-national-emission-reduction-commitments-directive-reporting-status-2020": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-nec-directive-reporting-status-2020": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-on-all-major-roads-railways-airports-and-agglomerations-df1-and-df5": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-on-invasive-alien-species": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-on-progress-and-implementation-article-12-birds-directive": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-on-progress-and-implementation-article-17-habitats-directive": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-state-of-nature-in-the-eu": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-sustainable-transitions-in-europe-in-the-age-of-demographic-and-technological-change": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-tbc-emerging-challenges-of-waste-management-in-europe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/report-the-case-for-increasing-recycling": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/resource-efficiency-and-circular-economy-in-europe-2013-even-more-from-less": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/resource-efficiency-and-circular-economy-in-europe-2013-even-more-from-less-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/resource-efficiency-and-circular-economy-in-europe-2013-even-more-from-less-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/resource-efficiency-and-circular-economy-in-europe-2013-even-more-from-less-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/resource-efficiency-and-the-circular-economy-in-europe-2019": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sc": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sc-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sc-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/scientific-committee-meeting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/scientific-committee-meeting-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/scientific-committee-meeting-and-seminar": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/scientific-committee-meeting-tentative": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/scientific-committee-meeting-tentative-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/scientific-committee-meeting-tentative-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sdgs-and-the-environment-in-europe-a-cross-country-analysis": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sdgs-and-the-environment-in-europe-a-cross-country-analysis-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sdgs-and-the-environment-in-europe-a-cross-country-analysis-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sdgs-and-the-environment-in-europe-a-cross-country-analysis-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/second-soer-2020-stakeholder-interaction-process-sip2a": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/signals-2019-en-2013-land-and-soil-in-europe-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soe-webinar": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soe-webinar-on-national-soe-reports": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soe-webinar-on-national-soe-reports-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-event-finland": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-event-ireland": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-integrated-assessment-2013-part-4-conclusions": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-integrated-assessment-2013-part-4-conclusions-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-integrated-assessment-2013-part-4-conclusions-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-integrated-assessment-report-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-knowledge-for-sustainability-transitions-workshop": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-launch-event": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-launch-event-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-launch-turkey": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-morning-coffee-2013the-state-of-the-environment-in-the-eu": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-seminar-at-the-swedish-environmental-protection-agency-epa": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-2020-stakeholder-workshop-with-ministries-and-business-sector": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/soer-event-italy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/state-and-outlook-for-europe2019s-environment-report-soer-2020": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/state-and-outlook-for-europe2019s-environment-report-soer-2020-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/state-and-outlook-for-europe2019s-environment-report-soer-2020-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/state-of-the-european-environment": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sustainability-transition-in-europe-in-the-age-of-demographic-and-technological-change-implications-for-fiscal-revenues-and-financial-investments": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sustainability-transition-in-europe-in-the-age-of-demographic-and-technological-change-implications-for-fiscal-revenues-and-financial-investments-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sustainability-transition-in-europe-in-the-age-of-demographic-and-technological-change-implications-for-fiscal-revenues-and-financial-investments-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sustainability-transition-in-europe-in-the-age-of-demographic-and-technological-change-implications-for-fiscal-revenues-and-financial-investments-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sustainability-transitions-policy-and-practice": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sustainability-transitions-policy-and-practice-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sustainability-transitions-policy-and-practice-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sustainability-transitions-policy-and-practice-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/sustainable-agriculture-2013-potential-and-gaps-of-precision-farming": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/test-consultation-health": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/textiles-in-europe2019s-circular-economy-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/the-eu-emissions-trading-system-in-2019-trends-and-projections-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/the-first-and-last-mile-2013-key-to-sustainable-urban-transport-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/the-plastic-waste-trade-in-the-circular-economy-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/the-state-of-the-environment-in-europe-and-in-italy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/third-soer-2020-stakeholder-interaction-process-sip3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/three-ghg-products": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/three-ghg-products-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/three-ghg-products-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/tools-to-support-green-infrastructure-planning-and-ecosystem-restoration-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/training-for-new-nfps": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/transport-and-environment": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/transport-and-environment-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/transport-and-environment-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/transport-and-environment-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/trends-and-projections-in-europe-2019-2014-tracking-progress-towards-europe2019s-climate-and-energy-targets": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/trends-and-projections-in-europe-2019-2014-tracking-progress-towards-europe2019s-climate-and-energy-targets-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/trends-and-projections-in-europe-2019-2014-tracking-progress-towards-europe2019s-climate-and-energy-targets-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/trends-and-projections-in-europe-2019-2014-tracking-progress-towards-europe2019s-climate-and-energy-targets-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/trends-and-projections-in-the-eu-ets-in-2019": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/trends-and-projections-in-the-eu-ets-in-2019-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/trends-and-projections-in-the-eu-ets-in-2019-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/unequal-exposure-and-unequal-impacts-social-vulnerability-to-air-pollution-noise-and-extreme-temperatures-in-europe-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/urban-waste-water-treatment-directive-2013-national-implementation-programme": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/urban-waste-water-treatment-for-21st-century-challenges-published": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/use-of-auctioning-revenue-and-project-credits-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/use-of-freshwater-resources": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/use-of-freshwater-resources-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/use-of-freshwater-resources-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/using-copernicus-land-monitoring-service-clms-to-support-the-land-use-land-use-change-and-forestry-lulucf-regulation": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/virtual": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/waste-indicators": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/waste-indicators-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/waste-indicators-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/waste-prevention-an-updated-set-of-factsheets-batch-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/waste-prevention-an-updated-set-of-factsheets-batch-1-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/waste-prevention-an-updated-set-of-factsheets-batch-1-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/waste-prevention-an-updated-set-of-factsheets-batch-1-3": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/waste-prevention-an-updated-set-of-factsheets-batch-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/waste-prevention-programmes": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/waste-prevention-programmes-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/water-indicators": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/water-indicators-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/water-indicators-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/water-use-intensity-of-crop-production": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/water-use-intensity-of-crop-production-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/water-use-intensity-of-crop-production-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-201cplanetary-boundaries-is-europe-living-within-the-limits-of-our-planet-201d": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-abc-of-social-media": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-ad-hoc-expert-group-chemicals": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-ad-hoc-expert-group-chemicals-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-ad-hoc-expert-group-on-chemicals": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-bellagio-process-improving-the-monitoring-of-circular-economy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-climate-adapt": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-copernicus": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-eionet-modernisation-working-group": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-end-inspire-data-model-documentation": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-environmental-information-systems": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-eu-biodiversity-strategy-for-2030": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-eu-registry-2018-reporting-year-submission": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-future-proofing-cities-2013-resilience-in-redesign": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-human-exposure-to-pfas-and-bfr": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nfp-eionet": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nfp-eionet-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-biodiversity": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-biodiversity-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-circular-economy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-circular-economy-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-circular-economy-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-climate-change": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-climate-change-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-energy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-environment-and-energy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-environment-and-energy-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-flis": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-flis-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-flis-soe-com": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-forest": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-forests": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-forests-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-forests-2": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-land-cover": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-noise": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-noise-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-soe": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-soe-community-of-practice": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-waste": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-waste-and-eea-strategy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-nrc-waste-and-increasing-recycling-levels": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-on-cdda-and-oecms": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-possible-impacts-of-covid-19-on-air-quality": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-presentation-of-noise-report": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-presentation-of-noise-report-for-communication-colleagues": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-reusing-waterbase-data": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-social-media-for-change": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-societal-shocks-multiple-crises-long-term-sustainability-objectives-and-the-role-of-facts": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-soer-2020-national-stakeholder-engagement": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-the-future-of-meat": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-training-of-eionet-forum-tools": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-west-balkans-coordination-meeting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-wise-1-reporting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-wise-1-reporting-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-wise-3-water-quantity": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-wise-4-and-wise-6-reporting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-wise-4-and-wise-6-reporting-copy": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-wise-6-water-quality-reporting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/webinar-wise6-water-quality": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/western-balkans-meeting": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/western-balkans-meeting-1": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/wise-soe-reporting-obligations": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/wise-soe-reporting-obligations-deadline-extended-to-31-january": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/workshop-road-transport-emission-inventory-model-copert": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        },
+        "https://www.eionet.europa.eu/planner/world-circular-economy-forum": {
+            "error_cnt": 2,
+            "skip_cnt": 45
+        }
+    },
+    "errors_gs": {},
     "headless_chrome": {
         "endpoint": "http://headless-chrome-api:3000/content"
     },
