@@ -1,7 +1,7 @@
 {
     "app_datahub": {
         "Sites": {
-            "sdi": "config_sdi"
+            "sdi": "config_sdi_prod"
         },
         "elastic_config": {
             "elastic": "elastic_datahub",
@@ -22,7 +22,7 @@
             "fise": "config_fise",
             "ias": "config_ias",
             "industry": "config_industry",
-            "sdi": "config_sdi",
+            "sdi": "config_sdi_prod",
             "wise_freshwater": "config_wise_freshwater",
             "wise_marine": "config_wise_marine"
         },
@@ -39,16 +39,18 @@
     },
     "app_gs": {
         "Sites": {
-            "eea": "config_eea"
+            "ias": "config_ias"
         },
+        "allowed_errors_for_doc": 2,
         "elastic_config": {
             "elastic": "elastic_global_search",
             "elastic_mapping": "elastic_mapping_default",
             "elastic_raw_mapping": "elastic_raw_mapping_default",
             "elastic_settings": "elastic_settings_default"
         },
-        "nlp_config": "nlp_services_s3",
-        "rabbitmq_config": "rabbitmq_global_search"
+        "nlp_config": "nlp_services_default",
+        "rabbitmq_config": "rabbitmq_global_search",
+        "skip_doc_cnt": 100
     },
     "config_bise": {
         "concurrency": 2,
@@ -530,6 +532,75 @@
         "type": "sdi",
         "url": "https://galliwasp.eea.europa.eu/catalogue/datahub"
     },
+    "config_sdi_prod": {
+        "authorization": "AIRFLOW_VAR_SDI_AUTH_PROD",
+        "custom_dag": "sdi_1_crawl",
+        "custom_task_id": "crawl_sdi",
+        "endpoint": "sdi.eea.europa.eu",
+        "fetch_all_docs": true,
+        "metadata_query": {
+            "_source": {
+                "excludes": [
+                    "*.data"
+                ]
+            },
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "metadataIdentifier": "<metadataIdentifier>"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "nlp_preprocessing": {
+            "text": {
+                "blacklist": [],
+                "whitelist": [
+                    "resourceTitleObject.default",
+                    "resourceAbstractObject.default"
+                ]
+            }
+        },
+        "normalizers_variable": "sdi_normalizers",
+        "path": "/catalogue/srv/api/search/records",
+        "port": 443,
+        "query": {
+            "_source": [
+                "metadataIdentifier",
+                "changeDate"
+            ],
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "resourceType": "series"
+                            }
+                        },
+                        {
+                            "match": {
+                                "groupPublished": "datahub"
+                            }
+                        },
+                        {
+                            "match": {
+                                "isTemplate": "n"
+                            }
+                        }
+                    ]
+                }
+            },
+            "size": 10000,
+            "track_total_hits": true
+        },
+        "threshold": 35,
+        "type": "sdi",
+        "url": "https://sdi.eea.europa.eu/catalogue/srv/api/search/records"
+    },
     "config_sdi_test": {
         "_endpoint": "https://galliwasp.eea.europa.eu/catalogue/datahub/api/search/records/_search",
         "_query": {
@@ -599,6 +670,7 @@
     "config_wise_freshwater": {
         "fix_items_url": {
             "with_api": "water.europa.eu/freshwater-api/++api++",
+            "with_api2": "water.europa.eu/freshwater-api",
             "without_api": "water.europa.eu/freshwater"
         },
         "normalize": {
@@ -639,7 +711,7 @@
             ]
         },
         "type": "plone_rest_api",
-        "url": "https://water.europa.eu/freshwater",
+        "url": "https://water.europa.eu/freshwater/",
         "url_api_part": ""
     },
     "config_wise_marine": {
@@ -793,6 +865,7 @@
             "GIS Application": "Map (interactive)",
             "Highlight": "News",
             "Infographic": "Infographic",
+            "Kosovo (UNSCR 1244/99)": "Kosovo",
             "News": "News",
             "News Item": "News",
             "Organisation": "Organisation",
@@ -807,7 +880,7 @@
             "Products.ATContentTypes.interfaces.topic.IATTopic": "Catalogue / listing",
             "Products.EEAContentTypes.content.interfaces.IArticle": "Article",
             "Products.EEAContentTypes.content.interfaces.ICloudVideo": "Video",
-            "Products.EEAContentTypes.content.interfaces.ICountryProfile": "Country profile",
+            "Products.EEAContentTypes.content.interfaces.ICountryProfile": "Country fact sheet",
             "Products.EEAContentTypes.content.interfaces.IExternalHighlight": "News",
             "Products.EEAContentTypes.content.interfaces.IGISMapApplication": "Map (interactive)",
             "Products.EEAContentTypes.content.interfaces.IInfographic": "Infographic",
@@ -816,6 +889,7 @@
             "Products.eeawebapplication.interface.IEEAWebApplication": "Topic/subtopic site",
             "Report": "Report",
             "Term": "Glossary term",
+            "Turkey": "T\u00fcrkiye",
             "agriculture": "Agriculture",
             "air": "Air pollution",
             "basic_data_factsheet": "Country fact sheet",
@@ -1549,6 +1623,11 @@
             "analyzer": "none",
             "fielddata": true,
             "type": "text"
+        },
+        "status_code": {
+            "analyzer": "none",
+            "fielddata": true,
+            "type": "text"
         }
     },
     "elastic_settings_default": {
@@ -1836,11 +1915,11 @@
         },
         "http://rod.eionet.europa.eu/obligations/14": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/141": {
             "instrument": "http://rod.eionet.europa.eu/instruments/522",
-            "label": "NEC Directive"
+            "label": "Old NEC Directive"
         },
         "http://rod.eionet.europa.eu/obligations/143": {
             "instrument": "http://rod.eionet.europa.eu/instruments/381",
@@ -1868,7 +1947,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/15": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/156": {
             "instrument": "http://rod.eionet.europa.eu/instruments/535",
@@ -1888,7 +1967,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/16": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/160": {
             "instrument": "http://rod.eionet.europa.eu/instruments/539",
@@ -1908,7 +1987,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/169": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/171": {
             "instrument": "http://rod.eionet.europa.eu/instruments/545",
@@ -1940,19 +2019,19 @@
         },
         "http://rod.eionet.europa.eu/obligations/180": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/181": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/184": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/185": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/186": {
             "instrument": "http://rod.eionet.europa.eu/instruments/549",
@@ -2100,7 +2179,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/232": {
             "instrument": "http://rod.eionet.europa.eu/instruments/522",
-            "label": "NEC Directive"
+            "label": "Old NEC Directive"
         },
         "http://rod.eionet.europa.eu/obligations/233": {
             "instrument": "http://rod.eionet.europa.eu/instruments/556",
@@ -2196,7 +2275,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/26": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/260": {
             "instrument": "http://rod.eionet.europa.eu/instruments/559",
@@ -2228,7 +2307,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/27": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/273": {
             "instrument": "http://rod.eionet.europa.eu/instruments/561",
@@ -2248,7 +2327,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/28": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/280": {
             "instrument": "http://rod.eionet.europa.eu/instruments/564",
@@ -2292,7 +2371,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/29": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/290": {
             "instrument": "http://rod.eionet.europa.eu/instruments/564",
@@ -2332,7 +2411,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/30": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/301": {
             "instrument": "http://rod.eionet.europa.eu/instruments/569",
@@ -2372,7 +2451,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/31": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/310": {
             "instrument": "http://rod.eionet.europa.eu/instruments/578",
@@ -2416,7 +2495,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/32": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/320": {
             "instrument": "http://rod.eionet.europa.eu/instruments/578",
@@ -2460,7 +2539,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/33": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/330": {
             "instrument": "http://rod.eionet.europa.eu/instruments/576",
@@ -3392,11 +3471,11 @@
         },
         "http://rod.eionet.europa.eu/obligations/571": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/572": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/574": {
             "instrument": "http://rod.eionet.europa.eu/instruments/170",
@@ -3520,7 +3599,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/604": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/605": {
             "instrument": "http://rod.eionet.europa.eu/instruments/509",
@@ -3560,7 +3639,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/619": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/620": {
             "instrument": "http://rod.eionet.europa.eu/instruments/560",
@@ -3584,7 +3663,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/630": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/631": {
             "instrument": "http://rod.eionet.europa.eu/instruments/500",
@@ -3592,27 +3671,27 @@
         },
         "http://rod.eionet.europa.eu/obligations/632": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/633": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/634": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/635": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/636": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/637": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/638": {
             "instrument": "http://rod.eionet.europa.eu/instruments/635",
@@ -3780,7 +3859,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/686": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/688": {
             "instrument": "http://rod.eionet.europa.eu/instruments/643",
@@ -3796,11 +3875,11 @@
         },
         "http://rod.eionet.europa.eu/obligations/690": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/691": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/692": {
             "instrument": "http://rod.eionet.europa.eu/instruments/632",
@@ -3884,7 +3963,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/714": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/715": {
             "instrument": "http://rod.eionet.europa.eu/instruments/516",
@@ -3892,7 +3971,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/716": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/717": {
             "instrument": "http://rod.eionet.europa.eu/instruments/516",
@@ -3908,7 +3987,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/72": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/720": {
             "instrument": "http://rod.eionet.europa.eu/instruments/615",
@@ -4020,27 +4099,27 @@
         },
         "http://rod.eionet.europa.eu/obligations/748": {
             "instrument": "http://rod.eionet.europa.eu/instruments/675",
-            "label": "Revised NEC Directive"
+            "label": "NEC Directive"
         },
         "http://rod.eionet.europa.eu/obligations/749": {
             "instrument": "http://rod.eionet.europa.eu/instruments/675",
-            "label": "Revised NEC Directive"
+            "label": "NEC Directive"
         },
         "http://rod.eionet.europa.eu/obligations/750": {
             "instrument": "http://rod.eionet.europa.eu/instruments/675",
-            "label": "Revised NEC Directive"
+            "label": "NEC Directive"
         },
         "http://rod.eionet.europa.eu/obligations/751": {
             "instrument": "http://rod.eionet.europa.eu/instruments/675",
-            "label": "Revised NEC Directive"
+            "label": "NEC Directive"
         },
         "http://rod.eionet.europa.eu/obligations/752": {
             "instrument": "http://rod.eionet.europa.eu/instruments/675",
-            "label": "Revised NEC Directive"
+            "label": "NEC Directive"
         },
         "http://rod.eionet.europa.eu/obligations/753": {
             "instrument": "http://rod.eionet.europa.eu/instruments/675",
-            "label": "Revised NEC Directive"
+            "label": "NEC Directive"
         },
         "http://rod.eionet.europa.eu/obligations/754": {
             "instrument": "http://rod.eionet.europa.eu/instruments/578",
@@ -4060,7 +4139,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/758": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/759": {
             "instrument": "http://rod.eionet.europa.eu/instruments/631",
@@ -4092,11 +4171,11 @@
         },
         "http://rod.eionet.europa.eu/obligations/767": {
             "instrument": "http://rod.eionet.europa.eu/instruments/675",
-            "label": "Revised NEC Directive"
+            "label": "NEC Directive"
         },
         "http://rod.eionet.europa.eu/obligations/768": {
             "instrument": "http://rod.eionet.europa.eu/instruments/675",
-            "label": "Revised NEC Directive"
+            "label": "NEC Directive"
         },
         "http://rod.eionet.europa.eu/obligations/769": {
             "instrument": "http://rod.eionet.europa.eu/instruments/676",
@@ -4108,11 +4187,11 @@
         },
         "http://rod.eionet.europa.eu/obligations/771": {
             "instrument": "http://rod.eionet.europa.eu/instruments/675",
-            "label": "Revised NEC Directive"
+            "label": "NEC Directive"
         },
         "http://rod.eionet.europa.eu/obligations/772": {
             "instrument": "http://rod.eionet.europa.eu/instruments/675",
-            "label": "Revised NEC Directive"
+            "label": "NEC Directive"
         },
         "http://rod.eionet.europa.eu/obligations/773": {
             "instrument": "http://rod.eionet.europa.eu/instruments/578",
@@ -4120,7 +4199,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/774": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/775": {
             "instrument": "http://rod.eionet.europa.eu/instruments/630",
@@ -4140,7 +4219,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/779": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/780": {
             "instrument": "http://rod.eionet.europa.eu/instruments/516",
@@ -4248,7 +4327,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/806": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
-            "label": "EEA AWP"
+            "label": "EEA-Eionet"
         },
         "http://rod.eionet.europa.eu/obligations/807": {
             "instrument": "http://rod.eionet.europa.eu/instruments/643",
@@ -4373,6 +4452,7 @@
         "blackMap": {},
         "normMissing": {},
         "normObj": {
+            "Kosovo (UNSCR 1244/99)": "Kosovo",
             "true": "published"
         },
         "normProp": {
@@ -4564,6 +4644,123 @@
         },
         "technology": {
             "label": "Environmental technology"
+        },
+        "term1": {
+            "label": "Agriculture and food"
+        },
+        "term10": {
+            "label": "Climate change adaptation"
+        },
+        "term11": {
+            "label": "Climate change mitigation"
+        },
+        "term13": {
+            "label": "Electric vehicles"
+        },
+        "term14": {
+            "label": "Energy"
+        },
+        "term15": {
+            "label": "Energy efficiency"
+        },
+        "term16": {
+            "label": "Environmental health impacts"
+        },
+        "term17": {
+            "label": "Environmental inequalities"
+        },
+        "term18": {
+            "label": "Extreme weather"
+        },
+        "term19": {
+            "label": "Fisheries and aquaculture"
+        },
+        "term2": {
+            "label": "Air pollution"
+        },
+        "term20": {
+            "label": "Forests and forestry"
+        },
+        "term22": {
+            "label": "Industry"
+        },
+        "term23": {
+            "label": "Land use"
+        },
+        "term25": {
+            "label": "Nature protection and restoration"
+        },
+        "term26": {
+            "label": "Nature-based solutions"
+        },
+        "term27": {
+            "label": "Noise"
+        },
+        "term28": {
+            "label": "Plastics"
+        },
+        "term29": {
+            "label": "Pollution"
+        },
+        "term3": {
+            "label": "Bathing water quality"
+        },
+        "term30": {
+            "label": "Production and consumption"
+        },
+        "term31": {
+            "label": "Renewable energy"
+        },
+        "term32": {
+            "label": "Resource use and materials"
+        },
+        "term33": {
+            "label": "Road transport"
+        },
+        "term34": {
+            "label": "Seas and coasts"
+        },
+        "term35": {
+            "label": "Soil"
+        },
+        "term38": {
+            "label": "Sustainability challenges"
+        },
+        "term39": {
+            "label": "Sustainability solutions"
+        },
+        "term4": {
+            "label": "Biodiversity"
+        },
+        "term40": {
+            "label": "Sustainable finance"
+        },
+        "term41": {
+            "label": "Textiles"
+        },
+        "term42": {
+            "label": "Transport and mobility"
+        },
+        "term43": {
+            "label": "Urban sustainability"
+        },
+        "term44": {
+            "label": "Waste and recycling"
+        },
+        "term45": {
+            "label": "Water"
+        },
+        "term5": {
+            "label": "Bioeconomy"
+        },
+        "term6": {
+            "label": "Buildings and construction"
+        },
+        "term7": {
+            "label": "Chemicals"
+        },
+        "term8": {
+            "label": "Circular economy"
         },
         "tourism": {
             "label": "Tourism"
