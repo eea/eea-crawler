@@ -37,6 +37,8 @@ def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
             skip = False
             doc_id = plone_rest_api.get_no_api_url(site_config, doc["@id"])
             print(doc_id)
+            print(doc["@type"])
+            print(portal_types)
             doc_modified = doc.get(
                 "modification_date", doc.get("modified", None)
             )
@@ -140,6 +142,7 @@ def crawl_doc(v, site, site_config, doc_id, handler=None):
         try:
             scraped = plone_rest_api.scrape(v, site_config, doc_id)
             if int(scraped.get("status_code", 0)) >= 400:
+                print(f"status_code:", scraped.get("status_code", 0))
                 scrape_errors = True
 
         except Exception:

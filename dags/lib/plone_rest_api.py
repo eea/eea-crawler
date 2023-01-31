@@ -15,7 +15,7 @@ def get_api_url(site_config, url):
             return url
 
     if site_config.get("fix_items_url", None):
-        if site_config["fix_items_url"]["without_api"] in url:
+        if f'{site_config["fix_items_url"]["without_api"]}/' in url:
             url = url.replace(
                 site_config["fix_items_url"]["without_api"],
                 site_config["fix_items_url"]["with_api"],
@@ -44,11 +44,17 @@ def get_api_url(site_config, url):
 
 def get_no_api_url(site_config, url):
     if site_config.get("fix_items_url", None):
-        if site_config["fix_items_url"]["without_api"] in url:
+        if f'{site_config["fix_items_url"]["without_api"]}/' in url:
             return url
-        if site_config["fix_items_url"]["with_api"] in url:
+        if f'{site_config["fix_items_url"]["with_api"]}/' in url:
             return url.replace(
                 site_config["fix_items_url"]["with_api"],
+                site_config["fix_items_url"]["without_api"],
+            )
+        with_api2 = site_config["fix_items_url"].get("with_api2", None)
+        if with_api2 is not None and f"{with_api2}/" in url:
+            return url.replace(
+                site_config["fix_items_url"]["with_api2"],
                 site_config["fix_items_url"]["without_api"],
             )
 
