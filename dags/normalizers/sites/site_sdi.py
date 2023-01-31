@@ -176,8 +176,6 @@ def pre_normalize_sdi(doc, config):
                 for rdate in resourceDates
                 if rdate["type"] == "publication"
             ]
-            if len(publishDates) > 0:
-                print("a4")
         if doc["raw_value"].get("issued", None) is None:
             # fallback to creation date
             doc["raw_value"]["issued"] = doc["raw_value"].get(
