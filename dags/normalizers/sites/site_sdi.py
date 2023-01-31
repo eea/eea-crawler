@@ -177,14 +177,15 @@ def pre_normalize_sdi(doc, config):
                 if rdate["type"] == "publication"
             ]
             if len(publishDates) > 0:
-                doc["raw_value"]["issued"] = publishDates[-1]
-        else:
+                print("a4")
+        if doc["raw_value"].get("issued", None) is None:
             # fallback to creation date
             doc["raw_value"]["issued"] = doc["raw_value"].get(
                 "publicationDateForResource",
                 doc["raw_value"].get("createDate"),
             )
-
+    print("ISSUED:")
+    print(doc["raw_value"].get("issued"))
     doc["raw_value"]["overview.url"] = simplify_list(
         doc["raw_value"].get("overview", []), "url"
     )
