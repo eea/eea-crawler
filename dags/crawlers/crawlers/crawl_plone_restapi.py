@@ -16,6 +16,8 @@ SKIP_EXTENSIONS = ["png", "svg", "jpg", "gif", "eps", "jpeg"]
 
 @register_site_crawler("plone_rest_api")
 def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
+    urls_whitelist = site_config.get("urls", {}).get("whitelist", [])
+    urls_blacklist = site_config.get("urls", {}).get("blacklist", [])
     rp = robots_txt.init(site_config)
 
     queries = plone_rest_api.build_queries_list(
@@ -42,6 +44,16 @@ def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
             doc_modified = doc.get(
                 "modification_date", doc.get("modified", None)
             )
+
+            if len(urls_whitelist) > 0:
+                if doc_id not in urls_whitelist:
+                    print("Document not in whitelist, skip indexing")
+                    skip = True
+
+            if len(urls_blacklist) > 0:
+                if doc_id in urls_blacklist:
+                    print("Document in blacklist, skip indexing")
+                    skip = True
 
             if not robots_txt.test_url(rp, doc_id):
                 skip = True

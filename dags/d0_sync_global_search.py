@@ -8,7 +8,9 @@ app_config = Variable.get("app_global_search", deserialize_json=True)
 SCHEDULE_INTERVAL = app_config.get("schedule_interval", "@daily")
 default_args = {"owner": "airflow"}
 
-TASK_PARAMS = {"params": {"app": "global_search", "enable_prepare_docs": True}}
+TASK_PARAMS = {
+    "params": {"app": "global_search", "enable_prepare_docs": False}
+}
 
 
 @task
