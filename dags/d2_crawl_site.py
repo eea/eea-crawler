@@ -84,6 +84,7 @@ def parse_all_documents(task_params, pool_name):
         site_config,
         handler,
         send_to_rabbitmq,
+        quick=task_params.get("quick"),
     )
 
 

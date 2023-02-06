@@ -20,7 +20,9 @@ def sdi_es(sdi_conf):
 
 
 @register_site_crawler("sdi")
-def parse_all_documents(v, site, sdi_conf, handler=None, doc_handler=None):
+def parse_all_documents(
+    v, site, sdi_conf, handler=None, doc_handler=None, quick=False
+):
     query = sdi_conf.get("query")
     path = sdi_conf.get("path")
     es_sdi = sdi_es(sdi_conf)

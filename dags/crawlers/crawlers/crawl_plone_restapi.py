@@ -15,14 +15,21 @@ SKIP_EXTENSIONS = ["png", "svg", "jpg", "gif", "eps", "jpeg"]
 
 
 @register_site_crawler("plone_rest_api")
-def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
+def parse_all_documents(
+    v, site, site_config, handler=None, doc_handler=None, quick=False
+):
+    print(site)
+    print(quick)
+
     urls_whitelist = site_config.get("urls", {}).get("whitelist", [])
     urls_blacklist = site_config.get("urls", {}).get("blacklist", [])
     rp = robots_txt.init(site_config)
 
     queries = plone_rest_api.build_queries_list(
-        site_config, {"query_size": 500}
+        site_config, {"query_size": 500, "quick": True}
     )
+
+    print(queries)
 
     es_docs = elastic.get_all_ids_from_raw_for_site(v, site)
 
@@ -87,6 +94,12 @@ def parse_all_documents(v, site, site_config, handler=None, doc_handler=None):
 
     es = elastic.elastic_connection(v)
     elastic_conf = v.get("elastic")
+
+    if quick:
+        print(
+            "Quick sync enabled, ignore removing documents from elasticsearch"
+        )
+        return
 
     print("REMOVE FROM ES, DOCS THAT ARE NOT PRESENT IN PLONE:")
     print(es_docs.keys())

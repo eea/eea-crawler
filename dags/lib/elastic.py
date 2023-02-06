@@ -120,7 +120,7 @@ def create_index(es, index, mapping, settings, add_embedding=False):
 
 
 def get_docs(
-    es, index=None, query=None, _source=None, path=None, scroll_size=1000
+    es, index=None, query=None, _source=None, path=None, scroll_size=500
 ):
     data = search(
         es=es,

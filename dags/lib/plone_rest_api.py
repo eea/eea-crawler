@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import logging
 import requests
@@ -73,6 +73,11 @@ def get_no_api_url(site_config, url):
 
 
 def build_queries_list(site_config, query_config):
+    query_limit = ""
+    if query_config.get("quick", False):
+        today = datetime.now()
+        yesterday = today - timedelta(1)
+        query_limit = f"&modified.query:date={yesterday.strftime('%m-%d-%Y')}&modified.range=min"
     url = site_config["url"].strip("/")
     if site_config.get("fix_items_url", None):
         if site_config["fix_items_url"]["without_api"] in url:
@@ -88,17 +93,17 @@ def build_queries_list(site_config, query_config):
     if site_config.get("portal_types", None):
         # queries = []
         queries = [
-            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}"
+            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}{query_limit}"
             for portal_type in site_config["portal_types"]
         ]
         if site_config.get("languages", None):
             for language in site_config.get("languages"):
                 queries.append(
-                    f"{url}/{language}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date"
+                    f"{url}/{language}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date{query_limit}"
                 )
     else:
         queries = [
-            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date"
+            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date{query_limit}"
         ]
     return queries
 
@@ -258,7 +263,6 @@ def extract_attachments(json_doc, nlp_service_params):
             download_url = fix_download_url(value["download"], url)
             logger.info("Download url found: %s", download_url)
             try:
-                #resp = "pdf_text"
                 resp = request_with_retry(
                     converter_dsn, "post", {"url": download_url}
                 )

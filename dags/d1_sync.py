@@ -17,7 +17,21 @@ default_dag_params = {
 
 @task
 def create_raw_index(task_params):
+    print(task_params)
     v = task_params.get("variables", {})
+
+    quick_sync = task_params.get("quick")
+    if quick_sync:
+        print(
+            "Quick sync enabled, ignore backing up index, just update the timestamp"
+        )
+        elastic_conf = v.get("elastic")
+        es = elastic.elastic_connection(v)
+        elastic.update_index_ts(es, elastic_conf["raw_index"])
+        elastic.update_index_ts(es, elastic_conf["searchui_target_index"])
+
+        return
+
     elastic.create_raw_index(v)
     elastic.create_search_index(v)
 
@@ -34,6 +48,7 @@ def trigger_all_crawlers(task_params, skip_docs):
     print(skip_docs)
     print(len(skip_docs))
     app = task_params["app"]
+    quick_sync = task_params.get("quick")
     Sites = task_params.get("Sites", [])
     if len(Sites) == 0:
         Sites = task_params.get("variables", {}).get("Sites", {}).keys()
@@ -50,6 +65,7 @@ def trigger_all_crawlers(task_params, skip_docs):
                     "enable_prepare_docs", False
                 ),
                 "skip_docs": skip_docs,
+                "quick": quick_sync,
             }
         }
         print(site)
@@ -60,6 +76,11 @@ def trigger_all_crawlers(task_params, skip_docs):
 @task
 def test_errors(task_params):
     print(task_params)
+    quick_sync = task_params.get("quick")
+    if quick_sync:
+        print("Quick sync enabled, ignore testing for errors")
+        return []
+
     app = task_params["app"]
     v = task_params.get("variables", {})
     print(v)
