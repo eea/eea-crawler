@@ -174,17 +174,27 @@ def scrape_with_retry(v, url, js=False):
         )
         downloaded = resp.text
         status = resp.status_code
+        final_url = resp.headers.get("final_url", "")
     else:
         resp = requests.get(url)
         downloaded = resp.text
         status = resp.status_code
+        final_url = resp.headers.get("final_url", "")
 
     if magic.from_buffer(downloaded) == "data":
-        return {"downloaded": None, "status_code": status}
+        return {
+            "downloaded": None,
+            "status_code": status,
+            "final_url": final_url,
+        }
 
     logger.info("Downloaded: %s", downloaded)
 
-    return {"downloaded": downloaded, "status_code": status}
+    return {
+        "downloaded": downloaded,
+        "status_code": status,
+        "final_url": final_url,
+    }
 
 
 def scrape(v, site_config, doc_id):
@@ -248,6 +258,7 @@ def extract_attachments(json_doc, nlp_service_params):
             download_url = fix_download_url(value["download"], url)
             logger.info("Download url found: %s", download_url)
             try:
+                #resp = "pdf_text"
                 resp = request_with_retry(
                     converter_dsn, "post", {"url": download_url}
                 )

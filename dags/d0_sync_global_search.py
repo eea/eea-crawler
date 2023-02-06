@@ -9,13 +9,12 @@ SCHEDULE_INTERVAL = app_config.get("schedule_interval", "@daily")
 default_args = {"owner": "airflow"}
 
 TASK_PARAMS = {
-    "params": {"app": "global_search", "enable_prepare_docs": False}
+    "params": {"app": "global_search", "enable_prepare_docs": True}
 }
 
 
 @task
 def trigger_sync():
-    pass
     trigger_dag("d1_sync", TASK_PARAMS, "default_pool")
 
 

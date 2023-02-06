@@ -156,6 +156,14 @@ def crawl_doc(v, site, site_config, doc_id, handler=None):
             if int(scraped.get("status_code", 0)) >= 400:
                 print(f"status_code:", scraped.get("status_code", 0))
                 scrape_errors = True
+            final_url = scraped.get("final_url", doc_id)
+            print("CHECK REDIRECT")
+            print(f"url {doc_id}")
+            print(f"final_url {final_url}")
+            if doc_id != final_url:
+                logger.exception(f"Redirected {doc_id} -> {final_url}")
+                errors.append("document redirected")
+                doc_errors.append("redirect")
 
         except Exception:
             scrape_errors = True
