@@ -9,7 +9,12 @@ SCHEDULE_INTERVAL = app_config.get("schedule_interval_quick", None)
 default_args = {"owner": "airflow"}
 
 TASK_PARAMS = {
-    "params": {"app": "global_search", "enable_prepare_docs": True, "quick": True}
+    "params": {
+        "app": "global_search",
+        "enable_prepare_docs": True,
+        "quick": True,
+        "ignore_delete_threshold": False,
+    }
 }
 
 

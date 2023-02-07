@@ -26,12 +26,16 @@ def parse_all_documents(
     rp = robots_txt.init(site_config)
 
     queries = plone_rest_api.build_queries_list(
-        site_config, {"query_size": 500, "quick": True}
+        site_config, {"query_size": 500, "quick": quick}
     )
 
     print(queries)
 
+    threshold = site_config.get("threshold", 25)
+    ignore_delete_threshold = v.get("ignore_delete_threshold", False)
+
     es_docs = elastic.get_all_ids_from_raw_for_site(v, site)
+    prev_es_docs_len = len(es_docs)
 
     portal_types = site_config.get("portal_types", [])
     skip_docs = v.get("skip_docs", [])
@@ -101,19 +105,33 @@ def parse_all_documents(
         )
         return
 
-    print("REMOVE FROM ES, DOCS THAT ARE NOT PRESENT IN PLONE:")
-    print(es_docs.keys())
-    for doc_id in es_docs.keys():
-        print(doc_id)
-        elastic.delete_doc(es, elastic_conf.get("raw_index"), doc_id)
-        if v.get("enable_prepare_docs", False):
-            try:
-                elastic.delete_doc(
-                    es, elastic_conf.get("searchui_target_index"), doc_id
-                )
-                print("document deleted from search index")
-            except:
-                print("document not found in search index")
+    to_delete_es_docs_len = len(es_docs)
+
+    should_delete_old_docs = True
+
+    if prev_es_docs_len == 0:
+        should_delete_old_docs = True
+    else:
+        diff = to_delete_es_docs_len * 100 / prev_es_docs_len
+        if diff > threshold:
+            should_delete_old_docs = False
+
+    if should_delete_old_docs or ignore_delete_threshold:
+        print("REMOVE FROM ES, DOCS THAT ARE NOT PRESENT IN PLONE:")
+        print(es_docs.keys())
+        for doc_id in es_docs.keys():
+            print(doc_id)
+            elastic.delete_doc(es, elastic_conf.get("raw_index"), doc_id)
+            if v.get("enable_prepare_docs", False):
+                try:
+                    elastic.delete_doc(
+                        es, elastic_conf.get("searchui_target_index"), doc_id
+                    )
+                    print("document deleted from search index")
+                except:
+                    print("document not found in search index")
+    else:
+        raise Exception("WARNING: Too many documents to be deleted")
 
 
 def prepare_doc_for_rabbitmq(

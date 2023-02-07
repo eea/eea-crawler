@@ -8,13 +8,12 @@ app_config = Variable.get("app_global_search", deserialize_json=True)
 SCHEDULE_INTERVAL = app_config.get("schedule_interval", "@daily")
 default_args = {"owner": "airflow"}
 
-TASK_PARAMS = {
-    "params": {"app": "global_search", "enable_prepare_docs": True}
-}
+TASK_PARAMS = {"params": {"app": "global_search", "enable_prepare_docs": True}}
 
 
 @task
-def trigger_sync():
+def trigger_sync(ignore_delete_threshold):
+    TASK_PARAMS["params"]["ignore_delete_threshold"] = ignore_delete_threshold
     trigger_dag("d1_sync", TASK_PARAMS, "default_pool")
 
 
@@ -25,8 +24,8 @@ def trigger_sync():
     description="scheduled global search sync",
     tags=["crawl"],
 )
-def d0_sync_global_search():
-    trigger_sync()
+def d0_sync_global_search(ignore_delete_threshold=False):
+    trigger_sync(ignore_delete_threshold)
 
 
 sync_global_search_dag = d0_sync_global_search()
