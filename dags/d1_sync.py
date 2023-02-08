@@ -126,7 +126,6 @@ def test_errors(task_params):
             else:
                 errors_from_vars[doc_with_errors]["error_cnt"] += 1
 
-    print(dir(Variable))
     Variable.update(error_var, json.dumps(errors_from_vars, indent=4))
 
     print(len(docs_to_skip))

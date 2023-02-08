@@ -43,32 +43,32 @@ def normalize_eionet(doc, config):
     doc_loc_parts = doc_loc.strip("/").split("/")
     if doc_loc_parts[0] == "etcs" and len(doc_loc_parts) > 1:
         if doc_loc_parts[1] == "etc-atni":
-            normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = ["air"]
+            #            normalized_doc["cluster_name"] = doc_loc_parts[1]
+            normalized_doc["topic"] = ["term2", "term29"]
 
         if doc_loc_parts[1] == "etc-bd":
-            normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = ["biodiversity"]
+            #            normalized_doc["cluster_name"] = doc_loc_parts[1]
+            normalized_doc["topic"] = ["term4"]
 
         if doc_loc_parts[1] == "etc-cca":
-            normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = ["climate-change-adaptation"]
+            #            normalized_doc["cluster_name"] = doc_loc_parts[1]
+            normalized_doc["topic"] = ["term10"]
 
         if doc_loc_parts[1] == "etc-cme":
-            normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = ["climate", "energy"]
+            #            normalized_doc["cluster_name"] = doc_loc_parts[1]
+            normalized_doc["topic"] = ["term11", "term14"]
 
         if doc_loc_parts[1] == "etc-icm":
-            normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = ["water", "coast_sea"]
+            #            normalized_doc["cluster_name"] = doc_loc_parts[1]
+            normalized_doc["topic"] = ["term45", "term34"]
 
         if doc_loc_parts[1] == "etc-uls":
-            normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = ["landuse", "soil"]
+            #            normalized_doc["cluster_name"] = doc_loc_parts[1]
+            normalized_doc["topic"] = ["term23", "term35"]
 
         if doc_loc_parts[1] == "etc-wmge":
-            normalized_doc["cluster_name"] = doc_loc_parts[1]
-            normalized_doc["topic"] = ["waste"]
+            #            normalized_doc["cluster_name"] = doc_loc_parts[1]
+            normalized_doc["topic"] = ["term44"]
 
     normalized_doc["topic"] = update_from_theme_taxonomy(
         normalized_doc["topic"],
