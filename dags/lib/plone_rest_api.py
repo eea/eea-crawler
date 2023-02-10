@@ -190,7 +190,7 @@ def scrape_with_retry(v, url, js=False):
         return {
             "downloaded": None,
             "status_code": status,
-            "final_url": final_url,
+            "final_url": final_url.split("?scrape")[0],
         }
 
     logger.info("Downloaded: %s", downloaded)
@@ -198,7 +198,7 @@ def scrape_with_retry(v, url, js=False):
     return {
         "downloaded": downloaded,
         "status_code": status,
-        "final_url": final_url,
+        "final_url": final_url.split("?scrape")[0],
     }
 
 
@@ -242,7 +242,14 @@ def fix_download_url(download_url, source_url):
     return download_url
 
 
-def extract_attachments(json_doc, nlp_service_params):
+CONTENT_TYPES_TO_EXTRACT = [
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-word.document.macroEnabled.12",
+]
+
+
+def extract_attachments(json_doc, nlp_service_params, extract_pdf):
 
     url = json_doc["id"]
     params = nlp_service_params["converter"]
@@ -256,10 +263,19 @@ def extract_attachments(json_doc, nlp_service_params):
     text_fragments = []
 
     for name, value in json_doc.items():
-        if (
-            is_field_of_type(value, "file")
-            and value["content-type"] == "application/pdf"
-        ):
+
+        # if (
+        #     is_field_of_type(value, "file")
+        #     and value["content-type"] == "application/pdf"
+        # ):
+        extract_doc = False
+        if is_field_of_type(value, "file"):
+            if value["content-type"] == "application/pdf" and extract_pdf:
+                extract_doc = True
+            if value["content-type"] in CONTENT_TYPES_TO_EXTRACT:
+                extract_doc = True
+
+        if extract_doc:
             download_url = fix_download_url(value["download"], url)
             logger.info("Download url found: %s", download_url)
             try:
@@ -267,7 +283,7 @@ def extract_attachments(json_doc, nlp_service_params):
                     converter_dsn, "post", {"url": download_url}
                 )
             except Exception:
-                logger.exception("failed pdf extraction, retry")
+                logger.exception("failed file extraction, retry")
                 download_url = value["download"]
                 logger.info("Retry with download url: %s", download_url)
                 resp = request_with_retry(
@@ -289,6 +305,7 @@ def extract_pdf(v, site_config, doc):
     pdf_text = ""
     nlp_service_params = v.get("nlp_services")
     should_extract_pdf = True
+
     if site_config.get("pdf_days_limit", 0) > 0:
         current_date = datetime.now()
         logger.info("CHECK DATE")
@@ -305,7 +322,11 @@ def extract_pdf(v, site_config, doc):
             logger.info(site_config.get("pdf_days_limit"))
             if delta > site_config.get("pdf_days_limit"):
                 should_extract_pdf = False
-    if should_extract_pdf:
-        logger.info("EXTRACT PDF")
-        pdf_text = extract_attachments(doc, nlp_service_params)
+    # if should_extract_pdf:
+
+    logger.info("EXTRACT DOCUMENT")
+    logger.info(doc["id"])
+
+    pdf_text = extract_attachments(doc, nlp_service_params, should_extract_pdf)
+
     return pdf_text

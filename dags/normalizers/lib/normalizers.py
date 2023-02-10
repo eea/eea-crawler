@@ -386,6 +386,14 @@ def merge_themes(doc):
     return themes
 
 
+ALLOWED_CONTENT_TYPES = [
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-word.document.macroEnabled.12",
+    "application/pdf",
+]
+
+
 def common_normalizer(doc, config):
     doc["raw_value"]["themes"] = merge_themes(doc)
     doc["raw_value"]["themes"] = update_from_theme_taxonomy(
@@ -396,8 +404,12 @@ def common_normalizer(doc, config):
     if doc["raw_value"]["@type"] == "Plone Site":
         return None
     if doc["raw_value"]["@type"] == "File":
-        if doc["raw_value"]["file"]["content-type"] != "application/pdf":
-            logger.info("file, but not pdf")
+        if (
+            doc["raw_value"]["file"]["content-type"]
+            not in ALLOWED_CONTENT_TYPES
+        ):
+            print(doc["raw_value"]["file"]["content-type"])
+            logger.info("file, but not in allowed list")
             return None
         else:
             doc["raw_value"]["format"] = doc["raw_value"]["file"][
