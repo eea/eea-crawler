@@ -150,6 +150,18 @@ def get_formats(datasets):
     return formats
 
 
+def fix_children_links(datasets):
+    print("CHILDREN_LINKS")
+    for dataset in datasets:
+        for link in dataset.get("link", []):
+            if link.get("nameObject", {}).get("default", None) is not None:
+                link["name"] = link["nameObject"]["default"]
+            if link.get("description", {}).get("default", None) is not None:
+                link["description"] = link["description"]["default"]
+            if link.get("url", {}).get("default", None) is not None:
+                link["url"] = link["url"]["default"]
+
+
 def pre_normalize_sdi(doc, config):
     doc["raw_value"]["site_id"] = "sdi"
     doc["raw_value"] = simplify_elements(doc["raw_value"], "")
@@ -211,6 +223,9 @@ def pre_normalize_sdi(doc, config):
     doc["raw_value"]["sdi_spatialRepresentationType"] = simplify_list(
         doc["raw_value"].get("cl_spatialRepresentationType", [])
     )
+    doc["raw_value"]["OrgForResource"] = simplify_list(
+        doc["raw_value"].get("OrgForResourceObject", [])
+    )
     doc["raw_value"]["sdi_spatial"] = simplify_list(
         doc["raw_value"].get("th_regions", [])
     )
@@ -228,6 +243,8 @@ def pre_normalize_sdi(doc, config):
     doc["raw_value"]["dataset_formats"] = get_formats(
         doc["raw_value"].get("children", [])
     )
+    fix_children_links(doc["raw_value"].get("children", []))
+
     doc["raw_value"]["instrument"] = list(
         set(
             [
@@ -241,7 +258,11 @@ def pre_normalize_sdi(doc, config):
     print("PROD_ID")
     print(doc["raw_value"].get("resourceIdentifier"))
     resourceIdentifier = doc["raw_value"].get("resourceIdentifier")
-    prodId = [res['code'] for res in resourceIdentifier if res['code'].startswith('DAT')]
+    prodId = [
+        res["code"]
+        for res in resourceIdentifier
+        if res["code"].startswith("DAT")
+    ]
     print(prodId)
     if len(prodId) > 0:
         doc["raw_value"]["prod_id"] = prodId[0]
