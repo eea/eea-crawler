@@ -353,12 +353,21 @@ def fix_state(doc):
     return doc
 
 
+ALLOWED_CONTENT_TYPES = [
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-word.document.macroEnabled.12",
+    "application/pdf",
+]
+
+
 def addFormat(doc, raw_doc):
     if raw_doc.get("pdf_text", None):
         doc_format = doc.get("format", None)
         if not isinstance(doc_format, list):
             doc_format = [doc_format]
-        if "application/pdf" not in doc_format:
+        if len(set(ALLOWED_CONTENT_TYPES).intersection(set(doc_format))) == 0:
+            # if "application/pdf" not in doc_format:
             doc_format.append("application/pdf")
             doc["format"] = doc_format
     return doc
@@ -384,14 +393,6 @@ def merge_themes(doc):
     ]
     themes = original_themes + taxonomy_themes
     return themes
-
-
-ALLOWED_CONTENT_TYPES = [
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/vnd.ms-word.document.macroEnabled.12",
-    "application/pdf",
-]
 
 
 def common_normalizer(doc, config):
