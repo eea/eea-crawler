@@ -223,9 +223,10 @@ def pre_normalize_sdi(doc, config):
     doc["raw_value"]["sdi_spatialRepresentationType"] = simplify_list(
         doc["raw_value"].get("cl_spatialRepresentationType", [])
     )
-    doc["raw_value"]["OrgForResource"] = simplify_list(
-        doc["raw_value"].get("OrgForResourceObject", [])
-    )
+    if doc["raw_value"].get("OrgForResource", None) is None:
+        doc["raw_value"]["OrgForResource"] = simplify_list(
+            doc["raw_value"].get("OrgForResourceObject", [])
+        )
     doc["raw_value"]["sdi_spatial"] = simplify_list(
         doc["raw_value"].get("th_regions", [])
     )
