@@ -55,7 +55,13 @@ def normalize_freshwater(doc, config):
         )
         logger.info(ct)
         normalized_doc["objectProvides"] = ct
-
+    if "Data set" in normalized_doc["objectProvides"]:
+        if len(normalized_doc["objectProvides"]) == 1:
+            normalized_doc["objectProvides"] = ["Webpage"]
+        else:
+            normalized_doc["objectProvides"].remove("Webpage")
+    print("OBJECT PROVIDES")
+    print(normalized_doc["objectProvides"])
     normalized_doc["cluster_name"] = "wise-freshwater"
 
     normalized_doc = add_counts(normalized_doc)

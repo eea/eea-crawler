@@ -115,6 +115,18 @@ def remove_duplicates(doc):
     return clean_data
 
 
+def remove_extra_webpages(doc):
+    logger.info("REMOVE EXTRA WEBPAGES")
+    logger.info(doc.get("objectProvides", []))
+    ops = doc.get("objectProvides", [])
+    if isinstance(ops, list):
+        if "Webpage" in ops and len(ops) > 1:
+            ops.remove("Webpage")
+            doc["objectProvides"] = ops
+    logger.info(doc.get("objectProvides", []))
+    return doc
+
+
 def remove_empty(doc):
     clean_data = {}
     for key in doc.keys():
@@ -460,6 +472,8 @@ def common_normalizer(doc, config):
     # normalized_doc = apply_types_detection(normalized_doc)
 
     normalized_doc = remove_duplicates(normalized_doc)
+
+    normalized_doc = remove_extra_webpages(normalized_doc)
 
     normalized_doc = fix_state(normalized_doc)
     normalized_doc = addFormat(normalized_doc, doc)

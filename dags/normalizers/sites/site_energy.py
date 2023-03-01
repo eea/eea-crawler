@@ -56,7 +56,7 @@ def normalize_energy(doc, config):
         doc_loc.strip("/").split("/")[0] == "topics"
         and doc_loc.strip("/").split("/")[-1] == "intro"
     ):
-        ct = ["Topic page", "Webpage"]
+        ct = ["Topic page"]
     logger.info(ct)
     normalized_doc["objectProvides"] = ct
 

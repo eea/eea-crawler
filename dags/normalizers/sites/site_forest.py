@@ -60,7 +60,7 @@ def normalize_forest(doc, config):
         if len(ct) == 1 and ct[0] == "Webpage":
             logger.info("HERE2")
             if doc_loc.strip("/").find("topics") == 0:
-                ct = ["Webpage", "Topic page"]
+                ct = ["Topic page"]
                 if normalized_doc.get("places", "unknown") == "unknown":
                     normalized_doc["places"] = "EU27"
 

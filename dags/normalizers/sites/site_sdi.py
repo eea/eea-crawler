@@ -161,15 +161,15 @@ def fix_children_links(datasets):
                 link["name"] = link["nameObject"]["default"]
             if (
                 not isinstance(link.get("description"), str)
-                and link.get("description", {}).get("default", None)
+                and link.get("descriptionObject", {}).get("default", None)
                 is not None
             ):
-                link["description"] = link["description"]["default"]
+                link["description"] = link["descriptionObject"]["default"]
             if (
                 not isinstance(link.get("url"), str)
-                and link.get("url", {}).get("default", None) is not None
+                and link.get("urlObject", {}).get("default", None) is not None
             ):
-                link["url"] = link["url"]["default"]
+                link["url"] = link["urlObject"]["default"]
 
 
 def pre_normalize_sdi(doc, config):

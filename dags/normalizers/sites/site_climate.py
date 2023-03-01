@@ -23,7 +23,17 @@ def normalize_climate(doc, config):
     logger.info(doc["raw_value"].get("@id", ""))
     logger.info(doc["raw_value"].get("@type", ""))
     logger.info(doc)
+    publication_date = doc["raw_value"].get("publication_date", None)
+    cca_published = doc["raw_value"].get("cca_published", None)
     ct_normalize_config = config["site"].get("normalize", {})
+    logger.info("DATES:")
+    logger.info(cca_published)
+    logger.info(publication_date)
+    _id = doc["raw_value"].get("@id", "")
+
+    if "https://climate-adapt.eea.europa.eu/en" not in _id:
+        logger.info("blacklisted, not /en")
+        return None
 
     if not check_blacklist_whitelist(
         doc,
@@ -38,6 +48,13 @@ def normalize_climate(doc, config):
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
+
+    if normalized_doc.get("issued", None) is None:
+        if cca_published is not None:
+            normalized_doc["issued"] = cca_published
+        else:
+            if publication_date is not None:
+                normalized_doc["issued"] = publication_date
 
     normalized_doc["cluster_name"] = "cca"
 

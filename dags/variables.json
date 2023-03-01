@@ -12,6 +12,19 @@
         "nlp_config": "nlp_services_s3",
         "rabbitmq_config": "rabbitmq_datahub"
     },
+    "app_datahub_demo": {
+        "Sites": {
+            "sdi": "config_sdi_demo"
+        },
+        "elastic_config": {
+            "elastic": "elastic_datahub_demo",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_s3",
+        "rabbitmq_config": "rabbitmq_datahub"
+    },
     "app_global_search": {
         "Sites": {
             "bise": "config_bise",
@@ -221,7 +234,6 @@
             "CallForProposal",
             "CallForTender",
             "ExternalDataSpec",
-            "Data",
             "DavizVisualization",
             "Document",
             "Page",
@@ -351,8 +363,7 @@
             "location_rules": [
                 {
                     "ct": [
-                        "Topic page",
-                        "Webpage"
+                        "Topic page"
                     ],
                     "path": "/topics/*"
                 },
@@ -429,7 +440,6 @@
             "location_rules": [
                 {
                     "ct": [
-                        "Data set",
                         "Dashboard"
                     ],
                     "path": "/"
@@ -445,12 +455,6 @@
                         "Dashboard"
                     ],
                     "path": "/analyse/*"
-                },
-                {
-                    "ct": [
-                        "Data set"
-                    ],
-                    "path": "/download"
                 }
             ],
             "location_rules_fallback": "Webpage",
@@ -538,6 +542,75 @@
         "threshold": 35,
         "type": "sdi",
         "url": "https://galliwasp.eea.europa.eu/catalogue/datahub"
+    },
+    "config_sdi_demo": {
+        "authorization": "AIRFLOW_VAR_SDI_AUTH_PROD",
+        "custom_dag": "sdi_1_crawl",
+        "custom_task_id": "crawl_sdi",
+        "endpoint": "galliwasp.eea.europa.eu",
+        "fetch_all_docs": true,
+        "metadata_query": {
+            "_source": {
+                "excludes": [
+                    "*.data"
+                ]
+            },
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "metadataIdentifier": "<metadataIdentifier>"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "nlp_preprocessing": {
+            "text": {
+                "blacklist": [],
+                "whitelist": [
+                    "resourceTitleObject.default",
+                    "resourceAbstractObject.default"
+                ]
+            }
+        },
+        "normalizers_variable": "sdi_normalizers",
+        "path": "/catalogue/srv/api/search/records",
+        "port": 443,
+        "query": {
+            "_source": [
+                "metadataIdentifier",
+                "changeDate"
+            ],
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "resourceType": "series"
+                            }
+                        },
+                        {
+                            "match": {
+                                "groupPublished": "datahub"
+                            }
+                        },
+                        {
+                            "match": {
+                                "isTemplate": "n"
+                            }
+                        }
+                    ]
+                }
+            },
+            "size": 10000,
+            "track_total_hits": true
+        },
+        "threshold": 35,
+        "type": "sdi",
+        "url": "https://galliwasp.eea.europa.eu/catalogue/srv/api/search/records"
     },
     "config_sdi_prod": {
         "authorization": "AIRFLOW_VAR_SDI_AUTH_PROD",
@@ -685,8 +758,7 @@
             "location_rules": [
                 {
                     "ct": [
-                        "Topic page",
-                        "Webpage"
+                        "Topic page"
                     ],
                     "path": "/freshwater/europe-freshwater/*"
                 }
@@ -740,15 +812,13 @@
                 },
                 {
                     "ct": [
-                        "Topic page",
-                        "Webpage"
+                        "Topic page"
                     ],
                     "path": "/marine/state-of-europe-seas/"
                 },
                 {
                     "ct": [
-                        "Topic page",
-                        "Webpage"
+                        "Topic page"
                     ],
                     "path": "/marine/state-of-europe-seas/*"
                 },
@@ -776,12 +846,6 @@
                         "Dashboard"
                     ],
                     "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/ges-assessment-dashboards/country-thematic-dashboards/"
-                },
-                {
-                    "ct": [
-                        "Data set"
-                    ],
-                    "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
                 },
                 {
                     "ct": [
@@ -937,7 +1001,7 @@
             "eea.climateadapt.informationportal": "Information portal",
             "eea.climateadapt.mapgraphdataset": "Map (interactive)",
             "eea.climateadapt.organisation": "Organisation",
-            "eea.climateadapt.publicationreport": "Report",
+            "eea.climateadapt.publicationreport": "Publication reference",
             "eea.climateadapt.tool": "Tool",
             "eea.climateadapt.video": "Video",
             "eea.dataservice.interfaces.IDataset": "Data (at EEA)",
@@ -1069,6 +1133,12 @@
         "port": 9200,
         "raw_index": "datahub_raw",
         "searchui_target_index": "datahub_searchui"
+    },
+    "elastic_datahub_demo": {
+        "host": "elastic",
+        "port": 9200,
+        "raw_index": "datahub_raw_demo",
+        "searchui_target_index": "datahub_searchui_demo"
     },
     "elastic_global_search": {
         "host": "elastic",
