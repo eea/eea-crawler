@@ -31,9 +31,6 @@ def normalize_climate(doc, config):
     logger.info(publication_date)
     _id = doc["raw_value"].get("@id", "")
 
-    if "https://climate-adapt.eea.europa.eu/en" not in _id:
-        logger.info("blacklisted, not /en")
-        return None
 
     if not check_blacklist_whitelist(
         doc,

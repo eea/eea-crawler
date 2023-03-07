@@ -3,6 +3,30 @@ from lib import elastic
 
 from crawlers.registry import register_site_crawler, register_doc_crawler
 
+OBSOLETE_KEYS = ["obsolete", "superseded"]
+
+
+def isObsolete(doc):
+    print("check_obsolete")
+    obsolete = False
+    status = doc.get("cl_status", None)
+    if status is not None:
+        if isinstance(status, list):
+            if len(
+                [
+                    stat
+                    for stat in status
+                    if stat.get("key", "") in OBSOLETE_KEYS
+                ]
+            ):
+                obsolete = True
+        else:
+            if status.get("key", None) in OBSOLETE_KEYS:
+                obsolete = True
+    print("obsolete")
+    print(obsolete)
+    return obsolete
+
 
 def sdi_es(sdi_conf):
     econf = {
@@ -116,9 +140,9 @@ def crawl_doc(v, site, sdi_conf, metadataIdentifier, handler=None):
     children = doc.get("agg_associated", [])
     if type(children) != list:
         children = [children]
-    for child_id in children:
+    for child_id in list(dict.fromkeys(children)):
         child_doc = crawl_for_metadata_identifier(v, sdi_conf, child_id)
-        if child_doc is not None:
+        if child_doc is not None and not isObsolete(child_doc):
             if type(child_doc.get("linkProtocol", [])) != list:
                 child_doc["linkProtocol"] = [child_doc["linkProtocol"]]
             doc["children"].append(child_doc)
