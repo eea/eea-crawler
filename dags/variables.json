@@ -30,6 +30,7 @@
             "bise": "config_bise",
             "climate": "config_climate",
             "eea": "config_eea",
+            "eea_en": "config_eea_en",
             "eionet": "config_eionet",
             "energy": "config_energy",
             "fise": "config_fise",
@@ -264,6 +265,22 @@
         "type": "plone_rest_api",
         "url": "http://www.eea.europa.eu",
         "url_api_part": "api/SITE"
+    },
+    "config_eea_en": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "fix_items_url": {
+            "with_api": "https://www.eea.europa.eu/++api++/en",
+            "without_api": "https://www.eea.europa.eu/en"
+        },
+        "ignore_robots_txt": true,
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "type": "plone_rest_api",
+        "url": "https://www.eea.europa.eu/en",
+        "url_api_part": "++api++/en"
     },
     "config_eea_tmp": {
         "nlp_preprocessing": {
@@ -613,9 +630,9 @@
         "url": "https://galliwasp.eea.europa.eu/catalogue/srv/api/search/records"
     },
     "config_sdi_prod": {
-        "authorization": "AIRFLOW_VAR_SDI_AUTH_PROD",
         "custom_dag": "sdi_1_crawl",
         "custom_task_id": "crawl_sdi",
+        "disable_authorization": "AIRFLOW_VAR_SDI_AUTH_PROD",
         "endpoint": "sdi.eea.europa.eu",
         "fetch_all_docs": true,
         "metadata_query": {
@@ -971,6 +988,7 @@
             "Turkey": "T\u00fcrkiye",
             "agriculture": "Agriculture",
             "air": "Air pollution",
+            "article": "Article",
             "basic_data_factsheet": "Country fact sheet",
             "biodiversity": "Biodiversity - Ecosystems",
             "bise_factsheet": "Country fact sheet",
@@ -1032,6 +1050,7 @@
             "energy": "Energy",
             "etc_report": "Report",
             "european_union_factsheet": "Country fact sheet",
+            "faq": "FAQ",
             "helpcenter_faq": "FAQ",
             "http://www.eea.europa.eu/portal_vocabularies/themes/acidification": "Air pollution",
             "http://www.eea.europa.eu/portal_vocabularies/themes/air_quality": "Air pollution",
@@ -1066,6 +1085,7 @@
             "soil": "Soil",
             "sustainability-transitions": "Sustainability transitions",
             "technology": "Environmental technology",
+            "topic_page": "Topic page",
             "transport": "Transport",
             "visualization": "Chart (interactive)",
             "waste": "Resource efficiency and waste",
@@ -1096,6 +1116,7 @@
             "image.scales.thumb.download": "image_thumb",
             "image.scales.tile.download": "image_tile",
             "location": "spatial",
+            "subjects": "subject",
             "temporalCoverage": [
                 "time_coverage"
             ],
