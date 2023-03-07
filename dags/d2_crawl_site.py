@@ -101,7 +101,7 @@ def d2_crawl_site(item=default_dag_params):
     xc_params = load_variables(xc_params)
     xc_site_id = get_site(xc_params)
     xc_pool_name = val_to_pool(xc_site_id, prefix="crawl_with_query")
-    cpo = CreatePoolOperator(task_id="create_pool", name=xc_pool_name, slots=4)
+    cpo = CreatePoolOperator(task_id="create_pool", name=xc_pool_name, slots=1)
     pd = parse_all_documents(xc_params, xc_pool_name)
 
     cpo >> pd

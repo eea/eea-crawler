@@ -11,6 +11,7 @@ logger = logging.getLogger(__file__)
 
 def get_api_url(site_config, url):
     if url.find("www.eea.europa.eu") > -1:
+#        if url.find("/api/") > -1 and not url.find("www.eea.europa.eu/en") > -1:
         if url.find("/api/") > -1:
             return url
 
@@ -20,6 +21,8 @@ def get_api_url(site_config, url):
                 site_config["fix_items_url"]["without_api"],
                 site_config["fix_items_url"]["with_api"],
             )
+        if url == site_config["fix_items_url"]["without_api"]:
+            url = site_config["fix_items_url"]["with_api"]
         return url
 
     if site_config["url_api_part"].strip("/") == "":
@@ -57,6 +60,8 @@ def get_no_api_url(site_config, url):
                 site_config["fix_items_url"]["with_api2"],
                 site_config["fix_items_url"]["without_api"],
             )
+        if url in [site_config["fix_items_url"].get("without_api",""), site_config["fix_items_url"].get("with_api",""), site_config["fix_items_url"].get("with_api2", "")]:
+            return site_config["fix_items_url"]["without_api"]
 
     url_parts = url.split("://")
     protocol = url_parts[0]
@@ -141,7 +146,9 @@ def execute_query(query):
             yield (doc)
         next_query = docs.get("batching", {}).get("next", False)
         if next_query:
-            query = next_query
+            query_base = query.split("@search")[0]
+            next_query_base = next_query.split("@search")[0]
+            query = next_query.replace(next_query_base, query_base)
         else:
             break
 
