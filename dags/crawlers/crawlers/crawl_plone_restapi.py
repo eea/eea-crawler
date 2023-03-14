@@ -38,6 +38,9 @@ def parse_all_documents(
     prev_es_docs_len = len(es_docs)
 
     portal_types = site_config.get("portal_types", [])
+    types_blacklist = site_config.get("types_blacklist", [])
+    print("TYPES BLACKLIST")
+    print(types_blacklist)
     skip_docs = v.get("skip_docs", [])
     print("skip docs")
     print(skip_docs)
@@ -74,6 +77,8 @@ def parse_all_documents(
             if doc["@type"] == "File":
                 if doc_id.split(".")[-1].lower() in SKIP_EXTENSIONS:
                     skip = True
+            if doc["@type"] in types_blacklist:
+                skip = True
             if doc_id in skip_docs:
                 print("Document had errors, skip")
                 skip = True
@@ -191,7 +196,10 @@ def crawl_doc(v, site, site_config, doc_id, handler=None):
             print("CHECK REDIRECT")
             print(f"url {doc_id}")
             print(f"final_url {final_url}")
-            if doc_id.split("?")[0] != final_url.split("?")[0]:
+            if (
+                doc_id.split("?")[0].split("#")[0]
+                != final_url.split("?")[0].split("#")[0]
+            ):
                 logger.exception(f"Redirected {doc_id} -> {final_url}")
                 errors.append("document redirected")
                 doc_errors.append("redirect")

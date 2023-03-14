@@ -146,8 +146,8 @@ def execute_query(query):
             yield (doc)
         next_query = docs.get("batching", {}).get("next", False)
         if next_query:
-            query_base = query.split("@search")[0]
-            next_query_base = next_query.split("@search")[0]
+            query_base = query.split("@search")[0].split("#")[0]
+            next_query_base = next_query.split("@search")[0].split("#")[0]
             query = next_query.replace(next_query_base, query_base)
         else:
             break

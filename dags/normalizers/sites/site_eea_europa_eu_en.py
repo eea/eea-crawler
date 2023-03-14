@@ -10,16 +10,17 @@ import logging
 
 logger = logging.getLogger(__file__)
 
+
 def add_topic(doc):
-    topics = doc.get("raw_value",{}).get("topics", {}) or []
+    topics = doc.get("raw_value", {}).get("topics", {}) or []
     print("TOPICS")
-    print (topics)
+    print(topics)
     return [topic["title"] for topic in topics]
+
 
 @register_facets_normalizer("eea_en")
 def normalize_eea_europa_eu(doc, config):
     logger.info("NORMALIZE EEA EN")
-
 
     if doc["raw_value"].get("@type", None) is None:
         return None
@@ -35,10 +36,18 @@ def normalize_eea_europa_eu(doc, config):
     if "sandbox" in doc_loc_parts:
         return None
 
-
-    normalized_doc["cluster_name"] = "eea_en"
+    normalized_doc["cluster_name"] = "eea"
 
     normalized_doc["topic"] = add_topic(doc)
+
+    op = normalized_doc.get("objectProvides", [])
+    if "File" in op or "Image" in op:
+        if normalized_doc.get("hasWorkflowState", "") == "missing":
+            normalized_doc["hasWorkflowState"] = "published"
+            if normalized_doc.get("issued", None) is None:
+                normalized_doc["issued"] = normalized_doc.get(
+                    "creation_date", None
+                )
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 

@@ -43,7 +43,7 @@ link.description
 link.function
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 from urllib.parse import urlparse
 
 from normalizers.registry import (
@@ -280,6 +280,56 @@ def pre_normalize_sdi(doc, config):
     return doc
 
 
+OBSOLETE_KEYS = ["obsolete", "superseded"]
+
+
+def isObsolete(doc):
+    print("check_obsolete")
+    obsolete = False
+    status = doc.get("cl_status", None)
+    if status is not None:
+        if isinstance(status, list):
+            if len(
+                [
+                    stat
+                    for stat in status
+                    if stat.get("key", "") in OBSOLETE_KEYS
+                ]
+            ):
+                obsolete = True
+        else:
+            if status.get("key", None) in OBSOLETE_KEYS:
+                obsolete = True
+    print("obsolete")
+    print(obsolete)
+    return obsolete
+
+
+def add_expired(doc):
+    print("EXPIRED:")
+    print(doc)
+    is_obsolete = isObsolete(doc["raw_value"])
+    if is_obsolete:
+        expires = date.today() - timedelta(
+            days=2
+        )  ## should be modification date
+        doc["expires"] = expires.isoformat()
+    return doc
+
+
+def get_modified(doc):
+    print("GET MODIFIED")
+    mods = [
+        ds.get("changeDate")
+        for ds in doc.get("children", [])
+        if ds.get("changeDate", None) is not None
+    ]
+    if doc.get("changeDate", None) is not None:
+        mods.append(doc.get("changeDate"))
+    print(max(mods))
+    return max(mods)
+
+
 @register_facets_normalizer("sdi")
 def normalize_sdi(doc, config):
     logger.info("NORMALIZE SDI")
@@ -289,9 +339,12 @@ def normalize_sdi(doc, config):
     tc = get_years_from_ranges(
         doc["raw_value"].get("resourceTemporalExtentDetails", [])
     )
+
     normalized_doc["time_coverage"] = [str(y) for y in tc]
     normalized_doc = add_counts(normalized_doc)
     normalized_doc["raw_value"] = doc["raw_value"]
+    normalized_doc = add_expired(normalized_doc)
+    normalized_doc["last_modified"] = get_modified(doc["raw_value"])
     return normalized_doc
 
 

@@ -142,7 +142,8 @@ def crawl_doc(v, site, sdi_conf, metadataIdentifier, handler=None):
         children = [children]
     for child_id in list(dict.fromkeys(children)):
         child_doc = crawl_for_metadata_identifier(v, sdi_conf, child_id)
-        if child_doc is not None and not isObsolete(child_doc):
+#        if child_doc is not None and not isObsolete(child_doc):
+        if child_doc is not None:
             if type(child_doc.get("linkProtocol", [])) != list:
                 child_doc["linkProtocol"] = [child_doc["linkProtocol"]]
             doc["children"].append(child_doc)
