@@ -60,7 +60,7 @@ def normalize_climate(doc, config):
     normalized_doc["cca_adaptation_sectors"] = [sector['title'] for sector in cca_sectors]
     normalized_doc["cca_climate_impacts"] = [sector['title'] for sector in cca_impacts]
     normalized_doc["cca_adaptation_elements"] = [sector['title'] for sector in cca_elements] if cca_elements else []
-    normalized_doc["cca_funding_programme"] = cca_funding_programme.title if cca_funding_programme else None
+    normalized_doc["cca_funding_programme"] = cca_funding_programme['title'] if cca_funding_programme else None
     normalized_doc["cluster_name"] = "cca"
 
     # if doc["raw_value"].get("review_state") == "archived":
