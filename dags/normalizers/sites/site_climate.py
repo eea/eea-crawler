@@ -25,6 +25,10 @@ def normalize_climate(doc, config):
     logger.info(doc)
     publication_date = doc["raw_value"].get("publication_date", None)
     cca_published = doc["raw_value"].get("cca_published", None)
+    cca_sectors = doc["raw_value"].get("sectors", [])
+    cca_impacts = doc["raw_value"].get("climate_impacts", [])
+    cca_elements = doc["raw_value"].get("elements", [])
+    cca_funding_programme= doc["raw_value"].get("funding_programme", None)
     ct_normalize_config = config["site"].get("normalize", {})
     logger.info("DATES:")
     logger.info(cca_published)
@@ -53,6 +57,10 @@ def normalize_climate(doc, config):
             if publication_date is not None:
                 normalized_doc["issued"] = publication_date
 
+    normalized_doc["cca_adaptation_sectors"] = [sector['title'] for sector in cca_sectors]
+    normalized_doc["cca_climate_impacts"] = [sector['title'] for sector in cca_impacts]
+    normalized_doc["cca_adaptation_elements"] = [sector['title'] for sector in cca_elements] if cca_elements else []
+    normalized_doc["cca_funding_programme"] = cca_funding_programme.title if cca_funding_programme else None
     normalized_doc["cluster_name"] = "cca"
 
     # if doc["raw_value"].get("review_state") == "archived":

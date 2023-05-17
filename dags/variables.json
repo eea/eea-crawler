@@ -55,7 +55,7 @@
     },
     "app_gs": {
         "Sites": {
-            "ias": "config_ias"
+            "climate": "config_climate_test"
         },
         "allowed_errors_for_doc": 2,
         "elastic_config": {
@@ -64,7 +64,7 @@
             "elastic_raw_mapping": "elastic_raw_mapping_default",
             "elastic_settings": "elastic_settings_default"
         },
-        "nlp_config": "nlp_services_default",
+        "nlp_config": "nlp_services_local",
         "rabbitmq_config": "rabbitmq_global_search",
         "skip_doc_cnt": 100
     },
@@ -153,6 +153,30 @@
             ]
         },
         "normalizers_variable": "default_normalizers",
+        "scrape_pages": false,
+        "scrape_with_js": true,
+        "type": "plone_rest_api",
+        "url": "https://climate-adapt.eea.europa.eu",
+        "url_api_part": ""
+    },
+    "config_climate_test": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "normalize": {
+            "blacklist": [],
+            "whitelist": [
+                "eea.climateadapt.adaptationoption",
+                "eea.climateadapt.indicator",
+                "eea.climateadapt.video"
+            ]
+        },
+        "normalizers_variable": "default_normalizers",
+        "portal_types": [
+            "eea.climateadapt.adaptationoption",
+            "eea.climateadapt.indicator",
+            "eea.climateadapt.video"
+        ],
         "scrape_pages": false,
         "scrape_with_js": true,
         "type": "plone_rest_api",
@@ -1208,6 +1232,42 @@
             "fielddata": true,
             "type": "text"
         },
+        "cca_adaptation_elements": {
+            "fields": {
+                "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                }
+            },
+            "type": "text"
+        },
+        "cca_adaptation_sectors": {
+            "fields": {
+                "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                }
+            },
+            "type": "text"
+        },
+        "cca_climate_impacts": {
+            "fields": {
+                "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                }
+            },
+            "type": "text"
+        },
+        "cca_funding_programme": {
+            "fields": {
+                "keyword": {
+                    "ignore_above": 256,
+                    "type": "keyword"
+                }
+            },
+            "type": "text"
+        },
         "cluster_id": {
             "analyzer": "none",
             "copy_to": [
@@ -1928,6 +1988,33 @@
             "dest_field_name": "nlp_250",
             "fulltext_field": "fulltext",
             "host": "nlp-searchlib",
+            "path": "api/split",
+            "port": "8000",
+            "split_by": "word",
+            "split_length": 250,
+            "split_overlap": 50,
+            "split_respect_sentence_boundary": false
+        }
+    },
+    "nlp_services_local": {
+        "converter": {
+            "host": "192.168.100.50",
+            "path": "api/converter",
+            "port": "8000"
+        },
+        "embedding": {
+            "dest_field_name": "nlp_250",
+            "host": "192.168.100.50",
+            "path": "api/embedding",
+            "port": "8000"
+        },
+        "split": {
+            "clean_empty_lines": true,
+            "clean_header_footer": false,
+            "clean_whitespace": true,
+            "dest_field_name": "nlp_250",
+            "fulltext_field": "fulltext",
+            "host": "192.168.100.50",
             "path": "api/split",
             "port": "8000",
             "split_by": "word",
@@ -4074,7 +4161,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/713": {
             "instrument": "http://rod.eionet.europa.eu/instruments/657",
-            "label": "F-Gas Regulation 2014"
+            "label": "F-gas Regulation 2014"
         },
         "http://rod.eionet.europa.eu/obligations/714": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
@@ -4274,11 +4361,11 @@
         },
         "http://rod.eionet.europa.eu/obligations/764": {
             "instrument": "http://rod.eionet.europa.eu/instruments/657",
-            "label": "F-Gas Regulation 2014"
+            "label": "F-gas Regulation 2014"
         },
         "http://rod.eionet.europa.eu/obligations/765": {
             "instrument": "http://rod.eionet.europa.eu/instruments/657",
-            "label": "F-Gas Regulation 2014"
+            "label": "F-gas Regulation 2014"
         },
         "http://rod.eionet.europa.eu/obligations/766": {
             "instrument": "http://rod.eionet.europa.eu/instruments/634",
@@ -4507,6 +4594,22 @@
         "http://rod.eionet.europa.eu/obligations/822": {
             "instrument": "http://rod.eionet.europa.eu/instruments/690",
             "label": "Regulation on the Governance of the Energy Union and Climate Action"
+        },
+        "http://rod.eionet.europa.eu/obligations/823": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/824": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/825": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/828": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/516",
+            "label": "Water Framework Directive (consolidated)"
         },
         "http://rod.eionet.europa.eu/obligations/83": {
             "instrument": "http://rod.eionet.europa.eu/instruments/205",
