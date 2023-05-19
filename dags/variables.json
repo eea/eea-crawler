@@ -10,7 +10,8 @@
             "elastic_settings": "elastic_settings_default"
         },
         "nlp_config": "nlp_services_s3",
-        "rabbitmq_config": "rabbitmq_datahub"
+        "rabbitmq_config": "rabbitmq_datahub",
+        "schedule_interval": "@hourly"
     },
     "app_datahub_demo": {
         "Sites": {
@@ -50,7 +51,7 @@
         "nlp_config": "nlp_services_default",
         "rabbitmq_config": "rabbitmq_global_search",
         "schedule_interval": "@daily",
-        "schedule_interval_quick": "0 6-18 * * *",
+        "schedule_interval_quick": "*/5 6-18 * * *",
         "skip_doc_cnt": 100
     },
     "app_gs": {
@@ -247,8 +248,9 @@
             "Report",
             "Term",
             "Organisation",
+            "ims_indicator",
             "helpcenter_faq",
-            "ims_indicator"
+            "PressRelease"
         ],
         "scrape_pages": true,
         "scrape_with_js": true,
@@ -274,11 +276,22 @@
             "with_api": "https://www.eea.europa.eu/++api++/en",
             "without_api": "https://www.eea.europa.eu/en"
         },
-        "ignore_robots_txt": true,
+        "ignore_robots_txt": false,
         "normalizers_variable": "default_normalizers",
+        "robots_txt": "https://www.eea.europa.eu/robots.txt",
         "scrape_pages": true,
         "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".stagingBanner",
+                ".header-top-item"
+            ]
+        },
         "type": "plone_rest_api",
+        "types_blacklist": [
+            "Image",
+            "LIF"
+        ],
         "url": "https://www.eea.europa.eu/en",
         "url_api_part": "++api++/en"
     },
@@ -962,10 +975,12 @@
             "Highlight": "News",
             "Infographic": "Infographic",
             "Kosovo (UNSCR 1244/99)": "Kosovo",
+            "LRF": "Webpage",
             "News": "News",
             "News Item": "News",
             "Organisation": "Organisation",
             "Page": "Webpage",
+            "PressRelease": "News",
             "Products.ATContentTypes.interfaces.document.IATDocument": "Web page",
             "Products.ATContentTypes.interfaces.event.IATEvent": "News",
             "Products.ATContentTypes.interfaces.file.IATFile": "File",
@@ -1075,6 +1090,7 @@
             "human": "Environment and health",
             "ims_indicator": "Indicator",
             "industry": "Industry",
+            "landing_page": "Webpage",
             "landuse": "Land use",
             "map_interactive": "Map (interactive)",
             "plone.app.blob.interfaces.IATBlobImage": "Image",
@@ -4074,7 +4090,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/713": {
             "instrument": "http://rod.eionet.europa.eu/instruments/657",
-            "label": "F-Gas Regulation 2014"
+            "label": "F-gas Regulation 2014"
         },
         "http://rod.eionet.europa.eu/obligations/714": {
             "instrument": "http://rod.eionet.europa.eu/instruments/499",
@@ -4274,11 +4290,11 @@
         },
         "http://rod.eionet.europa.eu/obligations/764": {
             "instrument": "http://rod.eionet.europa.eu/instruments/657",
-            "label": "F-Gas Regulation 2014"
+            "label": "F-gas Regulation 2014"
         },
         "http://rod.eionet.europa.eu/obligations/765": {
             "instrument": "http://rod.eionet.europa.eu/instruments/657",
-            "label": "F-Gas Regulation 2014"
+            "label": "F-gas Regulation 2014"
         },
         "http://rod.eionet.europa.eu/obligations/766": {
             "instrument": "http://rod.eionet.europa.eu/instruments/634",
@@ -4507,6 +4523,22 @@
         "http://rod.eionet.europa.eu/obligations/822": {
             "instrument": "http://rod.eionet.europa.eu/instruments/690",
             "label": "Regulation on the Governance of the Energy Union and Climate Action"
+        },
+        "http://rod.eionet.europa.eu/obligations/823": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/824": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/825": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/828": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/516",
+            "label": "Water Framework Directive (consolidated)"
         },
         "http://rod.eionet.europa.eu/obligations/83": {
             "instrument": "http://rod.eionet.europa.eu/instruments/205",
