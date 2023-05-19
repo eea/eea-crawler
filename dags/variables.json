@@ -166,15 +166,31 @@
         "normalize": {
             "blacklist": [],
             "whitelist": [
+                "eea.climateadapt.aceproject",
                 "eea.climateadapt.adaptationoption",
+                "eea.climateadapt.casestudy",
+                "eea.climateadapt.informationportal",
                 "eea.climateadapt.indicator",
+                "eea.climateadapt.tool",
+                "eea.climateadapt.organisation",
+                "eea.climateadapt.publicationreport",
+                "eea.climateadapt.researchproject",
+                "eea.climateadapt.guidancedocument",
                 "eea.climateadapt.video"
             ]
         },
         "normalizers_variable": "default_normalizers",
         "portal_types": [
+            "eea.climateadapt.aceproject",
             "eea.climateadapt.adaptationoption",
+            "eea.climateadapt.casestudy",
+            "eea.climateadapt.informationportal",
             "eea.climateadapt.indicator",
+            "eea.climateadapt.tool",
+            "eea.climateadapt.organisation",
+            "eea.climateadapt.publicationreport",
+            "eea.climateadapt.researchproject",
+            "eea.climateadapt.guidancedocument",
             "eea.climateadapt.video"
         ],
         "scrape_pages": false,
@@ -1998,13 +2014,13 @@
     },
     "nlp_services_local": {
         "converter": {
-            "host": "192.168.100.50",
+            "host": "192.168.100.53",
             "path": "api/converter",
             "port": "8000"
         },
         "embedding": {
             "dest_field_name": "nlp_250",
-            "host": "192.168.100.50",
+            "host": "192.168.100.53",
             "path": "api/embedding",
             "port": "8000"
         },
@@ -2014,7 +2030,7 @@
             "clean_whitespace": true,
             "dest_field_name": "nlp_250",
             "fulltext_field": "fulltext",
-            "host": "192.168.100.50",
+            "host": "192.168.100.53",
             "path": "api/split",
             "port": "8000",
             "split_by": "word",

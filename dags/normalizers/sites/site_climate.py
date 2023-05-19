@@ -28,7 +28,9 @@ def normalize_climate(doc, config):
     cca_sectors = doc["raw_value"].get("sectors", [])
     cca_impacts = doc["raw_value"].get("climate_impacts", [])
     cca_elements = doc["raw_value"].get("elements", [])
-    cca_funding_programme= doc["raw_value"].get("funding_programme", None)
+    cca_origin_websites = doc["raw_value"].get("origin_website", [])
+    cca_funding_programme = doc["raw_value"].get("funding_programme", None)
+    cca_geographic = doc["raw_value"].get("geographic", None)
     ct_normalize_config = config["site"].get("normalize", {})
     logger.info("DATES:")
     logger.info(cca_published)
@@ -60,7 +62,16 @@ def normalize_climate(doc, config):
     normalized_doc["cca_adaptation_sectors"] = [sector['title'] for sector in cca_sectors]
     normalized_doc["cca_climate_impacts"] = [sector['title'] for sector in cca_impacts]
     normalized_doc["cca_adaptation_elements"] = [sector['title'] for sector in cca_elements] if cca_elements else []
-    normalized_doc["cca_funding_programme"] = cca_funding_programme['title'] if cca_funding_programme else None
+    if isinstance(cca_funding_programme, str):
+        normalized_doc["cca_funding_programme"] = cca_funding_programme
+    else:
+        normalized_doc["cca_funding_programme"] = cca_funding_programme['title'] if cca_funding_programme else None
+    normalized_doc["cca_origin_websites"] = [cca_origin_website['title'] for cca_origin_website in cca_origin_websites] if cca_origin_websites else []
+    if cca_geographic:
+        if 'countries' in cca_geographic:
+            normalized_doc["cca_geographic_countries"] = [country for country in cca_geographic['countries']]
+        if 'transnational_region' in cca_geographic:
+            normalized_doc["cca_geographic_transnational_region"] = [country for country in cca_geographic['transnational_region']]
     normalized_doc["cluster_name"] = "cca"
 
     # if doc["raw_value"].get("review_state") == "archived":
