@@ -4,6 +4,8 @@ from airflow.decorators import task
 from urllib.parse import urlparse
 from lib.airflow_variables import get_variable, get_all_variables
 
+from airflow import settings
+from airflow.models import DagRun
 
 def merge(dict1, dict2):
     """Return a new dictionary by merging two dictionaries recursively."""
@@ -149,3 +151,32 @@ def load_variables(task_params):
     variables = get_all_variables(conf_name)
     task_params["variables"] = variables
     return task_params
+
+STATES = ["queued", 'running']
+DAGS = ["d1_sync", "d2_crawl_site", "d3_crawl_fetch_for_id", "d5_prepare_doc_for_searchui"]
+
+def get_app_identifier(appname):
+    session = settings.Session()
+
+    app_id =  f"|_{appname}_|"
+    total_cnt = 0
+    print(dir(session))
+    for dag in DAGS:
+        for state in STATES:
+            query_as_string = f"""
+                SELECT count(dag_run.id)
+                FROM dag_run
+                WHERE dag_run.dag_id = '{dag}' AND dag_run.state = '{state}' AND dag_run.conf LIKE '%{app_id}%'
+                """
+            #print(query_as_string)
+            res = session.execute(query_as_string)
+            cnt = 0
+            for row in res:
+                cnt = row[0]
+            print(f"Dag: {dag}, State: {state}, Cnt: {cnt}")
+            total_cnt += cnt
+    session.close()
+    if total_cnt > 0:
+        msg = f"WARNING: sync for {appname} already in progress"
+        raise Exception(msg)
+    return app_id

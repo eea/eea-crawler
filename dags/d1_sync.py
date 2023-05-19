@@ -66,6 +66,7 @@ def trigger_all_crawlers(task_params, skip_docs):
                 ),
                 "skip_docs": skip_docs,
                 "quick": quick_sync,
+                "app_identifier" : task_params.get("app_identifier", None)
             }
         }
         print(site)

@@ -57,6 +57,10 @@ def clean_dagruns():
     clean_dag("d3_crawl_fetch_for_id", 100)
     clean_dag("d2_crawl_site", 10)
     clean_dag("d5_prepare_doc_for_searchui", 100)
+    clean_dag("d1_sync", 10)
+    clean_dag("d0_sync_global_search", 10)
+    clean_dag("d0_sync_global_search_quick", 10)
+    clean_dag("d0_sync_sdi", 10)
 
 
 default_args = {"owner": "airflow"}

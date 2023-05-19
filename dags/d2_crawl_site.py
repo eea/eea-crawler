@@ -40,6 +40,7 @@ def doc_handler(v, site, site_config, doc_id, handler=None):
     task_params = {
         "item": doc_id,
         "params": {
+            "app_identifier": v.get("app_identifier", None),
             "site": site,
             "variables": v,
             "enable_prepare_docs": v.get("enable_prepare_docs", False),
@@ -66,6 +67,7 @@ def parse_all_documents(task_params, pool_name):
         "ignore_delete_threshold", False
     )
     task_params["variables"]["skip_docs"] = task_params.get("skip_docs", [])
+    task_params["variables"]["app_identifier"] = task_params.get("app_identifier", None)
     site_id = task_params["site"]
     site_config_v = task_params["variables"]["Sites"][site_id]
     site_config = task_params["variables"][site_config_v]

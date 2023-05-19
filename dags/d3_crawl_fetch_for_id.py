@@ -28,6 +28,7 @@ logger = logging.getLogger(__file__)
 # from lib.debug import pretty_id
 # from datetime import timedelta
 
+from datetime import timedelta
 
 default_dag_params = {
     "item": "dacc1cd8-9f85-4dd3-871b-a7bf551fe03a",
@@ -85,6 +86,7 @@ def crawl_doc(task_params):
             task_params_prepare = {
                 "item": doc_id,
                 "params": {
+                    "app_identifier": v.get("app_identifier", None),
                     "raw_doc": doc.get("raw_doc"),
                     "site": site_id,
                     "variables": v,
@@ -108,6 +110,7 @@ def crawl_doc(task_params):
     description="""Get document from plone rest api, optional: scrape the url,
     optional: trigger facets_2_prepare_doc_for_search_ui and
     nlp_2_prepare_doc_for_nlp""",
+    dagrun_timeout=timedelta(minutes=20)
 )
 def d3_crawl_fetch_for_id(item=default_dag_params):
     """

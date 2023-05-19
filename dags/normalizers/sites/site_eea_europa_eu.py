@@ -21,6 +21,8 @@ def normalize_eea_europa_eu(doc, config):
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
+    if normalized_doc["language"] == 'en' and doc["raw_value"].get("@type", None) == 'helpcenter_faq':
+        return None
 
     normalized_doc["cluster_name"] = "eea"
 

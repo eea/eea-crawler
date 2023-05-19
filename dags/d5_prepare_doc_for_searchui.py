@@ -17,6 +17,7 @@ from tasks.helpers import (
     get_params,
     get_item,
 )
+from datetime import timedelta
 
 logger = logging.getLogger(__file__)
 
@@ -74,6 +75,7 @@ def preprocess_doc(task_params):
     description="""Get document from plone rest api, optional: scrape the url,
     optional: trigger facets_2_prepare_doc_for_search_ui and
     nlp_2_prepare_doc_for_nlp""",
+    dagrun_timeout=timedelta(minutes=20)
 )
 def d5_prepare_doc_for_searchui(item=default_dag_params):
     """
