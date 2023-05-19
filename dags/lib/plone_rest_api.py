@@ -10,6 +10,8 @@ logger = logging.getLogger(__file__)
 
 
 def get_api_url(site_config, url):
+    print("GET_API_URL")
+    print(url)
     if url.find("www.eea.europa.eu") > -1:
 #        if url.find("/api/") > -1 and not url.find("www.eea.europa.eu/en") > -1:
         if url.find("/api/") > -1:
@@ -28,7 +30,7 @@ def get_api_url(site_config, url):
     if site_config["url_api_part"].strip("/") == "":
         return url
 
-    if site_config["url_api_part"] in url:
+    if f'/{site_config["url_api_part"]}' in url:
         logger.info(
             "Found url_api_part (%s) in url: %s",
             site_config["url_api_part"],
@@ -42,10 +44,13 @@ def get_api_url(site_config, url):
     else:
         url_parts.insert(1, site_config["url_api_part"])
 
+    print("/".join(url_parts))
     return "/".join(url_parts)
 
 
 def get_no_api_url(site_config, url):
+    print("GET_NO_API_URL")
+    print(url)
     if site_config.get("fix_items_url", None):
         if f'{site_config["fix_items_url"]["without_api"]}/' in url:
             return url
@@ -73,7 +78,7 @@ def get_no_api_url(site_config, url):
     if url.find("www.eea.europa.eu") > -1:
         if url.find("/api/") > -1:
             ret_url = "/".join(ret_url.split("/api/"))
-
+    print(ret_url)
     return f"{protocol}://{ret_url}"
 
 

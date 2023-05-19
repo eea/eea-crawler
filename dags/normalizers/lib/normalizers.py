@@ -294,8 +294,10 @@ def update_locations(norm_doc):
 
 
 def fetch_geo_coverage(norm_doc):
+    print("FETCH_GEO")
+    print(norm_doc.get("geo_coverage.geolocation", []))
     geo_locations = [
-        loc["label"] for loc in norm_doc.get("geo_coverage.geolocation", [])
+        loc["label"] for loc in norm_doc.get("geo_coverage.geolocation", []) if loc.get("label", None) is not None
     ]
     if len(geo_locations) > 0:
         norm_doc["spatial"] = geo_locations
