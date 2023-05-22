@@ -71,18 +71,18 @@ def parse_all_documents(
                     skip = True
 
             if not robots_txt.test_url(rp, doc_id):
-                print("skip because of robots.txt")
+                print("Skiped by robots.txt")
                 skip = True
             if len(portal_types) > 0:
-                if doc["@type"] not in portal_types and urllib.parse.quote(doc["@type"]) not in portal_types:
-                    print("skip because not in portal_types")
+                if doc["@type"] not in portal_types:
+                    print("Skiped by portal_types")
                     skip = True
             if doc["@type"] == "File":
                 if doc_id.split(".")[-1].lower() in SKIP_EXTENSIONS:
-                    print("skip because wrong file type")
+                    print("Skiped by file extension")
                     skip = True
             if doc["@type"] in types_blacklist:
-                print("skip because type is blacklisted")
+                print("Skiped by black list type")
                 skip = True
             if doc_id in skip_docs:
                 print("Document had errors, skip")
