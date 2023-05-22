@@ -176,7 +176,13 @@
                 "eea.climateadapt.publicationreport",
                 "eea.climateadapt.researchproject",
                 "eea.climateadapt.guidancedocument",
-                "eea.climateadapt.video"
+                "eea.climateadapt.video",
+                "File",
+                "News Item",
+                "collective.cover.content",
+                "Folder",
+                "Document",
+                "Page"
             ]
         },
         "normalizers_variable": "default_normalizers",
@@ -191,7 +197,13 @@
             "eea.climateadapt.publicationreport",
             "eea.climateadapt.researchproject",
             "eea.climateadapt.guidancedocument",
-            "eea.climateadapt.video"
+            "eea.climateadapt.video",
+            "File",
+            "News Item",
+            "collective.cover.content",
+            "Folder",
+            "Document",
+            "Page"
         ],
         "scrape_pages": false,
         "scrape_with_js": true,
