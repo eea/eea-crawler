@@ -23,6 +23,8 @@ def normalize_climate(doc, config):
     logger.info(doc["raw_value"].get("@id", ""))
     logger.info(doc["raw_value"].get("@type", ""))
     logger.info(doc)
+    portal_type = doc["raw_value"].get("@type", "")
+    include_in_observatory = doc["raw_value"].get("include_in_observatory", False)
     publication_date = doc["raw_value"].get("publication_date", None)
     cca_published = doc["raw_value"].get("cca_published", None)
     cca_sectors = doc["raw_value"].get("sectors", [])
@@ -73,6 +75,8 @@ def normalize_climate(doc, config):
         if 'transnational_region' in cca_geographic:
             normalized_doc["cca_geographic_transnational_region"] = [country for country in cca_geographic['transnational_region']]
     normalized_doc["cluster_name"] = "cca"
+    normalized_doc["cca_include_in_search"] = "true" if is_portal_type_in_search(portal_type) else 'false'
+    normalized_doc["cca_include_in_search_observatory"] = "true" if include_in_observatory else 'false'
 
     # if doc["raw_value"].get("review_state") == "archived":
     #     # raise Exception("review_state")
@@ -89,3 +93,20 @@ def preprocess_climate(doc, config):
     dict_doc = common_preprocess(doc, config)
 
     return dict_doc
+
+def is_portal_type_in_search(portal_type):
+    allowed_portal_types = [
+            "eea.climateadapt.aceproject",
+            "eea.climateadapt.adaptationoption",
+            "eea.climateadapt.casestudy",
+            "eea.climateadapt.guidancedocument",
+            "eea.climateadapt.indicator",
+            "eea.climateadapt.informationportal",
+            "eea.climateadapt.organisation",
+            "eea.climateadapt.publicationreport",
+            "eea.climateadapt.tool",
+            "eea.climateadapt.video",
+            ]
+    if portal_type in allowed_portal_types:
+        return True
+    return False
