@@ -148,6 +148,7 @@
                 "File",
                 "Folder",
                 "News Item",
+                "Event",
                 "Page",
                 "eea.climateadapt.mapgraphdataset",
                 "eea.climateadapt.c3sindicator"
@@ -168,6 +169,7 @@
             "eea.climateadapt.video",
             "File",
             "News Item",
+            "Event",
             "collective.cover.content",
             "Folder",
             "Document",
