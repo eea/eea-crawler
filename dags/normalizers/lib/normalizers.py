@@ -419,11 +419,15 @@ def common_normalizer(doc, config):
     if doc["raw_value"]["@type"] == "Plone Site":
         return None
     if doc["raw_value"]["@type"] == "File":
+        rw = doc.get("raw_value", {})
+        rw_file = rw.get("file", {}) or {}
+        rw_file_ct = rw_file.get("content-type",'') or ''
         if (
-            doc["raw_value"]["file"]["content-type"]
+            rw_file_ct
             not in ALLOWED_CONTENT_TYPES
         ):
-            print(doc["raw_value"]["file"]["content-type"])
+            print("file content-type:")
+            print(rw_file_ct)
             logger.info("file, but not in allowed list")
             return None
         else:

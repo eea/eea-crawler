@@ -87,7 +87,8 @@ def parse_all_documents(
             if doc_id in skip_docs:
                 print("Document had errors, skip")
                 skip = True
-                del es_docs[doc_id]
+                if es_docs.get(doc_id, None):
+                    del es_docs[doc_id]
             if not skip:
                 #                import pdb; pdb.set_trace()
                 es_doc = es_docs.get(doc_id, {})
