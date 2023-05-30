@@ -25,6 +25,7 @@ def normalize_climate(doc, config):
     logger.info(doc)
     portal_type = doc["raw_value"].get("@type", "")
     include_in_observatory = doc["raw_value"].get("include_in_observatory", False)
+    include_in_mission = doc["raw_value"].get("include_in_mission", False)
     publication_date = doc["raw_value"].get("publication_date", None)
     cca_published = doc["raw_value"].get("cca_published", None)
     cca_sectors = doc["raw_value"].get("sectors", [])
@@ -38,7 +39,8 @@ def normalize_climate(doc, config):
     logger.info(cca_published)
     logger.info(publication_date)
     _id = doc["raw_value"].get("@id", "")
-
+    if portal_type in ['News Item','Event'] and any(path in _id for path in ["/mission/news/", "/mission/events/"]):
+        include_in_mission = True
 
     if not check_blacklist_whitelist(
         doc,
@@ -77,6 +79,7 @@ def normalize_climate(doc, config):
     normalized_doc["cluster_name"] = "cca"
     normalized_doc["cca_include_in_search"] = "true" if is_portal_type_in_search(portal_type) else 'false'
     normalized_doc["cca_include_in_search_observatory"] = "true" if include_in_observatory else 'false'
+    normalized_doc["cca_include_in_mission"] = "true" if include_in_mission else 'false'
 
     # if doc["raw_value"].get("review_state") == "archived":
     #     # raise Exception("review_state")
