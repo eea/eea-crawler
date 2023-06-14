@@ -203,8 +203,8 @@ def crawl_doc(v, site, site_config, doc_id, handler=None):
             print(f"url {doc_id}")
             print(f"final_url {final_url}")
             if (
-                doc_id.split("?")[0].split("#")[0]
-                != final_url.split("?")[0].split("#")[0]
+                doc_id.split("?")[0].split("#")[0].rstrip("/")
+                != final_url.split("?")[0].split("#")[0].rstrip("/")
             ):
                 logger.exception(f"Redirected {doc_id} -> {final_url}")
                 errors.append("document redirected")

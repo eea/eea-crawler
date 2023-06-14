@@ -507,6 +507,8 @@ def check_blacklist_whitelist(doc, blacklist, whitelist):
     if len(blacklist) > 0:
         if doc["raw_value"].get("@type", "") not in blacklist:
             return True
+    if len(whitelist) == 0 and len(blacklist) == 0:
+        return True
     return False
 
 
