@@ -29,6 +29,7 @@
     "app_global_search": {
         "Sites": {
             "bise": "config_bise",
+            "cab": "config_climate_advisory_board",
             "climate": "config_climate",
             "eea": "config_eea",
             "eea_en": "config_eea_en",
@@ -56,7 +57,7 @@
     },
     "app_gs": {
         "Sites": {
-            "climate": "config_climate_test"
+            "ias": "config_ias"
         },
         "allowed_errors_for_doc": 2,
         "elastic_config": {
@@ -133,24 +134,24 @@
         "normalize": {
             "blacklist": [],
             "whitelist": [
-                "eea.climateadapt.aceproject",
-                "eea.climateadapt.adaptationoption",
-                "eea.climateadapt.casestudy",
-                "eea.climateadapt.guidancedocument",
-                "eea.climateadapt.informationportal",
-                "eea.climateadapt.indicator",
-                "eea.climateadapt.organisation",
                 "eea.climateadapt.publicationreport",
-                "eea.climateadapt.tool",
-                "eea.climateadapt.video",
-                "collective.cover.content",
-                "Document",
+                "eea.climateadapt.aceproject",
                 "File",
-                "Folder",
                 "News Item",
+                "collective.cover.content",
+                "Folder",
+                "eea.climateadapt.informationportal",
+                "eea.climateadapt.guidancedocument",
+                "eea.climateadapt.casestudy",
+                "eea.climateadapt.organisation",
+                "eea.climateadapt.mapgraphdataset",
+                "eea.climateadapt.tool",
+                "eea.climateadapt.indicator",
+                "eea.climateadapt.adaptationoption",
+                "Document",
                 "Event",
                 "Page",
-                "eea.climateadapt.mapgraphdataset",
+                "eea.climateadapt.video",
                 "eea.climateadapt.c3sindicator"
             ]
         },
@@ -169,10 +170,10 @@
             "eea.climateadapt.video",
             "File",
             "News Item",
-            "Event",
             "collective.cover.content",
             "Folder",
             "Document",
+            "Event",
             "Page",
             "eea.climateadapt.mapgraphdataset",
             "eea.climateadapt.c3sindicator"
@@ -181,7 +182,30 @@
         "scrape_with_js": true,
         "type": "plone_rest_api",
         "url": "https://climate-adapt.eea.europa.eu",
-        "url_api_part": ""
+        "url_api_part": "++api++"
+    },
+    "config_climate_advisory_board": {
+        "location_rules_fallback": "Webpage",
+        "normalize": {
+            "blacklist": [],
+            "location_rules": [],
+            "whitelist": []
+        },
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".breadcrumbs",
+                ".footer",
+                ".eea.header",
+                "#page-header",
+                ".fw-light"
+            ]
+        },
+        "type": "plone_rest_api",
+        "url": "https://climate-advisory-board.europa.eu/",
+        "url_api_part": "++api++"
     },
     "config_copernicus": {
         "avoid_cache_api": true,
@@ -1943,8 +1967,6 @@
             }
         }
     },
-    "errors_datahub": {},
-    "errors_gs": {},
     "headless_chrome": {
         "endpoint": "http://headless-chrome-api:3000/content"
     },
@@ -4563,9 +4585,17 @@
             "instrument": "http://rod.eionet.europa.eu/instruments/516",
             "label": "Water Framework Directive (consolidated)"
         },
+        "http://rod.eionet.europa.eu/obligations/829": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/676",
+            "label": "HDV Monitoring and Reporting Regulation"
+        },
         "http://rod.eionet.europa.eu/obligations/83": {
             "instrument": "http://rod.eionet.europa.eu/instruments/205",
             "label": "Dangerous Substances Directive"
+        },
+        "http://rod.eionet.europa.eu/obligations/830": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
         },
         "http://rod.eionet.europa.eu/obligations/84": {
             "instrument": "http://rod.eionet.europa.eu/instruments/217",

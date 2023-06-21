@@ -33,7 +33,7 @@ def normalize_energy(doc, config):
         return None
     logger.info("whitelisted")
 
-    doc["raw_value"]["themes"] = ["climate?"]
+    #doc["raw_value"]["themes"] = ["climate?"]
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
