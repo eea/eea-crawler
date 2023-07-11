@@ -267,8 +267,8 @@ def pre_normalize_sdi(doc, config):
         )
     )
     print("PROD_ID")
-    print(doc["raw_value"].get("resourceIdentifier", []))
-    resourceIdentifier = doc["raw_value"].get("resourceIdentifier")
+    print(doc["raw_value"].get("resourceIdentifier"))
+    resourceIdentifier = doc["raw_value"].get("resourceIdentifier", [])
     prodId = [
         res["code"]
         for res in resourceIdentifier

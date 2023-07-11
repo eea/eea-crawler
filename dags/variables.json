@@ -1,4 +1,5 @@
 {
+    "!": "IMPORTANT",
     "app_datahub": {
         "Sites": {
             "sdi": "config_sdi_prod"
@@ -29,8 +30,8 @@
     "app_global_search": {
         "Sites": {
             "bise": "config_bise",
-            "cab": "config_climate_advisory_board",
             "climate": "config_climate",
+            "discomap": "config_discomap",
             "eea": "config_eea",
             "eea_en": "config_eea_en",
             "eionet": "config_eionet",
@@ -38,6 +39,7 @@
             "fise": "config_fise",
             "ias": "config_ias",
             "industry": "config_industry",
+            "noise": "config_noise",
             "sdi": "config_sdi_prod",
             "wise_freshwater": "config_wise_freshwater",
             "wise_marine": "config_wise_marine"
@@ -72,6 +74,7 @@
     },
     "config_bise": {
         "concurrency": 2,
+        "ignore_robots_txt": true,
         "normalize": {
             "blacklist": [],
             "location_rules": [
@@ -125,7 +128,7 @@
         },
         "type": "plone_rest_api",
         "url": "https://biodiversity.europa.eu",
-        "url_api_part": "api"
+        "url_api_part": "++api++"
     },
     "config_climate": {
         "avoid_cache_api": true,
@@ -221,6 +224,23 @@
         "type": "plone_rest_api",
         "url": "https://clmsdemo.devel6cph.eea.europa.eu",
         "url_api_part": "api"
+    },
+    "config_discomap": {
+        "concurrency": 1,
+        "exclude": [
+            "https://discomap.eea.europa.eu/climatechange/?page=Home",
+            "https://discomap.eea.europa.eu/atlas/?page=Home"
+        ],
+        "ignore_robots_txt": true,
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": []
+        },
+        "type": "sitemap",
+        "url": "https://discomap.eea.europa.eu/",
+        "url_api_part": ""
     },
     "config_eea": {
         "languages": [
@@ -554,7 +574,21 @@
         },
         "type": "plone_rest_api",
         "url": "https://industry.eea.europa.eu",
-        "url_api_part": "api"
+        "url_api_part": "++api++"
+    },
+    "config_noise": {
+        "concurrency": 1,
+        "ignore_robots_txt": true,
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": []
+        },
+        "type": "singlepage",
+        "url": "https://noise.eea.europa.eu/",
+        "url_api_part": "",
+        "url_to_parse": "https://eea.maps.arcgis.com/apps/MapJournal/index.html?appid=be745f206c7b4b9fa269f225c6388aec"
     },
     "config_sdi": {
         "authorization": "AIRFLOW_VAR_SDI_AUTH",
@@ -736,11 +770,6 @@
                         {
                             "match": {
                                 "resourceType": "series"
-                            }
-                        },
-                        {
-                            "match": {
-                                "groupPublished": "datahub"
                             }
                         },
                         {
@@ -1967,6 +1996,8 @@
             }
         }
     },
+    "errors_datahub": {},
+    "errors_global_search": {},
     "headless_chrome": {
         "endpoint": "http://headless-chrome-api:3000/content"
     },

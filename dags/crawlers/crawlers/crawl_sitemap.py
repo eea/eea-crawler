@@ -30,6 +30,7 @@ def parse_all_documents(
     threshold = site_config.get("threshold", 25)
     ignore_delete_threshold = v.get("ignore_delete_threshold", False)
 
+    exclude_list = site_config.get("exclude", [])
     es_docs = elastic.get_all_ids_from_raw_for_site(v, site)
     prev_es_docs_len = len(es_docs)
 
@@ -48,6 +49,9 @@ def parse_all_documents(
 
 
         print(doc_id)
+        if doc_id in exclude_list:
+            print("Document in exclude list")
+            skip = True
         doc_modified = doc.get(
             "modification_date", doc.get("last_modified", None)
         )
@@ -181,6 +185,10 @@ def crawl_doc(v, site, site_config, doc_id, handler=None, extra_opts=None):
         scrape_errors = False
         try:
             scraped = plone_rest_api.scrape(v, site_config, doc_id)
+            if len(scraped.get("downloaded")) == 0:
+                logger.exception("Empty response from headless chrome")
+                scrape_errors = True
+
             if int(scraped.get("status_code", 0)) >= 400:
                 print(f"status_code:", scraped.get("status_code", 0))
                 scrape_errors = True

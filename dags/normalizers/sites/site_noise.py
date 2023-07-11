@@ -33,6 +33,9 @@ def normalize_industry(doc, config):
         return None
 
     normalized_doc["cluster_name"] = "noise"
+    normalized_doc["objectProvides"] = ["Webpage", "Map (interactive)"]
+    normalized_doc["topic"] = ["Noise"]
+    normalized_doc["issued"] = '2021-07-01T13:47:12.000Z'
     normalized_doc['title'] = get_page_title(doc)
 
 

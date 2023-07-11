@@ -21,7 +21,9 @@ logger = logging.getLogger(__file__)
 @register_facets_normalizer("discomap")
 def normalize_industry(doc, config):
     logger.info("NORMALIZE DISCOMAP")
-    logger.info(doc["raw_value"].get("@id", ""))
+    logger.info(doc)
+    logger.info(doc["raw_value"].get("id", ""))
+    loc = doc["raw_value"].get("id", "")
     logger.info(doc["raw_value"].get("@type", ""))
     ct_normalize_config = config["site"].get("normalize", {})
 
@@ -34,7 +36,22 @@ def normalize_industry(doc, config):
     normalized_doc['title'] = get_page_title(doc)
     normalized_doc["cluster_name"] = "discomap"
 
+    normalized_doc["issued"] = doc["raw_value"].get("modified")
 
+    if loc.startswith("https://discomap.eea.europa.eu/climatechange"):
+        normalized_doc["topic"] = ["Climate change adaptation", "Climate change mitigation"]
+
+        if loc.strip("/") in ["https://discomap.eea.europa.eu/climatechange/?page=Home", "https://discomap.eea.europa.eu/climatechange"]:
+            normalized_doc["objectProvides"] = ["Webpage"]
+        else:
+            normalized_doc["objectProvides"] = ["Map (interactive)"]
+
+    if loc.startswith("https://discomap.eea.europa.eu/atlas"):
+        normalized_doc["topic"] = ["Environmental health impacts"]
+        if loc.strip("/") in ["https://discomap.eea.europa.eu/atlas/?page=Learn-more", "https://discomap.eea.europa.eu/atlas/?page=Home", "https://discomap.eea.europa.eu/atlas"]:
+            normalized_doc["objectProvides"] = ["Webpage"]
+        else:
+            normalized_doc["objectProvides"] = ["Map (interactive)"]
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

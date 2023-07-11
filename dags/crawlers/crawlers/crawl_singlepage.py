@@ -70,6 +70,9 @@ def crawl_doc(v, site, site_config, doc_id, handler=None, extra_opts=None):
     url_to_parse = extra_opts["url"]
     try:
         scraped = plone_rest_api.scrape(v, site_config, url_to_parse)
+        if len(scraped.get("downloaded")) == 0:
+            logger.exception("Empty response from headless chrome")
+            scrape_errors = True
         if int(scraped.get("status_code", 0)) >= 400:
             print(f"status_code:", scraped.get("status_code", 0))
             scrape_errors = True
