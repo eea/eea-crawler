@@ -133,7 +133,7 @@ def prepare_doc_for_rabbitmq(doc, site):
 
 
 @register_doc_crawler("sdi")
-def crawl_doc(v, site, sdi_conf, metadataIdentifier, handler=None):
+def crawl_doc(v, site, sdi_conf, metadataIdentifier, handler=None, extra_opts=None):
     doc = crawl_for_metadata_identifier(v, sdi_conf, metadataIdentifier)
     doc["children"] = []
 

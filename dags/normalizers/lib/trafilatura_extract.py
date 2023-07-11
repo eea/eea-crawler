@@ -36,3 +36,9 @@ def get_text_from_html(html, config):
     cleaned = lxml.html.tostring(e)
     text = trafilatura.extract(cleaned, favor_recall=True) or ""
     return text
+
+def get_title_from_html(html, config):
+    try:
+        return (lxml.html.fromstring(html).find(".//title").text)
+    except Exception:
+        return config.get('fallback_title')

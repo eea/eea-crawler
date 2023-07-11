@@ -51,6 +51,8 @@ def get_api_url(site_config, url):
 def get_no_api_url(site_config, url):
     print("GET_NO_API_URL")
     print(url)
+    if site_config.get('url_to_parse', None):
+        return site_config.get('url_to_parse', None)
     if site_config.get("fix_items_url", None):
         if f'{site_config["fix_items_url"]["without_api"]}/' in url:
             return url

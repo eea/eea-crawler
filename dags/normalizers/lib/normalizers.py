@@ -5,7 +5,7 @@ import json
 import re
 from datetime import date, timedelta
 
-from normalizers.lib.trafilatura_extract import get_text_from_html
+from normalizers.lib.trafilatura_extract import get_text_from_html, get_title_from_html
 import logging
 
 logger = logging.getLogger(__file__)
@@ -94,9 +94,9 @@ def apply_norm_missing(doc, norm_missing):
             if isinstance(norm_missing[key], str) and norm_missing[
                 key
             ].startswith("field:"):
-                clean_data[key] = doc[
+                clean_data[key] = doc.get(
                     norm_missing[key].split("field:")[-1].strip()
-                ]
+                )
             else:
                 clean_data[key] = norm_missing[key]
     return clean_data
@@ -251,6 +251,11 @@ def delete_attrs(doc, attrs):
             clean_data[key] = doc[key]
     return clean_data
 
+def get_page_title(doc, trafilatura_config={}):
+    html = doc.get("web_html", "")
+
+    title = get_title_from_html(html, trafilatura_config)
+    return title
 
 def add_reading_time_and_fulltext(
     norm_doc, doc, txt_props=[], txt_props_black=[], trafilatura_config={}

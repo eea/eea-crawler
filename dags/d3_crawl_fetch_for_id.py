@@ -66,6 +66,7 @@ def crawl_doc(task_params):
     v = task_params.get("params", {}).get("variables", {})
     site_id = task_params.get("params", {}).get("site")
     doc_id = task_params.get("item")
+    extra_opts = task_params.get("params", {}).get("extra_opts")
 
     print(doc_id)
     print(task_params)
@@ -74,7 +75,7 @@ def crawl_doc(task_params):
     crawl_type = site_config.get("type", "plone_rest_api")
     crawler = get_doc_crawler(crawl_type)
 
-    doc = crawler(v, site_id, site_config, doc_id, send_to_rabbitmq)
+    doc = crawler(v, site_id, site_config, doc_id, send_to_rabbitmq, extra_opts = extra_opts)
 
     print("check preprocess")
     if task_params["params"].get("enable_prepare_docs", False):

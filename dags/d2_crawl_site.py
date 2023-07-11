@@ -35,7 +35,7 @@ def send_to_rabbitmq(v, raw_doc):
         rabbitmq.send_to_rabbitmq(raw_doc, rabbitmq_config)
 
 
-def doc_handler(v, site, site_config, doc_id, handler=None):
+def doc_handler(v, site, site_config, doc_id, handler=None, extra_opts=None):
     pool_name = simple_val_to_pool(site, "crawl_with_query")
     task_params = {
         "item": doc_id,
@@ -44,6 +44,7 @@ def doc_handler(v, site, site_config, doc_id, handler=None):
             "site": site,
             "variables": v,
             "enable_prepare_docs": v.get("enable_prepare_docs", False),
+            "extra_opts": extra_opts
         },
     }
 
