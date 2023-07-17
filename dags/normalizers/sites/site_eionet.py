@@ -37,6 +37,8 @@ def normalize_eionet(doc, config):
     if not normalized_doc:
         return None
 
+    normalized_doc["issued"] = doc["raw_value"].get("publication_date", normalized_doc.get("issued"))
+
     normalized_doc["cluster_name"] = "etc"
 
     doc_loc = urlparse(normalized_doc["id"]).path
