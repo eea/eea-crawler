@@ -60,8 +60,19 @@ def normalize_freshwater(doc, config):
             normalized_doc["objectProvides"] = ["Webpage"]
         else:
             normalized_doc["objectProvides"].remove("Webpage")
+    if "Measure" in normalized_doc["objectProvides"] or "Source" in normalized_doc["objectProvides"] or "Case study" in normalized_doc["objectProvides"]:
+        normalized_doc['exclude_from_globalsearch'] = ['True']
     print("OBJECT PROVIDES")
     print(normalized_doc["objectProvides"])
+
+    if type(doc["raw_value"].get("biophysical_impacts")) is list:
+        normalized_doc['biophysical_impacts'] = [val.get('name') for val in doc["raw_value"]["biophysical_impacts"]]
+    if type(doc["raw_value"].get("ecosystem_services")) is list:
+        normalized_doc['ecosystem_services'] = [val.get('name') for val in doc["raw_value"]["ecosystem_services"]]
+    if type(doc["raw_value"].get("policy_objectives")) is list:
+        normalized_doc['policy_objectives'] = [val.get('name') for val in doc["raw_value"]["policy_objectives"]]
+    normalized_doc['measure_sector'] = doc["raw_value"].get("measure_sector")
+
     normalized_doc["cluster_name"] = "wise-freshwater"
 
     normalized_doc = add_counts(normalized_doc)
