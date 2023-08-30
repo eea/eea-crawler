@@ -1,19 +1,24 @@
-from urllib.parse import urlparse
-
-from normalizers.registry import (
-    register_facets_normalizer,
-    register_nlp_preprocessor,
-)
-from normalizers.lib.normalizers import (
-    common_normalizer,
-    check_blacklist_whitelist,
-    add_counts,
-)
-from normalizers.lib.nlp import common_preprocess
 import logging
-from datetime import date, timedelta
+
+from normalizers.lib.nlp import common_preprocess
+from normalizers.lib.normalizers import (add_counts, check_blacklist_whitelist,
+                                         common_normalizer)
+from normalizers.registry import (register_facets_normalizer,
+                                  register_nlp_preprocessor)
+
+# from datetime import date  # , timedelta
+# from urllib.parse import urlparse
+
 
 logger = logging.getLogger(__file__)
+
+
+def vocab_to_list(vocab):
+    return [term['title'] for term in vocab] if vocab else []
+
+
+def vocab_to_term(term):
+    return term['title'] if term else None
 
 
 @register_facets_normalizer("climate")
@@ -24,7 +29,8 @@ def normalize_climate(doc, config):
     logger.info(doc["raw_value"].get("@type", ""))
     logger.info(doc)
     portal_type = doc["raw_value"].get("@type", "")
-    include_in_observatory = doc["raw_value"].get("include_in_observatory", False)
+    include_in_observatory = doc["raw_value"].get(
+        "include_in_observatory", False)
     include_in_mission = doc["raw_value"].get("include_in_mission", False)
     publication_date = doc["raw_value"].get("publication_date", None)
     cca_published = doc["raw_value"].get("cca_published", None)
@@ -39,7 +45,10 @@ def normalize_climate(doc, config):
     logger.info(cca_published)
     logger.info(publication_date)
     _id = doc["raw_value"].get("@id", "")
-    if portal_type in ['News Item','Event'] and any(path in _id for path in ["/mission/news/", "/mission/events/"]):
+
+    if portal_type in ['News Item', 'Event'] and \
+            any(path in _id
+                for path in ["/mission/news/", "/mission/events/"]):
         include_in_mission = True
 
     if not check_blacklist_whitelist(
@@ -49,46 +58,57 @@ def normalize_climate(doc, config):
     ):
         logger.info("blacklisted")
         return None
+
     logger.info("whitelisted")
 
     doc["raw_value"]["themes"] = ["climate-change-adaptation"]
-    normalized_doc = common_normalizer(doc, config)
-    if not normalized_doc:
+    doc_out = common_normalizer(doc, config)
+    if not doc_out:
         return None
 
-    if normalized_doc.get("issued", None) is None:
+    if doc_out.get("issued", None) is None:
         if cca_published is not None:
-            normalized_doc["issued"] = cca_published
+            doc_out["issued"] = cca_published
         else:
             if publication_date is not None:
-                normalized_doc["issued"] = publication_date
+                doc_out["issued"] = publication_date
 
-    normalized_doc["cca_adaptation_sectors"] = [sector['title'] for sector in cca_sectors]
-    normalized_doc["cca_climate_impacts"] = [sector['title'] for sector in cca_impacts]
-    normalized_doc["cca_adaptation_elements"] = [sector['title'] for sector in cca_elements] if cca_elements else []
+    doc_out["cca_adaptation_sectors"] = vocab_to_list(cca_sectors)
+    doc_out["cca_climate_impacts"] = vocab_to_list(cca_impacts)
+    doc_out["cca_adaptation_elements"] = vocab_to_list(cca_elements)
+
     if isinstance(cca_funding_programme, str):
-        normalized_doc["cca_funding_programme"] = cca_funding_programme
+        doc_out["cca_funding_programme"] = cca_funding_programme
     else:
-        normalized_doc["cca_funding_programme"] = cca_funding_programme['title'] if cca_funding_programme else None
-    normalized_doc["cca_origin_websites"] = [cca_origin_website['title'] for cca_origin_website in cca_origin_websites] if cca_origin_websites else []
+        doc_out["cca_funding_programme"] = vocab_to_term(cca_funding_programme)
+
+    doc_out["cca_origin_websites"] = vocab_to_list(
+        cca_origin_websites) if cca_origin_websites else []
+
     if cca_geographic:
         if 'countries' in cca_geographic:
-            normalized_doc["cca_geographic_countries"] = [country for country in cca_geographic['countries']]
+            doc_out["cca_geographic_countries"] = [
+                country for country in cca_geographic['countries']]
         if 'transnational_region' in cca_geographic:
-            normalized_doc["cca_geographic_transnational_region"] = [country for country in cca_geographic['transnational_region']]
-    normalized_doc["cluster_name"] = "cca"
-    normalized_doc["cca_include_in_search"] = "true" if is_portal_type_in_search(portal_type) else 'false'
-    normalized_doc["cca_include_in_search_observatory"] = "true" if include_in_observatory else 'false'
-    normalized_doc["cca_include_in_mission"] = "true" if include_in_mission else 'false'
+            doc_out["cca_geographic_transnational_region"] = [
+                country for country in cca_geographic['transnational_region']]
+
+    doc_out["cluster_name"] = "cca"
+    doc_out["cca_include_in_search"] = "true" if is_portal_type_in_search(
+        portal_type) else 'false'
+    doc_out["cca_include_in_search_observatory"] = "true" \
+        if include_in_observatory else 'false'
+    doc_out["cca_include_in_mission"] = "true" \
+        if include_in_mission else 'false'
 
     # if doc["raw_value"].get("review_state") == "archived":
     #     # raise Exception("review_state")
     #     expires = date.today() - timedelta(days=2)
-    #     normalized_doc["expires"] = expires.isoformat()
+    #     doc_out["expires"] = expires.isoformat()
     #     logger.info("RS EXPIRES")
 
-    normalized_doc = add_counts(normalized_doc)
-    return normalized_doc
+    doc_out = add_counts(doc_out)
+    return doc_out
 
 
 @register_nlp_preprocessor("climate")
@@ -97,19 +117,20 @@ def preprocess_climate(doc, config):
 
     return dict_doc
 
+
 def is_portal_type_in_search(portal_type):
     allowed_portal_types = [
-            "eea.climateadapt.aceproject",
-            "eea.climateadapt.adaptationoption",
-            "eea.climateadapt.casestudy",
-            "eea.climateadapt.guidancedocument",
-            "eea.climateadapt.indicator",
-            "eea.climateadapt.informationportal",
-            "eea.climateadapt.organisation",
-            "eea.climateadapt.publicationreport",
-            "eea.climateadapt.tool",
-            "eea.climateadapt.video",
-            ]
+        "eea.climateadapt.aceproject",
+        "eea.climateadapt.adaptationoption",
+        "eea.climateadapt.casestudy",
+        "eea.climateadapt.guidancedocument",
+        "eea.climateadapt.indicator",
+        "eea.climateadapt.informationportal",
+        "eea.climateadapt.organisation",
+        "eea.climateadapt.publicationreport",
+        "eea.climateadapt.tool",
+        "eea.climateadapt.video",
+    ]
     if portal_type in allowed_portal_types:
         return True
     return False
