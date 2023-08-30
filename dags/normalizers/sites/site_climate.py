@@ -134,6 +134,9 @@ def is_portal_type_in_search(portal_type):
         "eea.climateadapt.publicationreport",
         "eea.climateadapt.tool",
         "eea.climateadapt.video",
+        "eea.climateadapt.mapgraphdataset",
+        "eea.climateadapt.researchproject",
+        "eea.climateadapt.c3sindicator",
     ]
     if portal_type in allowed_portal_types:
         return True
