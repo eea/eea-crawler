@@ -28,6 +28,7 @@ def normalize_climate(doc, config):
     logger.info(doc["raw_value"].get("@id", ""))
     logger.info(doc["raw_value"].get("@type", ""))
     logger.info(doc)
+
     portal_type = doc["raw_value"].get("@type", "")
     include_in_observatory = doc["raw_value"].get(
         "include_in_observatory", False)
@@ -37,13 +38,16 @@ def normalize_climate(doc, config):
     cca_sectors = doc["raw_value"].get("sectors", [])
     cca_impacts = doc["raw_value"].get("climate_impacts", [])
     cca_elements = doc["raw_value"].get("elements", [])
+    cca_health_impacts = doc["raw_value"].get("health_impacts", [])
     cca_origin_websites = doc["raw_value"].get("origin_website", [])
     cca_funding_programme = doc["raw_value"].get("funding_programme", None)
     cca_geographic = doc["raw_value"].get("geographic", None)
     ct_normalize_config = config["site"].get("normalize", {})
+
     logger.info("DATES:")
     logger.info(cca_published)
     logger.info(publication_date)
+
     _id = doc["raw_value"].get("@id", "")
 
     if portal_type in ['News Item', 'Event'] and \
@@ -76,14 +80,14 @@ def normalize_climate(doc, config):
     doc_out["cca_adaptation_sectors"] = vocab_to_list(cca_sectors)
     doc_out["cca_climate_impacts"] = vocab_to_list(cca_impacts)
     doc_out["cca_adaptation_elements"] = vocab_to_list(cca_elements)
+    doc_out['health_impacts'] = vocab_to_list(cca_health_impacts)
 
     if isinstance(cca_funding_programme, str):
         doc_out["cca_funding_programme"] = cca_funding_programme
     else:
         doc_out["cca_funding_programme"] = vocab_to_term(cca_funding_programme)
 
-    doc_out["cca_origin_websites"] = vocab_to_list(
-        cca_origin_websites) if cca_origin_websites else []
+    doc_out["cca_origin_websites"] = vocab_to_list(cca_origin_websites)
 
     if cca_geographic:
         if 'countries' in cca_geographic:
