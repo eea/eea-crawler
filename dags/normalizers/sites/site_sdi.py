@@ -177,6 +177,8 @@ def pre_normalize_sdi(doc, config):
     doc["raw_value"] = simplify_elements(doc["raw_value"], "")
     doc["raw_value"]["@type"] = "Data set"
     doc["raw_value"]["about"] = doc["raw_value"]["metadataIdentifier"]
+    print("ABOUT:")
+    print (doc["raw_value"]["about"])
     isPublishedToAll = doc["raw_value"].get("isPublishedToAll", "false")
     print("ISPUBLISHED")
     print(isPublishedToAll)
@@ -206,6 +208,11 @@ def pre_normalize_sdi(doc, config):
             )
     print("ISSUED:")
     print(doc["raw_value"].get("issued"))
+
+    if doc["raw_value"]["about"] in ["fa8b1229-3db6-495d-b18e-9c9b3267c02b", "9636827c-bd0c-40f5-814e-c4065c11c9a0"]:
+        print("fix issued")
+        doc["raw_value"]["issued"] = ['2023-08-03T06:00:00Z']
+
     doc["raw_value"]["overview.url"] = simplify_list(
         doc["raw_value"].get("overview", []), "url"
     )
@@ -275,8 +282,9 @@ def pre_normalize_sdi(doc, config):
         if res["code"].startswith("DAT")
     ]
     print(prodId)
-    if len(prodId) > 0:
-        doc["raw_value"]["prod_id"] = prodId[0]
+    #if len(prodId) > 0:
+    #    doc["raw_value"]["prod_id"] = prodId[0]
+    doc["raw_value"]["prod_id"] = prodId
     return doc
 
 
