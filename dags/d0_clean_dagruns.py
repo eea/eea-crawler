@@ -18,13 +18,19 @@ from airflow.models import (
 )
 
 
-def clean_dag(dag_id, size):
+def clean_dag(dag_id, size, older_than=2, dag_state='success'):
     airflow_db_model = DagRun
+    import datetime, pytz
+    tod = datetime.datetime.now(pytz.utc)
+    d = datetime.timedelta(days = older_than)
+    older_than_date = tod - d
 
     while True:
         query = (
             session.query(airflow_db_model)
             .filter(DagRun.dag_id == dag_id)
+            .filter(DagRun.state == dag_state)
+            .filter(DagRun.start_date < older_than_date)
             .limit(size)
         )
         print(dir(query))
@@ -50,17 +56,17 @@ def clean_dag(dag_id, size):
 
 
 @task
-def clean_dagruns():
-    print("HERE")
-    # return
-    print(dir(DagRun))
-    clean_dag("d3_crawl_fetch_for_id", 100)
-    clean_dag("d2_crawl_site", 10)
-    clean_dag("d5_prepare_doc_for_searchui", 100)
-    clean_dag("d1_sync", 10)
-    clean_dag("d0_sync_global_search", 10)
-    clean_dag("d0_sync_global_search_quick", 10)
-    clean_dag("d0_sync_sdi", 10)
+def clean_dagruns(older_than, dag_state):
+    clean_dag("d0_sync_global_search", 100, older_than, dag_state)
+    clean_dag("d0_sync_global_search_quick", 100, older_than, dag_state)
+    clean_dag("d0_sync_sdi", 100, older_than, dag_state)
+    clean_dag("d0_update_obligations", 100, older_than, dag_state)
+    clean_dag("d0_update_themetaxonomy", 100, older_than, dag_state)
+    clean_dag("d1_sync", 100, older_than, dag_state)
+    clean_dag("d2_crawl_site", 100, older_than, dag_state)
+    clean_dag("d3_crawl_fetch_for_id", 100, older_than, dag_state)
+    clean_dag("d5_prepare_doc_for_searchui", 100, older_than, dag_state)
+
 
 
 default_args = {"owner": "airflow"}
@@ -73,8 +79,8 @@ default_args = {"owner": "airflow"}
     description="maintenance",
     tags=["maintenance"],
 )
-def d0_clean_dagruns():
-    clean_dagruns()
+def d0_clean_dagruns(older_than=2, dag_state='success'):
+    clean_dagruns(older_than, dag_state)
 
 
 update_clean_dagruns_dag = d0_clean_dagruns()
