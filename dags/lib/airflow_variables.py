@@ -19,6 +19,7 @@ def get_all_variables(conf_name):
     variables["allowed_errors_for_doc"] = app_conf.get(
         "allowed_errors_for_doc", 3
     )
+    variables["reading_time_blacklist"] = app_conf.get("reading_time_blacklist", [])
     variables["skip_doc_cnt"] = app_conf.get("skip_doc_cnt", 10)
     elastic_config = app_conf.get("elastic_config")
     variables["elastic"] = Variable.get(

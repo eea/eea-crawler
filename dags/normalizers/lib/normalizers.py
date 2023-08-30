@@ -258,7 +258,7 @@ def get_page_title(doc, trafilatura_config={}):
     return title
 
 def add_reading_time_and_fulltext(
-    norm_doc, doc, txt_props=[], txt_props_black=[], trafilatura_config={}
+    norm_doc, doc, txt_props=[], txt_props_black=[], trafilatura_config={}, reading_time_blacklist=[]
 ):
     html = doc.get("web_html", "")
     #    print("BEFORE")
@@ -283,7 +283,15 @@ def add_reading_time_and_fulltext(
     text += "\n\n" + pdf_text
     norm_doc["fulltext"] = text
     wc = res = len(re.findall(r"\w+", text))
-    norm_doc["readingTime"] = wc / 228
+
+    print("Add reading time")
+    print(reading_time_blacklist)
+    if doc.get("raw_value", "@type") not in reading_time_blacklist:
+        norm_doc["readingTime"] = wc / 228
+        print("Reading time added")
+    else:
+        norm_doc["readingTime"] = -1
+        print("Reading time not added, @type is blacklisted")
     return norm_doc
 
 
@@ -458,7 +466,9 @@ def common_normalizer(doc, config):
         config.get("nlp", {}).get("text", {}).get("whitelist", []),
         config.get("nlp", {}).get("text", {}).get("blacklist", []),
         config["site"].get("trafilatura", {}),
+        config.get("site", {}).get("reading_time_blacklist", config.get("full_config",{}).get("reading_time_blacklist",[]))
     )
+
     normalized_doc = apply_black_map(
         normalized_doc, normalizer.get("blackMap", {})
     )
