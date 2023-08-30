@@ -8,8 +8,8 @@ from normalizers import normalizer
 import logging
 
 logger = logging.getLogger(__file__)
-POOL_NAME = "prepare_for_searchui"
-POOL_SLOTS = 16
+POOL_NAME = "manual_prepare_for_searchui"
+POOL_SLOTS = 1
 
 from lib import rabbitmq
 
@@ -21,23 +21,45 @@ from tasks.debug import debug_value
 default_args = {"owner": "airflow"}
 
 
-default_dag_params = {"item": "", "params": {"app": "datahub"}}
+default_dag_params = {"item": "", "params": {"app": "global_search", "site": "climate", "portal_types":["eea.climateadapt.mapgraphdataset","eea.climateadapt.researchproject","eea.climateadapt.c3sindicator"]}}
 
 
 def send_to_rabbitmq(v, doc):
     print("send_to_rabbitmq:")
-    print(doc)
 
     index_name = v.get("elastic", {}).get("searchui_target_index", None)
     if index_name is not None:
-        doc["index_name"] = index_name
-        rabbitmq_config = v.get("rabbitmq")
-        rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
+         doc["index_name"] = index_name
+         rabbitmq_config = v.get("rabbitmq")
+         rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
 
 
 def doc_handler_fast(v, doc_id, site_id, doc_handler):
+    print(doc_id)
+    # if doc_id != 'https://climate-adapt.eea.europa.eu/en/metadata/indicators/growing-degree-days':
+    #     return
+    # print("fast")
+    # print(raw_doc)
+    # print(raw_doc['original_id'])
+    # print(raw_doc['site_id'])
     raw_doc = normalizer.get_raw_doc_by_id(v, doc_id)
-    normalizer.preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler)
+#    print(raw_doc)
+#    print("VTPTP")
+    sync_portal_types = v.get("sync_portal_types",[])
+    
+    should_sync = True
+    if len(sync_portal_types) == 0:
+        should_sync = False
+    else:
+        if raw_doc.get("raw_value",{}).get("@type", None) in sync_portal_types:
+            should_sync = True
+        else:
+            should_sync = False
+    print("should_sync", should_sync)
+#    print(sync_portal_types)
+#    print(raw_doc.get("raw_value",{}).get("@type", None))
+    if should_sync:
+        normalizer.preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler)
 
 
 def doc_handler(v, doc_id, site_id, doc_handler):
@@ -49,11 +71,13 @@ def doc_handler(v, doc_id, site_id, doc_handler):
 @task
 def parse_all_documents(task_params):
     handler = doc_handler_fast
-    if not task_params.get("fast", None):
-        handler = doc_handler
-
-    normalizer.parse_all_documents(
-        task_params["variables"], handler, send_to_rabbitmq
+    #if not task_params.get("fast", None):
+    #    handler = doc_handler
+    print("TPTP")
+    print(task_params)
+    task_params["variables"]["sync_portal_types"] = task_params.get("portal_types", [])
+    normalizer.parse_all_documents_for_site(
+        task_params['site'], task_params["variables"], handler, send_to_rabbitmq
     )
 
 

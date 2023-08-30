@@ -296,6 +296,29 @@ def get_all_ids_from_raw_for_site(v, site):
         }
     return docs_dict
 
+def get_all_docs_from_raw_for_site(v, site):
+    es = elastic_connection(v)
+    elastic_conf = v.get("elastic")
+    query = {
+        "query": {
+            "bool": {
+                "must": [{"match": {"site_id": site}}],
+                "must_not": [],
+                "should": [],
+            }
+        }
+    }
+    docs = get_docs(
+        es,
+        index=elastic_conf.get("raw_index"),
+        query=query,
+    )
+    docs_dict = {}
+    for doc in docs:
+        docs_dict[doc["_source"]["id"]] = doc["_source"]
+    return docs_dict
+
+
 
 def get_all_ids_from_raw(v):
     es = elastic_connection(v)
