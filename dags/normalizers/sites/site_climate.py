@@ -13,8 +13,8 @@ from normalizers.registry import (register_facets_normalizer,
 logger = logging.getLogger(__file__)
 
 
-def vocab_to_list(vocab):
-    return [term['title'] for term in vocab] if vocab else []
+def vocab_to_list(vocab, attr="title"):
+    return [term[attr] for term in vocab] if vocab else []
 
 
 def vocab_to_term(term):
@@ -42,6 +42,7 @@ def normalize_climate(doc, config):
     cca_origin_websites = doc["raw_value"].get("origin_website", [])
     cca_funding_programme = doc["raw_value"].get("funding_programme", None)
     cca_geographic = doc["raw_value"].get("geographic", None)
+    cca_key_type_measure = doc["raw_value"].get("key_type_measures", [])
     ct_normalize_config = config["site"].get("normalize", {})
 
     logger.info("DATES:")
@@ -80,8 +81,8 @@ def normalize_climate(doc, config):
     doc_out["cca_adaptation_sectors"] = vocab_to_list(cca_sectors)
     doc_out["cca_climate_impacts"] = vocab_to_list(cca_impacts)
     doc_out["cca_adaptation_elements"] = vocab_to_list(cca_elements)
-    doc_out['health_impacts'] = vocab_to_list(cca_health_impacts)
-
+    doc_out['cca_health_impacts'] = vocab_to_list(cca_health_impacts, "token")
+    doc_out['cca_key_type_measure'] = vocab_to_list(cca_key_type_measure, "token")
     if isinstance(cca_funding_programme, str):
         doc_out["cca_funding_programme"] = cca_funding_programme
     else:
