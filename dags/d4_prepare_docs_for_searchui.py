@@ -21,7 +21,7 @@ from tasks.debug import debug_value
 default_args = {"owner": "airflow"}
 
 
-default_dag_params = {"item": "", "params": {"app": "global_search", "site": "climate", "portal_types":["eea.climateadapt.mapgraphdataset","eea.climateadapt.researchproject","eea.climateadapt.c3sindicator"]}}
+default_dag_params = {"item": "", "params": {"app": "global_search", "site": "climate", "portal_types":["eea.climateadapt.adaptationoption"]}}
 
 
 def send_to_rabbitmq(v, doc):
@@ -49,7 +49,7 @@ def doc_handler_fast(v, doc_id, site_id, doc_handler):
     
     should_sync = True
     if len(sync_portal_types) == 0:
-        should_sync = False
+        should_sync = True
     else:
         if raw_doc.get("raw_value",{}).get("@type", None) in sync_portal_types:
             should_sync = True

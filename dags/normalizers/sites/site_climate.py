@@ -43,6 +43,8 @@ def normalize_climate(doc, config):
     cca_funding_programme = doc["raw_value"].get("funding_programme", None)
     cca_geographic = doc["raw_value"].get("geographic", None)
     cca_key_type_measure = doc["raw_value"].get("key_type_measures", [])
+    cca_partner_contributors = doc["raw_value"].get("contributor_list", [])
+    
     ct_normalize_config = config["site"].get("normalize", {})
 
     logger.info("DATES:")
@@ -83,6 +85,8 @@ def normalize_climate(doc, config):
     doc_out["cca_adaptation_elements"] = vocab_to_list(cca_elements)
     doc_out['cca_health_impacts'] = vocab_to_list(cca_health_impacts, "token")
     doc_out['cca_key_type_measure'] = vocab_to_list(cca_key_type_measure, "token")
+    doc_out['cca_partner_contributors'] = vocab_to_list(cca_partner_contributors, 'title')
+    
     if isinstance(cca_funding_programme, str):
         doc_out["cca_funding_programme"] = cca_funding_programme
     else:
