@@ -3,9 +3,11 @@ from copy import deepcopy
 from airflow.decorators import task
 from urllib.parse import urlparse
 from lib.airflow_variables import get_variable, get_all_variables
+from airflow.utils.cli import get_dag
 
 from airflow import settings
 from airflow.models import DagRun
+import pytz
 
 def merge(dict1, dict2):
     """Return a new dictionary by merging two dictionaries recursively."""
@@ -180,3 +182,13 @@ def get_app_identifier(appname):
         msg = f"WARNING: sync for {appname} already in progress"
         raise Exception(msg)
     return app_id
+
+def get_next_execution_date_for_dag(dag_id):
+    dag = get_dag(subdir='', dag_id =dag_id)
+    try:
+        latest_execution_date = dag.get_latest_execution_date()
+        if latest_execution_date:
+            next_execution_dttm = dag.following_schedule(latest_execution_date)
+        return (next_execution_dttm.strftime("%Y_%m_%d_%H_%M_%S"))
+    except:
+        return (-1)

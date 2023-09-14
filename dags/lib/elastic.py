@@ -240,6 +240,17 @@ def create_search_index(variables):
         settings=elastic_settings,
     )
 
+def create_status_index(variables):
+    es = elastic_connection(variables)
+    elastic_settings = variables.get("elastic_settings", None)
+    elastic = variables.get("elastic", None)
+    elastic_status_mapping = {'next_execution_date_ts':{"type": "long"}, 'start_time_ts':{"type": "long"}}
+    create_index(
+        es,
+        index=f'status_{elastic["searchui_target_index"]}',
+        mapping=elastic_status_mapping,
+        settings=elastic_settings,
+    )
 
 def elastic_connection(variables):
     elastic = variables.get("elastic", None)

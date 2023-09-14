@@ -4,7 +4,7 @@ from airflow.utils.dates import days_ago
 from crawlers.registry import get_site_crawler, get_doc_crawler
 
 from lib.dagrun import trigger_dag
-from lib import rabbitmq
+from lib import rabbitmq, status
 from lib.pool import val_to_pool, simple_val_to_pool
 
 import logging
@@ -61,6 +61,9 @@ def get_site(task_params):
 @task
 def parse_all_documents(task_params, pool_name):
     print(task_params)
+    site_id = task_params["site"]
+    v = task_params.get("variables", {})
+    ts = status.add_cluster_status(v, site_id, 'Started')
     task_params["variables"]["enable_prepare_docs"] = task_params.get(
         "enable_prepare_docs", False
     )
@@ -69,7 +72,6 @@ def parse_all_documents(task_params, pool_name):
     )
     task_params["variables"]["skip_docs"] = task_params.get("skip_docs", [])
     task_params["variables"]["app_identifier"] = task_params.get("app_identifier", None)
-    site_id = task_params["site"]
     site_config_v = task_params["variables"]["Sites"][site_id]
     site_config = task_params["variables"][site_config_v]
     crawl_type = site_config.get("type", "plone_rest_api")
@@ -81,14 +83,21 @@ def parse_all_documents(task_params, pool_name):
 
     # def crawl_doc(v, site, sdi_conf, metadataIdentifier, handler=None):
     # def crawl_doc(v, site, site_config, doc_id, handler=None):
-    parse_all_documents(
-        task_params["variables"],
-        site_id,
-        site_config,
-        handler,
-        send_to_rabbitmq,
-        quick=task_params.get("quick"),
-    )
+    
+    try:
+        parse_all_documents(
+            task_params["variables"],
+            site_id,
+            site_config,
+            handler,
+            send_to_rabbitmq,
+            quick=task_params.get("quick"),
+        )
+    except Exception as e:
+        status.add_cluster_status(v, site_id, 'Failed', ts, str(e))
+        raise (Exception)
+
+    status.add_cluster_status(v, site_id, 'Finished', ts)
 
 
 @dag(

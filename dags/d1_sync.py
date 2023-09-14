@@ -4,7 +4,7 @@ from airflow.models import Variable
 
 from tasks.helpers import dag_param_to_dict, load_variables, get_params
 from lib.dagrun import trigger_dag
-from lib import elastic
+from lib import elastic, status
 import json
 
 default_args = {"owner": "airflow"}
@@ -40,6 +40,9 @@ def create_raw_index(task_params):
     elastic.backup_indices(
         es, [elastic_conf["raw_index"], elastic_conf["searchui_target_index"]]
     )
+
+    v['next_execution_date'] = task_params.get('next_execution_date')
+    status.add_site_status(v, status='Started')
 
 
 @task
