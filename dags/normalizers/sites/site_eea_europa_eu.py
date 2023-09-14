@@ -24,6 +24,9 @@ def normalize_eea_europa_eu(doc, config):
     if normalized_doc["language"] == 'en' and doc["raw_value"].get("@type", None) == 'helpcenter_faq':
         return None
 
+    if doc["raw_value"].get("@type", None) == 'Term':
+        normalized_doc['term_description'] = doc["raw_value"].get('description', None)
+        normalized_doc['term_source'] = doc["raw_value"].get('source', None)
     normalized_doc["cluster_name"] = "eea"
 
     normalized_doc = add_counts(normalized_doc)
