@@ -101,21 +101,21 @@ def build_queries_list(site_config, query_config):
         url_api_part = site_config["url_api_part"].strip("/")
         if url_api_part != "":
             url = f"{url}/{url_api_part}"
-
+    ts = datetime.now().timestamp()
     if site_config.get("portal_types", None):
         # queries = []
         queries = [
-            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}{query_limit}"
+            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}{query_limit}&ts={ts}"
             for portal_type in site_config["portal_types"]
         ]
         if site_config.get("languages", None):
             for language in site_config.get("languages"):
                 queries.append(
-                    f"{url}/{language}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date{query_limit}"
+                    f"{url}/{language}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date{query_limit}&ts={ts}"
                 )
     else:
         queries = [
-            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date{query_limit}"
+            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date{query_limit}&ts={ts}"
         ]
     return queries
 
@@ -168,7 +168,7 @@ def get_docs(query):
 
 def get_doc_from_plone(site_config, doc_id):
     url_with_api = get_api_url(site_config, doc_id)
-    r_url = f"{url_with_api}?expand=object_provides"
+    r_url = f"{url_with_api}?expand=object_provides&eea_index=1"
     if site_config.get("avoid_cache_api", False):
         dt = datetime.now()
         # dts = datetime.strptime(
