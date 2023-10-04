@@ -22,7 +22,7 @@ TASK_PARAMS = {
 
 @task
 def trigger_sync(task_params):
-    next_execution_date = get_next_execution_date_for_dag("d0_sync_sdi")
+    next_execution_date = get_next_execution_date_for_dag("d0_sync_global_search_quick")
     TASK_PARAMS["params"]["next_execution_date"] = next_execution_date
     v = task_params.get("variables", {})
     elastic.create_status_index(v)

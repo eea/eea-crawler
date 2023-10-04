@@ -18,6 +18,7 @@ def trigger_sync(ignore_delete_threshold):
     app_id = get_app_identifier("wise_test")
     TASK_PARAMS["params"]["ignore_delete_threshold"] = ignore_delete_threshold
     TASK_PARAMS["params"]["app_identifier"] = app_id
+    TASK_PARAMS["params"]["skip_status"] = True
     trigger_dag("d1_sync", TASK_PARAMS, "default_pool")
 
 

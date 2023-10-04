@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 
 from lib import elastic, rabbitmq
@@ -10,10 +10,12 @@ STATUS_QUERY_ALL = """{
 
 def strtime_to_ts(strtime):
     dt = datetime.strptime(strtime, '%Y_%m_%d_%H_%M_%S')
-    ts = dt.timestamp() * 1000
+    ts = dt.replace(tzinfo=timezone.utc).timestamp() * 1000
     return ts
 
 def add_site_status(v, task_name='', msg='', status=''):
+    if v.get("skip_status", None) == True:
+        return
     now = datetime.utcnow()
     str_time = now.strftime("%Y_%m_%d_%H_%M_%S")
     rabbitmq_config = v.get('rabbitmq')
@@ -40,6 +42,8 @@ def add_site_status(v, task_name='', msg='', status=''):
     rabbitmq.send_to_rabbitmq(raw_status, rabbitmq_config)
 
 def add_cluster_status(v, cluster, status='', str_time=None, msg=''):
+    if v.get("skip_status", None) == True:
+        return
     if str_time is None:
         now = datetime.utcnow()
         str_time = now.strftime("%Y_%m_%d_%H_%M_%S")
@@ -49,7 +53,7 @@ def add_cluster_status(v, cluster, status='', str_time=None, msg=''):
 
     raw_status = {'index_name' : f'status_{elastic_conf["searchui_target_index"]}'}
 
-    raw_status["id"] = f'main_task_{str_time}'
+    raw_status["id"] = f'{cluster}_{str_time}'
     raw_status['cluster'] = cluster
     raw_status['start_time'] = str_time
     raw_status['start_time_ts'] = strtime_to_ts(str_time)

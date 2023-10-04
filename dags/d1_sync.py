@@ -20,6 +20,10 @@ def create_raw_index(task_params):
     print(task_params)
     v = task_params.get("variables", {})
 
+    v['next_execution_date'] = task_params.get('next_execution_date')
+    v['skip_status'] = task_params.get('skip_status')
+    status.add_site_status(v, status='Started')
+
     quick_sync = task_params.get("quick")
     if quick_sync:
         print(
@@ -41,8 +45,6 @@ def create_raw_index(task_params):
         es, [elastic_conf["raw_index"], elastic_conf["searchui_target_index"]]
     )
 
-    v['next_execution_date'] = task_params.get('next_execution_date')
-    status.add_site_status(v, status='Started')
 
 
 @task

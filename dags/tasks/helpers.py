@@ -188,7 +188,9 @@ def get_next_execution_date_for_dag(dag_id):
     try:
         latest_execution_date = dag.get_latest_execution_date()
         if latest_execution_date:
-            next_execution_dttm = dag.following_schedule(latest_execution_date)
+            print("NEXT EXECUTION")
+            this_execution_dttm = dag.following_schedule(latest_execution_date)
+            next_execution_dttm = dag.following_schedule(this_execution_dttm)
         return (next_execution_dttm.strftime("%Y_%m_%d_%H_%M_%S"))
     except:
         return (-1)
