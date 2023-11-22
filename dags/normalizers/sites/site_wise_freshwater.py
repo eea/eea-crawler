@@ -71,6 +71,10 @@ def normalize_freshwater(doc, config):
         normalized_doc['ecosystem_services'] = [val.get('name') for val in doc["raw_value"]["ecosystem_services"]]
     if type(doc["raw_value"].get("policy_objectives")) is list:
         normalized_doc['policy_objectives'] = [val.get('name') for val in doc["raw_value"]["policy_objectives"]]
+    if type(doc["raw_value"].get("legislative_reference")) is list:
+        normalized_doc['legislative_reference'] = [val.get('title') for val in doc["raw_value"]["legislative_reference"]]
+    if type(doc["raw_value"].get("category")) is list:
+        normalized_doc['category'] = doc["raw_value"].get("category")
     normalized_doc['measure_sector'] = doc["raw_value"].get("measure_sector")
 
     normalized_doc["cluster_name"] = "wise-freshwater"
