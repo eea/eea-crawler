@@ -10,6 +10,13 @@ import logging
 
 logger = logging.getLogger(__file__)
 
+def simplify_list(attr_list, field="title"):
+    print("========================")
+    print(attr_list)
+    attr_list = attr_list or []
+    if type(attr_list) != list:
+        attr_list = [attr_list]
+    return [val[field] for val in attr_list or []]
 
 def add_topic(doc):
     topics = doc.get("raw_value", {}).get("topics", {}) or []
@@ -39,6 +46,11 @@ def normalize_eea_europa_eu(doc, config):
     normalized_doc["cluster_name"] = "eea"
 
     normalized_doc["topic"] = add_topic(doc)
+
+    normalized_doc["dpsir"] = simplify_list(doc.get("raw_value", {}).get("taxonomy_dpsir",[]))
+    normalized_doc["typology"] = simplify_list(doc.get("raw_value", {}).get("taxonomy_typology",[]))
+    normalized_doc["un_sdgs"] = simplify_list(doc.get("raw_value", {}).get("taxonomy_un_sdgs",[]))
+
 
     op = normalized_doc.get("objectProvides", [])
     if "File" in op or "Image" in op:
