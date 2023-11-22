@@ -421,6 +421,40 @@ def merge_themes(doc):
     themes = original_themes + taxonomy_themes
     return themes
 
+def find_all(key, node, name, results=[]):
+    if key == name:
+        results.append(node)
+    else:
+        if type(node) is dict:
+            for elem in node.keys():
+                results = find_all(elem, node[elem], name, results)
+        else:
+            if type(node) is list:
+                for elem in node:
+                    results = find_all('', elem, name, results)
+    return results
+
+def get_data_provenance(doc):
+    print("DATA PROVENANCE")
+    dps = find_all('', doc, 'data_provenance',[])
+    dps_full = []
+    for dp_part in dps:
+        dp_data = dp_part.get('data',[])
+        for dp in dp_data:
+            should_add = True
+
+            for dp_seen in dps_full:
+                if dp["link"] == dp_seen["link"] and dp["organisation"] == dp_seen["organisation"] and dp["title"] == dp_seen["title"]:
+                    should_add = False
+            if should_add:
+                dps_full.append({"link":dp["link"], "organisation": dp["organisation"], "title":dp["title"]})
+
+    dp_organisations = list(dict.fromkeys([dp["organisation"] for dp in dps_full]))
+    print(dp_organisations)
+    return {
+        "data_provenances" : dps_full,
+        "data_provenances_organisations": dp_organisations
+    }
 
 def common_normalizer(doc, config):
     doc["raw_value"]["themes"] = merge_themes(doc)
@@ -502,6 +536,10 @@ def common_normalizer(doc, config):
     normalized_doc = delete_attrs(normalized_doc, attrs_to_delete)
     normalized_doc["original_id"] = normalized_doc["about"]
     normalized_doc = strip_fields(normalized_doc)
+    dp = get_data_provenance(doc)
+    normalized_doc['data_provenances'] = dp.get('data_provenances', [])
+    normalized_doc['data_provenances_organisations'] = dp.get('data_provenances_organisations', [])
+
     # normalize objects again, after we add values in various ways (for spatial)
     normalized_doc = apply_norm_obj(
         normalized_doc, normalizer.get("normObj", {})
