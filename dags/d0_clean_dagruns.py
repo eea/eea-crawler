@@ -56,17 +56,17 @@ def clean_dag(dag_id, size, older_than=2, dag_state='success'):
 
 
 @task
-def clean_dagruns(older_than, dag_state):
-    clean_dag("d0_sync_global_search", 100, older_than, dag_state)
-    clean_dag("d0_sync_global_search_quick", 100, older_than, dag_state)
-    clean_dag("d0_sync_sdi", 100, older_than, dag_state)
-    clean_dag("d0_update_obligations", 100, older_than, dag_state)
-    clean_dag("d0_update_themetaxonomy", 100, older_than, dag_state)
-    clean_dag("d1_sync", 100, older_than, dag_state)
-    clean_dag("d2_crawl_site", 100, older_than, dag_state)
-    clean_dag("d3_crawl_fetch_for_id", 100, older_than, dag_state)
-    clean_dag("d5_prepare_doc_for_searchui", 100, older_than, dag_state)
-
+def clean_dagruns(older_than, dag_states):
+    for dag_state in dag_states:
+        clean_dag("d0_sync_global_search", 100, older_than, dag_state)
+        clean_dag("d0_sync_global_search_quick", 100, older_than, dag_state)
+        clean_dag("d0_sync_sdi", 100, older_than, dag_state)
+        clean_dag("d0_update_obligations", 100, older_than, dag_state)
+        clean_dag("d0_update_themetaxonomy", 100, older_than, dag_state)
+        clean_dag("d1_sync", 100, older_than, dag_state)
+        clean_dag("d2_crawl_site", 100, older_than, dag_state)
+        clean_dag("d3_crawl_fetch_for_id", 100, older_than, dag_state)
+        clean_dag("d5_prepare_doc_for_searchui", 100, older_than, dag_state)
 
 
 default_args = {"owner": "airflow"}
@@ -75,12 +75,14 @@ default_args = {"owner": "airflow"}
 @dag(
     default_args=default_args,
     start_date=days_ago(1),
-    schedule_interval=None,
     description="maintenance",
     tags=["maintenance"],
+    catchup=False,
+    schedule_interval="0 2 * * *",
 )
-def d0_clean_dagruns(older_than=2, dag_state='success'):
-    clean_dagruns(older_than, dag_state)
+
+def d0_clean_dagruns(older_than=2, dag_states=['success', 'failed']):
+    clean_dagruns(older_than, dag_states)
 
 
 update_clean_dagruns_dag = d0_clean_dagruns()
