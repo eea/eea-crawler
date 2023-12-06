@@ -49,6 +49,8 @@ def parse_all_documents(
     for query in queries:
         docs = plone_rest_api.get_docs(query)
         for doc in docs:
+            # if not doc["@id"].startswith('https://www.eea.europa.eu/api/SITE/publications/environment-and-climate-pressures-from'):
+            #   continue
             print(cnt)
             cnt += 1
             skip = False
@@ -178,7 +180,9 @@ def prepare_doc_for_rabbitmq(
 def crawl_doc(v, site, site_config, doc_id, handler=None, extra_opts=None):
     doc_errors = []
     errors = []
-
+    print("CRAWL_DOC")
+    print(doc_id)
+    print(extra_opts)
     try:
         r = plone_rest_api.get_doc_from_plone(site_config, doc_id)
         assert json.loads(r)["@id"]
@@ -191,22 +195,38 @@ def crawl_doc(v, site, site_config, doc_id, handler=None, extra_opts=None):
     doc = json.loads(r)
     doc["id"] = doc_id
     scraped = {}
-    if doc.get("@type", None) != "File":
+    extra_opts = extra_opts or {}
+    if doc.get("@type", None) != "File" and not extra_opts.get("skip_scrape", False):
         scrape_errors = False
         try:
-            scraped = plone_rest_api.scrape(v, site_config, doc_id)
-            if int(scraped.get("status_code", 0)) >= 400:
-                print(f"status_code:", scraped.get("status_code", 0))
-                scrape_errors = True
-            final_url = scraped.get("final_url", doc_id)
-            print("CHECK REDIRECT")
-            print(f"url {doc_id}")
-            print(f"final_url {final_url}")
-            if (
-                doc_id.split("?")[0].split("#")[0].rstrip("/")
-                != final_url.split("?")[0].split("#")[0].rstrip("/")
-            ):
-                logger.exception(f"Redirected {doc_id} -> {final_url}")
+            redirected = False
+            redirected_url = "initial"
+            while True:
+                scraped = plone_rest_api.scrape(v, site_config, doc_id)
+                if int(scraped.get("status_code", 0)) >= 400:
+                    print(f"status_code:", scraped.get("status_code", 0))
+                    scrape_errors = True
+                final_url = scraped.get("final_url", doc_id)
+                print("CHECK REDIRECT")
+                print(f"url {doc_id}")
+                print(f"final_url {final_url}")
+                if (
+                    doc_id.split("?")[0].split("#")[0].rstrip("/")
+                    != final_url.split("?")[0].split("#")[0].rstrip("/")
+                ):
+                    if redirected_url == final_url:
+                        print("Redirected 2 times to the same url:")
+                        print(final_url)
+                        redirected = True
+                        break
+                    print("Maybe redirected, try again")
+                    redirected_url = final_url
+                else:
+                    print("Not redirected")
+                    break
+
+            if redirected:
+                logger.exception(f"Redirected {doc_id} -> {redirected_url}")
                 errors.append("document redirected")
                 doc_errors.append("redirect")
 
@@ -224,6 +244,25 @@ def crawl_doc(v, site, site_config, doc_id, handler=None, extra_opts=None):
         logger.exception("Error converting pdf file")
         errors.append("converting pdf file")
         doc_errors.append("pdf")
+    if doc["@type"] == 'Report':
+        for item in doc.get("items",[]):
+            if item.get("@type") == 'Fiche' and doc.get("description",{}).get("data") == item.get("description"):
+                print("Has duplicate")
+                print("Fetch:")
+                print(item.get("@id"))
+                try:
+                    item_id = plone_rest_api.get_no_api_url(site_config, item.get("@id"))
+                    item_doc = crawl_doc(v, site, site_config, item_id, handler=None, extra_opts={"skip_scrape":True})
+                    if len(item_doc.get("errors", [])) == 0:
+                        pdf_text += " "
+                        pdf_text += item_doc.get("raw_doc").get("pdf_text", "")
+                        doc["duplicate_info"] = {
+                            "has_duplicate": True,
+                            "@type": item.get("@type")
+                        }
+                except:
+                    print("error loading items of document")
+
 
     raw_doc = prepare_doc_for_rabbitmq(
         doc, scraped, pdf_text, doc_errors, site, site_config

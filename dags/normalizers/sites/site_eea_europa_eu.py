@@ -1,3 +1,4 @@
+import json
 from urllib.parse import urlparse
 
 from normalizers.registry import (
@@ -7,9 +8,9 @@ from normalizers.registry import (
 from normalizers.lib.normalizers import common_normalizer, add_counts
 from normalizers.lib.nlp import common_preprocess
 import logging
+from lib import plone_rest_api
 
 logger = logging.getLogger(__file__)
-
 
 @register_facets_normalizer("eea")
 def normalize_eea_europa_eu(doc, config):
@@ -18,6 +19,12 @@ def normalize_eea_europa_eu(doc, config):
         return None
     if doc["raw_value"]["@type"] == "Plone Site":
         return None
+
+    if doc["raw_value"]["@type"] == 'Fiche':
+        if doc["raw_value"].get("parent",{}).get("@type",None) == "Report" and doc["raw_value"].get("description",{}).get("data") == doc["raw_value"].get("parent",{}).get("description"):
+            logger.info("Duplicated data, ignore")
+            return None
+
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
@@ -30,6 +37,11 @@ def normalize_eea_europa_eu(doc, config):
     normalized_doc["cluster_name"] = "eea"
 
     normalized_doc = add_counts(normalized_doc)
+
+    is_duplicated = doc["raw_value"].get("duplicate_info", {}).get("has_duplicate", False)
+    if is_duplicated:
+         normalized_doc["objectProvides"].append("Briefing")
+
     return normalized_doc
 
 
