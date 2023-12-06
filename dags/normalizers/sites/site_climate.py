@@ -44,6 +44,9 @@ def normalize_climate(doc, config):
     cca_geographic = doc["raw_value"].get("geographic", None)
     cca_key_type_measure = doc["raw_value"].get("key_type_measures", [])
     cca_partner_contributors = doc["raw_value"].get("contributor_list", [])
+    cca_key_system = doc["raw_value"].get("key_system", [])
+    cca_countries = doc["raw_value"].get("country", [])
+    cca_climate_threats = doc["raw_value"].get("climate_threats", [])
     
     ct_normalize_config = config["site"].get("normalize", {})
 
@@ -86,11 +89,20 @@ def normalize_climate(doc, config):
     doc_out['cca_health_impacts'] = vocab_to_list(cca_health_impacts, "token")
     doc_out['cca_key_type_measure'] = vocab_to_list(cca_key_type_measure, "token")
     doc_out['cca_partner_contributors'] = vocab_to_list(cca_partner_contributors, 'title')
+    doc_out['key_system'] = vocab_to_list(cca_key_system, 'title')
+    doc_countries = doc_out.get('spatial', [])
+    if type(doc_countries) is not list:
+       doc_countries = [doc_countries]
+    if doc_countries[0] == 'Other':
+        doc_countries = []
+    doc_out['spatial'] = doc_countries + vocab_to_list(cca_countries, "title")
+    doc_out['climate_threats'] = vocab_to_list(cca_climate_threats, 'title')
     
     if isinstance(cca_funding_programme, str):
         doc_out["cca_funding_programme"] = cca_funding_programme
     else:
         doc_out["cca_funding_programme"] = vocab_to_term(cca_funding_programme)
+
 
     doc_out["cca_origin_websites"] = vocab_to_list(cca_origin_websites)
 
