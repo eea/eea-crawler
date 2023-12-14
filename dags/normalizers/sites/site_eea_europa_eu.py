@@ -1,6 +1,6 @@
 import json
 from urllib.parse import urlparse
-
+from difflib import SequenceMatcher
 from normalizers.registry import (
     register_facets_normalizer,
     register_nlp_preprocessor,
@@ -12,6 +12,9 @@ from lib import plone_rest_api
 
 logger = logging.getLogger(__file__)
 
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
+
 @register_facets_normalizer("eea")
 def normalize_eea_europa_eu(doc, config):
     logger.info("NORMALIZE EEA")
@@ -21,7 +24,7 @@ def normalize_eea_europa_eu(doc, config):
         return None
 
     if doc["raw_value"]["@type"] == 'Fiche':
-        if doc["raw_value"].get("parent",{}).get("@type",None) == "Report" and doc["raw_value"].get("description",{}).get("data") == doc["raw_value"].get("parent",{}).get("description"):
+        if doc["raw_value"].get("parent",{}).get("@type",None) == "Report" and similar(doc["raw_value"].get("description",{}).get("data"), doc["raw_value"].get("parent",{}).get("description")) > 0.2:
             logger.info("Duplicated data, ignore")
             return None
 
@@ -41,6 +44,7 @@ def normalize_eea_europa_eu(doc, config):
     is_duplicated = doc["raw_value"].get("duplicate_info", {}).get("has_duplicate", False)
     if is_duplicated:
          normalized_doc["objectProvides"].append("Briefing")
+         normalized_doc["items_count_objectProvides"] += 1
 
     return normalized_doc
 

@@ -11,6 +11,9 @@ import requests
 import urllib.parse
 from lib import plone_rest_api, robots_txt
 from lib import elastic
+from difflib import SequenceMatcher
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
 
 SKIP_EXTENSIONS = ["png", "svg", "jpg", "gif", "eps", "jpeg"]
 
@@ -246,7 +249,7 @@ def crawl_doc(v, site, site_config, doc_id, handler=None, extra_opts=None):
         doc_errors.append("pdf")
     if doc["@type"] == 'Report':
         for item in doc.get("items",[]):
-            if item.get("@type") == 'Fiche' and doc.get("description",{}).get("data") == item.get("description"):
+            if item.get("@type") == 'Fiche' and similar(doc.get("description",{}).get("data"), item.get("description")) > 0.2:
                 print("Has duplicate")
                 print("Fetch:")
                 print(item.get("@id"))
