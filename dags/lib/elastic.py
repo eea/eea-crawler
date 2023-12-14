@@ -361,7 +361,7 @@ def get_all_ids_from_searchui(v):
     docs = get_docs(
         es,
         index=elastic_conf.get("searchui_target_index"),
-        _source=["site_id", "id", "modified", "errors"],
+        _source=["site_id", "id", "modified", "errors", "exclude_from_globalsearch"],
         query=query,
     )
 
@@ -372,6 +372,7 @@ def get_all_ids_from_searchui(v):
         docs_dict[doc["_source"]["id"]] = {
             "modified": doc.get("_source", {}).get("modified"),
             "errors": doc.get("_source", {}).get("errors", []),
+            "exclude_from_globalsearch": doc.get("_source", {}).get("exclude_from_globalsearch"),
         }
     return docs_dict
 
