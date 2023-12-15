@@ -21,7 +21,7 @@ from tasks.debug import debug_value
 default_args = {"owner": "airflow"}
 
 
-default_dag_params = {"item": "", "params": {"app": "global_search", "site": "climate", "portal_types":["eea.climateadapt.adaptationoption"]}}
+default_dag_params = {"item": "", "params": {"app": "gs", "site": "ias", "portal_types":[], "metadata_only":False}}
 
 
 def send_to_rabbitmq(v, doc):
@@ -29,9 +29,11 @@ def send_to_rabbitmq(v, doc):
 
     index_name = v.get("elastic", {}).get("searchui_target_index", None)
     if index_name is not None:
-         doc["index_name"] = index_name
-         rabbitmq_config = v.get("rabbitmq")
-         rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
+        if v.get("metadata_only"):
+            doc["update_only"] = True
+        doc["index_name"] = index_name
+        rabbitmq_config = v.get("rabbitmq")
+        rabbitmq.send_to_rabbitmq(doc, rabbitmq_config)
 
 
 def doc_handler_fast(v, doc_id, site_id, doc_handler):
@@ -75,6 +77,7 @@ def parse_all_documents(task_params):
     #    handler = doc_handler
     print("TPTP")
     print(task_params)
+    task_params['variables']['metadata_only'] = task_params.get('metadata_only')
     task_params["variables"]["sync_portal_types"] = task_params.get("portal_types", [])
     normalizer.parse_all_documents_for_site(
         task_params['site'], task_params["variables"], handler, send_to_rabbitmq

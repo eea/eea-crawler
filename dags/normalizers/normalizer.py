@@ -65,37 +65,38 @@ def preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler):
     raw_doc["raw_value"]["about"] = doc_id
     normalized_doc = facets_normalizer(raw_doc, config)
     if normalized_doc:
-        haystack_data = nlp_preprocessor(raw_doc, config)
-        normalized_doc["fulltext"] = haystack_data.get("text", "")
+        if not v.get("metadata_only"):
+            haystack_data = nlp_preprocessor(raw_doc, config)
+            normalized_doc["fulltext"] = haystack_data.get("text", "")
 
-        normalized_doc["site_id"] = raw_doc["raw_value"].get("site_id")
+            normalized_doc["site_id"] = raw_doc["raw_value"].get("site_id")
 
-        # normalized_doc = preprocess_split_doc(
-        #     normalized_doc,
-        #     config["nlp"]["text"],
-        #     field="fulltext",
-        #     field_name="nlp_500",
-        #     split_length=500,
-        # )
-        # normalized_doc = add_embeddings_to_doc(
-        #     normalized_doc, nlp_services["embedding"], field_name="nlp_500"
-        # )
+            # normalized_doc = preprocess_split_doc(
+            #     normalized_doc,
+            #     config["nlp"]["text"],
+            #     field="fulltext",
+            #     field_name="nlp_500",
+            #     split_length=500,
+            # )
+            # normalized_doc = add_embeddings_to_doc(
+            #     normalized_doc, nlp_services["embedding"], field_name="nlp_500"
+            # )
 
-        normalized_doc = preprocess_split_doc(
-            normalized_doc, nlp_services["split"]
-        )
-        normalized_doc = add_embeddings_to_doc(
-            normalized_doc, nlp_services["embedding"]
-        )
+            normalized_doc = preprocess_split_doc(
+                normalized_doc, nlp_services["split"]
+            )
+            normalized_doc = add_embeddings_to_doc(
+                normalized_doc, nlp_services["embedding"]
+            )
 
-        # normalized_doc = preprocess_split_doc(
-        #     normalized_doc,
-        #     config["nlp"]["text"],
-        #     field="fulltext",
-        #     field_name="nlp_100",
-        #     split_length=100,
-        # )
-        # normalized_doc = add_embeddings_to_doc(
-        #     normalized_doc, nlp_services["embedding"], field_name="nlp_100"
-        # )
+            # normalized_doc = preprocess_split_doc(
+            #     normalized_doc,
+            #     config["nlp"]["text"],
+            #     field="fulltext",
+            #     field_name="nlp_100",
+            #     split_length=100,
+            # )
+            # normalized_doc = add_embeddings_to_doc(
+            #     normalized_doc, nlp_services["embedding"], field_name="nlp_100"
+            # )
         doc_handler(v, normalized_doc)
