@@ -449,8 +449,19 @@ def get_data_provenance(doc):
             if should_add:
                 dps_full.append({"link":dp["link"], "organisation": dp["organisation"], "title":dp["title"]})
 
+    if len(dps_full) == 0:
+        chartSources = find_all('', doc, 'chartSources', [])
+        for cs_part in chartSources:
+            for cs in cs_part:
+                should_add = True
+                for dp_seen in dps_full:
+                    if cs["chart_source_link"] == dp_seen["link"] and cs["chart_source"] == dp_seen["organisation"]:
+                        should_add = False
+                if should_add:
+                    dps_full.append({"link":cs["chart_source_link"], "organisation": cs["chart_source"], "title":cs["chart_source"]})
+
     dp_organisations = list(dict.fromkeys([dp["organisation"] for dp in dps_full]))
-    print(dp_organisations)
+
     return {
         "data_provenances" : dps_full,
         "data_provenances_organisations": dp_organisations
