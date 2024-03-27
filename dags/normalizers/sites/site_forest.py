@@ -9,6 +9,7 @@ from normalizers.lib.normalizers import (
     check_blacklist_whitelist,
     find_ct_by_rules,
     add_counts,
+    check_readingTime,
 )
 from normalizers.lib.nlp import common_preprocess
 import logging
@@ -73,6 +74,7 @@ def normalize_forest(doc, config):
                 "Country fact sheet",
                 "Dashboard",
             ]
+    normalized_doc = check_readingTime(normalized_doc, config)
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

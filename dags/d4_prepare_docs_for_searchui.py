@@ -21,7 +21,7 @@ from tasks.debug import debug_value
 default_args = {"owner": "airflow"}
 
 
-default_dag_params = {"item": "", "params": {"app": "gs", "site": "ias", "portal_types":[], "metadata_only":False}}
+default_dag_params = {"item": "", "params": {"app": "global_search", "site": "eea_en", "portal_types":[], "metadata_only":True}}
 
 
 def send_to_rabbitmq(v, doc):
@@ -57,6 +57,8 @@ def doc_handler_fast(v, doc_id, site_id, doc_handler):
             should_sync = True
         else:
             should_sync = False
+    # if raw_doc['raw_value'] is None:
+    #     should_sync = False
     print("should_sync", should_sync)
 #    print(sync_portal_types)
 #    print(raw_doc.get("raw_value",{}).get("@type", None))

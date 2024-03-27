@@ -9,6 +9,7 @@ from normalizers.lib.normalizers import (
     check_blacklist_whitelist,
     find_ct_by_rules,
     add_counts,
+    check_readingTime,
 )
 from normalizers.lib.nlp import common_preprocess
 import logging
@@ -71,14 +72,20 @@ def normalize_freshwater(doc, config):
         normalized_doc['ecosystem_services'] = [val.get('name') for val in doc["raw_value"]["ecosystem_services"]]
     if type(doc["raw_value"].get("policy_objectives")) is list:
         normalized_doc['policy_objectives'] = [val.get('name') for val in doc["raw_value"]["policy_objectives"]]
-    if type(doc["raw_value"].get("legislative_reference")) is list:
-        normalized_doc['legislative_reference'] = [val.get('title') for val in doc["raw_value"]["legislative_reference"]]
+    lr = doc["raw_value"].get("legislative_reference")
+    if type(lr) is list:
+        if len(lr) > 0:
+            if type(lr[0]) is str:
+                normalized_doc['legislative_reference'] = lr
+            else:
+                normalized_doc['legislative_reference'] = [val.get('title') for val in lr]
     if type(doc["raw_value"].get("category")) is list:
         normalized_doc['category'] = doc["raw_value"].get("category")
     normalized_doc['measure_sector'] = doc["raw_value"].get("measure_sector")
 
     normalized_doc["cluster_name"] = "wise-freshwater"
 
+    normalized_doc = check_readingTime(normalized_doc, config)
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 

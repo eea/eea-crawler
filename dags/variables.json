@@ -1,5 +1,21 @@
 {
     "!": "IMPORTANT",
+    "app_cca_test": {
+        "Sites": {
+            "climate": "config_cca_mission_stories"
+        },
+        "allowed_errors_for_doc": 20,
+        "elastic_config": {
+            "elastic": "elastic_cca_test",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_default",
+        "rabbitmq_config": "rabbitmq_global_search",
+        "schedule_interval": "@daily",
+        "skip_doc_cnt": 100
+    },
     "app_datahub": {
         "Sites": {
             "sdi": "config_sdi_prod"
@@ -41,7 +57,7 @@
             "industry": "config_industry",
             "noise": "config_noise",
             "sdi": "config_sdi_prod",
-            "wise_freshwater": "config_wise_freshwater",
+            "wise_freshwater": "config_wise_new_freshwater",
             "wise_marine": "config_wise_marine"
         },
         "Sites_full": {
@@ -57,7 +73,7 @@
             "industry": "config_industry",
             "noise": "config_noise",
             "sdi": "config_sdi_prod",
-            "wise_freshwater": "config_wise_freshwater",
+            "wise_freshwater": "config_wise_new_freshwater",
             "wise_marine": "config_wise_marine"
         },
         "allowed_errors_for_doc": 2,
@@ -69,6 +85,15 @@
         },
         "nlp_config": "nlp_services_default",
         "rabbitmq_config": "rabbitmq_global_search",
+        "reading_time_blacklist_op": [
+            "Figure (chart/map)",
+            "Chart (interactive)",
+            "Infographic",
+            "Dashboard",
+            "Map (interactive)",
+            "Data set",
+            "External data reference"
+        ],
         "schedule_interval": "@daily",
         "schedule_interval_quick": "*/5 6-18 * * *",
         "skip_doc_cnt": 100
@@ -90,10 +115,10 @@
     },
     "app_wise_test": {
         "Sites": {
-            "wise_freshwater": "config_wise_test_freshwater",
-            "wise_marine": "config_wise_test_marine"
+            "wise_freshwater": "config_wise_demo_freshwater",
+            "wise_marine": "config_wise_demo_marine"
         },
-        "allowed_errors_for_doc": 2,
+        "allowed_errors_for_doc": 20,
         "elastic_config": {
             "elastic": "elastic_wise_test",
             "elastic_mapping": "elastic_mapping_default",
@@ -162,6 +187,26 @@
         "url": "https://biodiversity.europa.eu",
         "url_api_part": "++api++"
     },
+    "config_cca_mission_stories": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "normalize": {
+            "blacklist": [],
+            "whitelist": [
+                "mission_story"
+            ]
+        },
+        "normalizers_variable": "default_normalizers",
+        "portal_types": [
+            "mission_story"
+        ],
+        "scrape_pages": false,
+        "scrape_with_js": true,
+        "type": "plone_rest_api",
+        "url": "https://cca-p6.devel5cph.eionet.europa.eu",
+        "url_api_part": "++api++"
+    },
     "config_climate": {
         "avoid_cache_api": true,
         "avoid_cache_web": true,
@@ -187,7 +232,8 @@
                 "Event",
                 "Page",
                 "eea.climateadapt.video",
-                "eea.climateadapt.c3sindicator"
+                "eea.climateadapt.c3sindicator",
+                "mission_story"
             ]
         },
         "normalizers_variable": "default_normalizers",
@@ -211,7 +257,8 @@
             "Event",
             "Page",
             "eea.climateadapt.mapgraphdataset",
-            "eea.climateadapt.c3sindicator"
+            "eea.climateadapt.c3sindicator",
+            "mission_story"
         ],
         "scrape_pages": false,
         "scrape_with_js": true,
@@ -348,7 +395,6 @@
             "Report",
             "Term",
             "Organisation",
-            "ims_indicator",
             "helpcenter_faq",
             "PressRelease"
         ],
@@ -886,6 +932,161 @@
         "type": "sdi",
         "url": "https://galliwasp.eea.europa.eu/catalogue/datahub"
     },
+    "config_wise_demo_freshwater": {
+        "fix_items_url": {
+            "with_api": "https://demo-water.devel5cph.eea.europa.eu/freshwater/++api++",
+            "without_api": "https://demo-water.devel5cph.eea.europa.eu/freshwater"
+        },
+        "normalize": {
+            "blacklist": [],
+            "location_rules": [
+                {
+                    "ct": [
+                        "Topic page"
+                    ],
+                    "path": "/freshwater/europe-freshwater/*"
+                }
+            ],
+            "location_rules_fallback": "Webpage",
+            "whitelist": [
+                "Document",
+                "Page",
+                "File",
+                "News Item",
+                "visualization",
+                "CompositePage",
+                "dashboard",
+                "dataset",
+                "database",
+                "briefing",
+                "map_interactive",
+                "country_profile",
+                "measure",
+                "case_study",
+                "indicator",
+                "report_publication",
+                "visualization_tableau",
+                "glossary_term",
+                "tableau_visualization",
+                "chemical"
+            ]
+        },
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".header",
+                ".breadcrumbs",
+                ".footerWrapper",
+                ".skiplinks-wrapper"
+            ]
+        },
+        "type": "plone_rest_api",
+        "url": "https://demo-water.devel5cph.eea.europa.eu/freshwater/",
+        "url_api_part": ""
+    },
+    "config_wise_demo_marine": {
+        "concurrency": 4,
+        "fix_items_url": {
+            "with_api": "demo-water.devel5cph.eea.europa.eu/marine/++api++",
+            "without_api": "demo-water.devel5cph.eea.europa.eu/marine"
+        },
+        "location_rules_fallback": "Webpage",
+        "normalize": {
+            "blacklist": [],
+            "location_rules": [
+                {
+                    "ct": [
+                        "Webpage"
+                    ],
+                    "path": "/marine/policy-and-reporting/*"
+                },
+                {
+                    "ct": [
+                        "Topic page"
+                    ],
+                    "path": "/marine/state-of-europe-seas/"
+                },
+                {
+                    "ct": [
+                        "Topic page"
+                    ],
+                    "path": "/marine/state-of-europe-seas/*"
+                },
+                {
+                    "ct": [
+                        "Dashboard"
+                    ],
+                    "path": "/marine/state-of-europe-seas/marine-sectors-catalogue-of-measures"
+                },
+                {
+                    "ct": [
+                        "Dashboard"
+                    ],
+                    "path": "/marine/data-maps-and-tools/map-viewers-visualization-tools/dashboards-on-marine-features-under-other-policies/*"
+                },
+                {
+                    "ct": [
+                        "Dashboard"
+                    ],
+                    "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/ges-assessment-dashboards/*"
+                },
+                {
+                    "ct": [
+                        "Country fact sheet",
+                        "Dashboard"
+                    ],
+                    "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/ges-assessment-dashboards/country-thematic-dashboards/"
+                },
+                {
+                    "ct": [
+                        "Map (interactive)"
+                    ],
+                    "path": "/marine/data-maps-and-tools/map-viewers-visualization-tools/european-reference-maps"
+                },
+                {
+                    "ct": [
+                        "Country fact sheet",
+                        "Dashboard"
+                    ],
+                    "path": "/marine/countries-and-regional-seas/country-profiles/*"
+                }
+            ],
+            "whitelist": [
+                "Document",
+                "Page",
+                "File",
+                "country_factsheet",
+                "spmeasure",
+                "tableau_visualization",
+                "visualization",
+                "map_visualization",
+                "map_interactive"
+            ]
+        },
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".fp-header",
+                ".content-header",
+                ".plone-breadcrumb",
+                ".footer-wrapper",
+                ".left-logo-section",
+                ".navbar-header",
+                "#portal-globalnav",
+                ".hiddenStructure",
+                "#content-header",
+                ".daviz-toolbar-container",
+                ".leadimage-header"
+            ]
+        },
+        "type": "plone_rest_api",
+        "url": "https://demo-water.devel5cph.eea.europa.eu/marine",
+        "url_api_part": ""
+    },
     "config_wise_freshwater": {
         "fix_items_url": {
             "with_api": "water.europa.eu/freshwater-api/++api++",
@@ -1032,9 +1233,62 @@
         "url": "https://water.europa.eu/marine",
         "url_api_part": ""
     },
+    "config_wise_new_freshwater": {
+        "fix_items_url": {
+            "with_api": "https://water.europa.eu/freshwater/++api++",
+            "without_api": "https://water.europa.eu/freshwater"
+        },
+        "normalize": {
+            "blacklist": [],
+            "location_rules": [
+                {
+                    "ct": [
+                        "Topic page"
+                    ],
+                    "path": "/freshwater/europe-freshwater/*"
+                }
+            ],
+            "location_rules_fallback": "Webpage",
+            "whitelist": [
+                "Document",
+                "Page",
+                "File",
+                "News Item",
+                "visualization",
+                "CompositePage",
+                "dashboard",
+                "dataset",
+                "database",
+                "briefing",
+                "map_interactive",
+                "country_profile",
+                "measure",
+                "case_study",
+                "indicator",
+                "report_publication",
+                "visualization_tableau",
+                "glossary_term",
+                "tableau_visualization"
+            ]
+        },
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".header",
+                ".breadcrumbs",
+                ".footerWrapper",
+                ".skiplinks-wrapper"
+            ]
+        },
+        "type": "plone_rest_api",
+        "url": "https://water.europa.eu/freshwater/",
+        "url_api_part": ""
+    },
     "config_wise_test_freshwater": {
         "fix_items_url": {
-            "with_api": "wise-test.eionet.europa.eu/freshwater-api/++api++",
+            "with_api": "wise-test.eionet.europa.eu/freshwater-api/++api++/freshwater",
             "with_api2": "wise-test.eionet.europa.eu/freshwater-api",
             "without_api": "wise-test.eionet.europa.eu/freshwater"
         },
@@ -1064,7 +1318,11 @@
                 "country_profile",
                 "measure",
                 "case_study",
-                "source"
+                "source",
+                "indicator",
+                "report_publication",
+                "visualization_tableau",
+                "glossary_term"
             ]
         },
         "normalizers_variable": "default_normalizers",
@@ -1153,7 +1411,12 @@
                 "Document",
                 "Page",
                 "File",
-                "country_factsheet"
+                "country_factsheet",
+                "spmeasure",
+                "tableau_visualization",
+                "visualization",
+                "map_visualization",
+                "map_interactive"
             ]
         },
         "normalizers_variable": "default_normalizers",
@@ -1325,6 +1588,7 @@
             "etc_report": "Report",
             "european_union_factsheet": "Country fact sheet",
             "faq": "FAQ",
+            "glossary_term": "Glossary term",
             "helpcenter_faq": "FAQ",
             "http://www.eea.europa.eu/portal_vocabularies/themes/acidification": "Air pollution",
             "http://www.eea.europa.eu/portal_vocabularies/themes/air_quality": "Air pollution",
@@ -1348,23 +1612,29 @@
             "http://www.eea.europa.eu/portal_workflow/plone_workflow/states/published": "published",
             "human": "Environment and health",
             "ims_indicator": "Indicator",
+            "indicator": "Indicator",
             "industry": "Industry",
             "landing_page": "Webpage",
             "landuse": "Land use",
             "map_interactive": "Map (interactive)",
             "measure": "Measure",
+            "mission_story": "Mission story",
             "plone.app.blob.interfaces.IATBlobImage": "Image",
             "plone.app.collection.interfaces.ICollection": "Catalogue / listing",
             "plone.app.layout.navigation.interfaces.INavigationRoot": "Website main section",
             "policy": "Policy instruments",
             "regions": "Specific regions",
+            "report_publication": "Report/Publication",
             "soil": "Soil",
             "source": "Source",
+            "spmeasure": "Shipping and Ports Measure",
             "sustainability-transitions": "Sustainability transitions",
+            "tableau_visualization": "Dashboard",
             "technology": "Environmental technology",
             "topic_page": "Topic page",
             "transport": "Transport",
             "visualization": "Chart (interactive)",
+            "visualization_tableau": "Visualization (Tableau)",
             "waste": "Resource efficiency and waste",
             "water": "Water and marine environment"
         },
@@ -1422,9 +1692,24 @@
             "format",
             "hasWorkflowState",
             "issued",
-            "prod_id"
+            "prod_id",
+            "creators",
+            "contributors",
+            "publishers",
+            "number_of_appearances",
+            "number_of_categories",
+            "number_of_countries",
+            "management_plan",
+            "chemical_type",
+            "country"
         ],
         "whiteMap": {}
+    },
+    "elastic_cca_test": {
+        "host": "elastic",
+        "port": 9200,
+        "raw_index": "ccatest_raw_new",
+        "searchui_target_index": "ccatest_searchui"
     },
     "elastic_datahub": {
         "host": "elastic",
@@ -1918,6 +2203,11 @@
                 "keyword": {
                     "ignore_above": 256,
                     "type": "keyword"
+                },
+                "keyword_lc": {
+                    "ignore_above": 256,
+                    "normalizer": "lowercase",
+                    "type": "keyword"
                 }
             },
             "type": "text"
@@ -2196,8 +2486,8 @@
         "raw_index": "wisetest_raw_new",
         "searchui_target_index": "wisetest_searchui"
     },
+    "errors_cca_test": {},
     "errors_datahub": {},
-    "errors_global_search": {},
     "headless_chrome": {
         "endpoint": "http://headless-chrome-api:3000/content"
     },
@@ -2266,7 +2556,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/106": {
             "instrument": "http://rod.eionet.europa.eu/instruments/257",
-            "label": "Nitrates Directive (consolidated)"
+            "label": "Nitrates Directive"
         },
         "http://rod.eionet.europa.eu/obligations/11": {
             "instrument": "http://rod.eionet.europa.eu/instruments/500",
@@ -2398,7 +2688,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/171": {
             "instrument": "http://rod.eionet.europa.eu/instruments/545",
-            "label": "New Drinking Water Directive (consolidated)"
+            "label": "Drinking Water Directive (1998)"
         },
         "http://rod.eionet.europa.eu/obligations/172": {
             "instrument": "http://rod.eionet.europa.eu/instruments/546",
@@ -4274,7 +4564,7 @@
         },
         "http://rod.eionet.europa.eu/obligations/689": {
             "instrument": "http://rod.eionet.europa.eu/instruments/651",
-            "label": "WEEE directive 2012/19/EU"
+            "label": "New WEEE Directive"
         },
         "http://rod.eionet.europa.eu/obligations/69": {
             "instrument": "http://rod.eionet.europa.eu/instruments/514",
@@ -4834,15 +5124,91 @@
         },
         "http://rod.eionet.europa.eu/obligations/832": {
             "instrument": "http://rod.eionet.europa.eu/instruments/699",
-            "label": "Recast Drinking Water Directive"
+            "label": "Drinking Water Directive (recast 2020)"
+        },
+        "http://rod.eionet.europa.eu/obligations/833": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/584",
+            "label": "EU Wildlife Trade Regulation"
+        },
+        "http://rod.eionet.europa.eu/obligations/834": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/701",
+            "label": "FLEGT Regulation"
+        },
+        "http://rod.eionet.europa.eu/obligations/835": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/702",
+            "label": "Environmental liability Directve"
+        },
+        "http://rod.eionet.europa.eu/obligations/836": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/703",
+            "label": "Plastic packaging waste not recycled Regulation"
+        },
+        "http://rod.eionet.europa.eu/obligations/837": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/703",
+            "label": "Plastic packaging waste not recycled Regulation"
+        },
+        "http://rod.eionet.europa.eu/obligations/838": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/704",
+            "label": "Lightweight plastic carrier bags"
+        },
+        "http://rod.eionet.europa.eu/obligations/839": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/705",
+            "label": "Single Use Plastic Directive"
         },
         "http://rod.eionet.europa.eu/obligations/84": {
             "instrument": "http://rod.eionet.europa.eu/instruments/217",
             "label": "GroundWater Directive dangerous substances (consolidated)"
         },
+        "http://rod.eionet.europa.eu/obligations/840": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/705",
+            "label": "Single Use Plastic Directive"
+        },
+        "http://rod.eionet.europa.eu/obligations/841": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/705",
+            "label": "Single Use Plastic Directive"
+        },
+        "http://rod.eionet.europa.eu/obligations/842": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/705",
+            "label": "Single Use Plastic Directive"
+        },
+        "http://rod.eionet.europa.eu/obligations/843": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/705",
+            "label": "Single Use Plastic Directive"
+        },
+        "http://rod.eionet.europa.eu/obligations/844": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/706",
+            "label": "EU Regulation on European environmental economic accounting"
+        },
+        "http://rod.eionet.europa.eu/obligations/845": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/707",
+            "label": "Alternative fuels infrastructure"
+        },
+        "http://rod.eionet.europa.eu/obligations/846": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/651",
+            "label": "New WEEE Directive"
+        },
+        "http://rod.eionet.europa.eu/obligations/847": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/708",
+            "label": "Promotion of clean and energy-efficient road transport vehicles"
+        },
+        "http://rod.eionet.europa.eu/obligations/848": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/708",
+            "label": "Promotion of clean and energy-efficient road transport vehicles"
+        },
+        "http://rod.eionet.europa.eu/obligations/849": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/670",
+            "label": "Regulation (EU) No 649/2012 on export and import of hazardous chemicals"
+        },
         "http://rod.eionet.europa.eu/obligations/85": {
             "instrument": "http://rod.eionet.europa.eu/instruments/218",
             "label": "Drinking Water Directive (consolidated)"
+        },
+        "http://rod.eionet.europa.eu/obligations/850": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/709",
+            "label": "REACH Regulation"
+        },
+        "http://rod.eionet.europa.eu/obligations/851": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/631",
+            "label": "Marine Strategy Framework Directive"
         },
         "http://rod.eionet.europa.eu/obligations/9": {
             "instrument": "http://rod.eionet.europa.eu/instruments/500",

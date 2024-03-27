@@ -5,7 +5,7 @@ from normalizers.registry import (
     register_facets_normalizer,
     register_nlp_preprocessor,
 )
-from normalizers.lib.normalizers import common_normalizer, add_counts
+from normalizers.lib.normalizers import common_normalizer, add_counts, check_readingTime
 from normalizers.lib.nlp import common_preprocess
 import logging
 from lib import plone_rest_api
@@ -45,6 +45,8 @@ def normalize_eea_europa_eu(doc, config):
     if is_duplicated:
          normalized_doc["objectProvides"].append("Briefing")
          normalized_doc["items_count_objectProvides"] += 1
+
+    normalized_doc = check_readingTime(normalized_doc, config)
 
     return normalized_doc
 

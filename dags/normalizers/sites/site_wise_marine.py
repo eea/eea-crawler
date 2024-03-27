@@ -9,6 +9,7 @@ from normalizers.lib.normalizers import (
     check_blacklist_whitelist,
     find_ct_by_rules,
     add_counts,
+    check_readingTime
 )
 from normalizers.lib.nlp import common_preprocess
 import logging
@@ -119,10 +120,16 @@ def normalize_marine(doc, config):
         for extra_field in wm_spm_extra_fields:
             normalized_doc[f'wm_spm_{extra_field}'] = doc["raw_value"].get(extra_field)
 
+    if type(doc["raw_value"].get("legislative_reference")) is list:
+        normalized_doc['legislative_reference'] = [val.get('title') for val in doc["raw_value"]["legislative_reference"]]
+    if type(doc["raw_value"].get("theme")) is list:
+        normalized_doc['wm_theme'] = doc["raw_value"].get("theme")
+
     print("OBJECT PROVIDES")
     print(normalized_doc["objectProvides"])
 
     normalized_doc["cluster_name"] = "wise-marine"
+    normalized_doc = check_readingTime(normalized_doc, config)
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

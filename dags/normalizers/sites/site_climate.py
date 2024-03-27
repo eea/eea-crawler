@@ -2,7 +2,7 @@ import logging
 
 from normalizers.lib.nlp import common_preprocess
 from normalizers.lib.normalizers import (add_counts, check_blacklist_whitelist,
-                                         common_normalizer)
+                                         common_normalizer,check_readingTime)
 from normalizers.registry import (register_facets_normalizer,
                                   register_nlp_preprocessor)
 
@@ -47,6 +47,7 @@ def normalize_climate(doc, config):
     cca_key_system = doc["raw_value"].get("key_system", [])
     cca_countries = doc["raw_value"].get("country", [])
     cca_climate_threats = doc["raw_value"].get("climate_threats", [])
+    cca_preview_image = doc["raw_value"].get('preview_image')
     
     ct_normalize_config = config["site"].get("normalize", {})
 
@@ -121,12 +122,16 @@ def normalize_climate(doc, config):
         if include_in_observatory else 'false'
     doc_out["cca_include_in_mission"] = "true" \
         if include_in_mission else 'false'
-
+    print("preview")
+    print(cca_preview_image)
+    if cca_preview_image is not None:
+        doc_out["cca_preview_image"] = cca_preview_image.get('scales',{}).get('preview', {}).get('download')
     # if doc["raw_value"].get("review_state") == "archived":
     #     # raise Exception("review_state")
     #     expires = date.today() - timedelta(days=2)
     #     doc_out["expires"] = expires.isoformat()
     #     logger.info("RS EXPIRES")
+    doc_out = check_readingTime(doc_out, config)
 
     doc_out = add_counts(doc_out)
     return doc_out

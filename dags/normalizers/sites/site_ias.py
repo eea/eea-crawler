@@ -8,6 +8,7 @@ from normalizers.lib.normalizers import (
     common_normalizer,
     check_blacklist_whitelist,
     add_counts,
+    check_readingTime,
 )
 from normalizers.lib.nlp import common_preprocess
 import logging
@@ -49,6 +50,8 @@ def normalize_ias(doc, config):
             normalized_doc["objectProvides"] = "Map (interactive)"
 
     normalized_doc["cluster_name"] = "ias"
+
+    normalized_doc = check_readingTime(normalized_doc, config)
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

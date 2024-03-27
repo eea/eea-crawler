@@ -37,7 +37,9 @@ def sdi_es(sdi_conf):
     }
 
     if sdi_conf.get("authorization"):
-        econf["headers"] = {"authorization": sdi_conf.get("authorization")}
+        econf["headers"] = {"authorization": sdi_conf.get("authorization"), "accept": "application/json"}
+    else:
+        econf["headers"] = {"accept": "application/json"}
     es = Elasticsearch([econf])
 
     return es

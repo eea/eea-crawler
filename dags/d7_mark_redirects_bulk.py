@@ -42,9 +42,11 @@ def update_redirect_in_es(v, url, redirect):
     doc = {"update_only": True, "id":url}
     if redirect:
         doc['exclude_from_globalsearch'] = 'redirected'
+        print("REDIRECTED YES")
     else:
         doc['exclude_from_globalsearch'] = None
-    send_to_rabbitmq(v, doc)
+        print("REDIRECTED NO")
+    #send_to_rabbitmq(v, doc)
 
 
 def _mark_redirects(task_params):
@@ -53,6 +55,7 @@ def _mark_redirects(task_params):
     for item in task_params["items"]:
         doc_id = item["doc_id"]
         print(item)
+        print(cnt)
         doc_value = item["doc_value"]
         cnt += 1
         redirected = url_redirects(doc_id)

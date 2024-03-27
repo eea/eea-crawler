@@ -9,6 +9,7 @@ from normalizers.lib.normalizers import (
     check_blacklist_whitelist,
     find_ct_by_rules,
     add_counts,
+    check_readingTime,
 )
 from normalizers.lib.nlp import common_preprocess
 import logging
@@ -57,6 +58,7 @@ def normalize_biodiversity_europa_eu(doc, config):
         normalized_doc["objectProvides"] = ["Country fact sheet", "Dashboard"]
     logger.info(normalized_doc["objectProvides"])
     normalized_doc["cluster_name"] = "bise"
+    normalized_doc = check_readingTime(normalized_doc, config)
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

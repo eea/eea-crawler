@@ -18,7 +18,10 @@ def parse_all_documents_for_site(site_id, v, handler, doc_handler):
 def parse_all_documents(v, handler, doc_handler):
     raw_docs = elastic.get_all_ids_from_raw(v)
     search_docs = elastic.get_all_ids_from_searchui(v)
+    cnt = 0
     for raw_doc in raw_docs.keys():
+        print(cnt)
+        cnt+=1
         should_index = True
         if (
             len(raw_docs[raw_doc].get("errors")) > 0
@@ -35,6 +38,9 @@ def get_raw_doc_by_id(v, doc_id):
 
 
 def preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler):
+    #disable embeddings as we don't use them
+    disable_embeddings = True
+    
     print(f"{site_id} - {doc_id}")
     facets_normalizer = get_facets_normalizer(site_id)
     nlp_preprocessor = get_nlp_preprocessor(site_id)
@@ -85,9 +91,10 @@ def preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler):
             normalized_doc = preprocess_split_doc(
                 normalized_doc, nlp_services["split"]
             )
-            normalized_doc = add_embeddings_to_doc(
-                normalized_doc, nlp_services["embedding"]
-            )
+            if not disable_embeddings:
+                normalized_doc = add_embeddings_to_doc(
+                    normalized_doc, nlp_services["embedding"]
+                )
 
             # normalized_doc = preprocess_split_doc(
             #     normalized_doc,

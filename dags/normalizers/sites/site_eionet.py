@@ -9,6 +9,7 @@ from normalizers.lib.normalizers import (
     common_normalizer,
     check_blacklist_whitelist,
     add_counts,
+    check_readingTime,
 )
 from normalizers.lib.nlp import common_preprocess
 import logging
@@ -76,6 +77,7 @@ def normalize_eionet(doc, config):
         normalized_doc["topic"],
         config.get("full_config", {}).get("theme_taxonomy", {}),
     )
+    normalized_doc = check_readingTime(normalized_doc, config)
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

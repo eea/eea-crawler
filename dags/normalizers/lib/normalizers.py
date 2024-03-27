@@ -439,33 +439,59 @@ def get_data_provenance(doc):
     dps = find_all('', doc, 'data_provenance',[])
     dps_full = []
     for dp_part in dps:
-        dp_data = dp_part.get('data',[])
-        for dp in dp_data:
-            should_add = True
-
-            for dp_seen in dps_full:
-                if dp["link"] == dp_seen["link"] and dp["organisation"] == dp_seen["organisation"] and dp["title"] == dp_seen["title"]:
-                    should_add = False
-            if should_add:
-                dps_full.append({"link":dp["link"], "organisation": dp["organisation"], "title":dp["title"]})
+        if dp_part is not None:
+            dp_data = dp_part.get('data',[])
+            for dp in dp_data:
+                should_add = True
+    
+                for dp_seen in dps_full:
+                    if dp.get("link") == dp_seen.get("link") and dp.get("organisation") == dp_seen.get("organisation") and dp.get("title") == dp_seen.get("title"):
+                        should_add = False
+                if should_add:
+                    dps_full.append({"link":dp.get("link"), "organisation": dp.get("organisation"), "title":dp.get("title")})
 
     if len(dps_full) == 0:
+        print("here")
         chartSources = find_all('', doc, 'chartSources', [])
+        print(chartSources)
         for cs_part in chartSources:
             for cs in cs_part:
                 should_add = True
                 for dp_seen in dps_full:
-                    if cs["chart_source_link"] == dp_seen["link"] and cs["chart_source"] == dp_seen["organisation"]:
+                    if cs.get("chart_source_link", 'no_link') == dp_seen["link"] and cs["chart_source"] == dp_seen["organisation"]:
                         should_add = False
                 if should_add:
-                    dps_full.append({"link":cs["chart_source_link"], "organisation": cs["chart_source"], "title":cs["chart_source"]})
-
+                    dps_full.append({"link":cs.get("chart_source_link", 'no_link'), "organisation": cs["chart_source"], "title":cs["chart_source"]})
+        print(dps_full)
     dp_organisations = list(dict.fromkeys([dp["organisation"] for dp in dps_full]))
 
     return {
         "data_provenances" : dps_full,
-        "data_provenances_organisations": dp_organisations
+        "data_provenances_organisations": [dpo for dpo in dp_organisations if dpo != '/data/visualizations/vis_countryfacts_gfra_vita_disturbances_diseases']
     }
+
+def simplify_list(attr_list, field="title"):
+    print("========================")
+    print(attr_list)
+    attr_list = attr_list or []
+    if type(attr_list) != list:
+        attr_list = [attr_list]
+    return [val[field] for val in attr_list or []]
+
+def check_readingTime(doc, config):
+    print("CHECK_READING_TIME")
+    reading_time_blacklist_op = config.get("full_config",{}).get("reading_time_blacklist_op",[])
+    print("RT_BLACKLIST")
+    print(reading_time_blacklist_op)
+    ops =doc.get('objectProvides')
+    print("DOC_OP")
+    print(ops)
+    if not isinstance(ops, list):
+        ops = [ops]
+    for op in ops:
+        if op in reading_time_blacklist_op:
+            doc['readingTime'] = -1
+    return doc
 
 def common_normalizer(doc, config):
     doc["raw_value"]["themes"] = merge_themes(doc)
@@ -561,6 +587,23 @@ def common_normalizer(doc, config):
             normalized_doc.get("fulltext", "").strip().split(" ")[:100]
         )
 
+    publishers = normalized_doc.get('publishers', None)
+    if publishers is not None:
+        if not isinstance(publishers, list):
+            publishers = [publishers]
+    else:
+        publishers = []
+    
+    publishers_extra = simplify_list(doc['raw_value'].get('publisher'), 'title')
+    all_publishers = publishers + publishers_extra
+    if len(all_publishers) > 0:
+        clean_publishers = []
+        for publisher in all_publishers:
+            if publisher == 'EEA (European Environment Agency)':
+                publisher = 'European Environment Agency'
+            clean_publishers.append(publisher)
+        normalized_doc['publishers'] = clean_publishers
+    
     return normalized_doc
 
 

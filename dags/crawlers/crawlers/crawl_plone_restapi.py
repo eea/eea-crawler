@@ -59,7 +59,7 @@ def parse_all_documents(
             skip = False
             doc_id = plone_rest_api.get_no_api_url(site_config, doc["@id"])
             print(doc_id)
-            print(doc["@type"])
+            print(doc.get("@type"))
             print(portal_types)
             doc_modified = doc.get(
                 "modification_date", doc.get("modified", None)
@@ -247,7 +247,7 @@ def crawl_doc(v, site, site_config, doc_id, handler=None, extra_opts=None):
         logger.exception("Error converting pdf file")
         errors.append("converting pdf file")
         doc_errors.append("pdf")
-    if doc["@type"] == 'Report':
+    if doc.get("@type") == 'Report':
         for item in doc.get("items",[]):
             if item.get("@type") == 'Fiche' and similar(doc.get("description",{}).get("data"), item.get("description")) > 0.2:
                 print("Has duplicate")

@@ -56,6 +56,7 @@ from normalizers.lib.normalizers import (
     check_blacklist_whitelist,
     simplify_elements,
     add_counts,
+    check_readingTime,
 )
 from normalizers.lib.nlp import common_preprocess
 import logging
@@ -285,6 +286,7 @@ def pre_normalize_sdi(doc, config):
     #if len(prodId) > 0:
     #    doc["raw_value"]["prod_id"] = prodId[0]
     doc["raw_value"]["prod_id"] = prodId
+    
     return doc
 
 
@@ -353,6 +355,8 @@ def normalize_sdi(doc, config):
     normalized_doc["raw_value"] = doc["raw_value"]
     normalized_doc = add_expired(normalized_doc)
     normalized_doc["last_modified"] = get_modified(doc["raw_value"])
+    normalized_doc = check_readingTime(normalized_doc, config)
+
     return normalized_doc
 
 

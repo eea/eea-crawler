@@ -9,7 +9,7 @@ from airflow.models import Variable
 import json
 START_DATE = days_ago(1)
 app_config = Variable.get("app_global_search", deserialize_json=True)
-SCHEDULE_INTERVAL = app_config.get("schedule_interval", None)
+SCHEDULE_INTERVAL = None
 default_args = {"owner": "airflow"}
 default_dag_params = {"item": "", "params": {"app": "global_search", "attr":"publisher"}}
 
@@ -20,8 +20,10 @@ def update_var(attr, key, site_id, doc_id):
         stored_attrs[site_id] = {}
     
     if stored_attrs[site_id].get(key, None) is None:
-        stored_attrs[site_id][key] = doc_id
-        Variable.update(f"_attr_find_{attr}", json.dumps(stored_attrs, indent=4))
+        stored_attrs[site_id][key] = []
+        
+    stored_attrs[site_id][key].append(doc_id)
+    Variable.update(f"_attr_find_{attr}", json.dumps(stored_attrs, indent=4))
 
 def doc_handler(v, doc_id, site_id, doc_handler):
     raw_doc = normalizer.get_raw_doc_by_id(v, doc_id)
@@ -35,7 +37,7 @@ def trigger_find(task_params):
     try:
         Variable.get(f"_attr_find_{attr}", deserialize_json=True)
     except:
-        Variable.set(f"_attr_find_{attr}", json.dumps({}), description="failed documents")
+        Variable.set(f"_attr_find_{attr}", json.dumps({}), description="found attributes")
     task_params['variables']["attr"] = attr
     normalizer.parse_all_documents(
         task_params["variables"], doc_handler, update_var

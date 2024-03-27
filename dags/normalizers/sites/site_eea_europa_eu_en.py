@@ -4,7 +4,7 @@ from normalizers.registry import (
     register_facets_normalizer,
     register_nlp_preprocessor,
 )
-from normalizers.lib.normalizers import common_normalizer, add_counts
+from normalizers.lib.normalizers import common_normalizer, add_counts, check_readingTime
 from normalizers.lib.nlp import common_preprocess
 import logging
 
@@ -60,6 +60,8 @@ def normalize_eea_europa_eu(doc, config):
                 normalized_doc["issued"] = normalized_doc.get(
                     "creation_date", None
                 )
+
+    normalized_doc = check_readingTime(normalized_doc, config)
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc
 

@@ -19,6 +19,7 @@ def trigger_mark_redirects_bulk(task_params):
             bulks.append([])
         bulks[bulk_cnt[0]].append({"doc_id":doc_id, "doc_value":doc_value})
         cnt+=1
+        print(cnt)
     print(cnt)
     for bulk in bulks:
         bulk_config = {
@@ -32,7 +33,7 @@ def trigger_mark_redirects_bulk(task_params):
 
 
 default_args = {"owner": "airflow"}
-default_dag_params = {"item": "", "params": {"app": "global_search", "bulk_size":200}}
+default_dag_params = {"item": "", "params": {"app": "global_search", "bulk_size":10000}}
 
 @dag(
     default_args=default_args,
