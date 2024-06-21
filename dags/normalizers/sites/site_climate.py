@@ -49,6 +49,14 @@ def normalize_climate(doc, config):
     cca_climate_threats = doc["raw_value"].get("climate_threats", [])
     cca_preview_image = doc["raw_value"].get('preview_image')
     
+    cca_readiness_for_use = doc["raw_value"].get("readiness_for_use", [])
+    cca_rast_steps = doc["raw_value"].get("rast_steps", [])
+    cca_eligible_entities = doc["raw_value"].get("eligible_entities", [])
+    cca_geographical_scale = doc["raw_value"].get("geographical_scale", [])
+    cca_tool_language = doc["raw_value"].get("tool_language", [])
+    cca_most_useful_for = doc["raw_value"].get("most_useful_for", [])
+    cca_user_requirements = doc["raw_value"].get("user_requirements", [])
+
     ct_normalize_config = config["site"].get("normalize", {})
 
     logger.info("DATES:")
@@ -90,6 +98,15 @@ def normalize_climate(doc, config):
     doc_out['cca_health_impacts'] = vocab_to_list(cca_health_impacts, "token")
     doc_out['cca_key_type_measure'] = vocab_to_list(cca_key_type_measure, "token")
     doc_out['cca_partner_contributors'] = vocab_to_list(cca_partner_contributors, 'title')
+
+    doc_out['cca_readiness_for_use'] = vocab_to_list(cca_readiness_for_use, 'title')
+    doc_out['cca_rast_steps'] = vocab_to_list(cca_rast_steps, 'title')
+    doc_out['cca_eligible_entities'] = vocab_to_list(cca_eligible_entities, 'title')
+    doc_out['cca_geographical_scale'] = vocab_to_list(cca_geographical_scale, 'title')
+    doc_out['cca_tool_language'] = vocab_to_list(cca_tool_language, 'title')
+    doc_out['cca_most_useful_for'] = vocab_to_list(cca_most_useful_for, 'title')
+    doc_out['cca_user_requirements'] = vocab_to_list(cca_user_requirements, 'title')
+
     doc_out['key_system'] = vocab_to_list(cca_key_system, 'title')
     doc_countries = doc_out.get('spatial', [])
     if type(doc_countries) is not list:
