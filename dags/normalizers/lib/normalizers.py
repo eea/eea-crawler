@@ -658,3 +658,18 @@ def add_counts(doc):
         else:
             doc_with_counts[f"items_count_{key}"] = 1
     return doc_with_counts
+
+def update_ct_by_attr(doc, config, normalized_doc):
+    op_list = normalized_doc.get("objectProvides")
+
+    mapping_config = config.get("site",{}).get('attribute_to_content_type_mapping', {})
+    mapping_field = mapping_config.get('name', 'subjects')
+    mapping = mapping_config.get('mapping', {})
+    field_values = doc.get("raw_value").get(mapping_field, [])
+    field_values_lc = [x.lower() for x in field_values]
+    for key in mapping.keys():
+        if key.lower() in field_values_lc:
+            for new_op in mapping[key]:
+                if new_op not in op_list:
+                    op_list.append(new_op)
+    return op_list
