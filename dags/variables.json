@@ -1,5 +1,7 @@
 {
     "!": "IMPORTANT",
+    "_attr_find_publisher": {
+    },
     "app_cca_test": {
         "Sites": {
             "climate": "config_cca_mission_stories"
@@ -14,6 +16,22 @@
         "nlp_config": "nlp_services_default",
         "rabbitmq_config": "rabbitmq_global_search",
         "schedule_interval": "@daily",
+        "skip_doc_cnt": 100
+    },
+    "app_copernicus": {
+        "Sites": {
+            "insitu": "config_copernicus_insitu",
+            "land": "config_copernicus_land"
+        },
+        "allowed_errors_for_doc": 20,
+        "elastic_config": {
+            "elastic": "elastic_copernicus",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_default",
+        "rabbitmq_config": "rabbitmq_global_search",
         "skip_doc_cnt": 100
     },
     "app_datahub": {
@@ -58,7 +76,7 @@
             "noise": "config_noise",
             "sdi": "config_sdi_prod",
             "wise_freshwater": "config_wise_new_freshwater",
-            "wise_marine": "config_wise_marine"
+            "wise_marine": "config_wise_new_marine"
         },
         "Sites_full": {
             "bise": "config_bise",
@@ -74,7 +92,7 @@
             "noise": "config_noise",
             "sdi": "config_sdi_prod",
             "wise_freshwater": "config_wise_new_freshwater",
-            "wise_marine": "config_wise_marine"
+            "wise_marine": "config_wise_new_marine"
         },
         "allowed_errors_for_doc": 2,
         "elastic_config": {
@@ -105,6 +123,22 @@
         "allowed_errors_for_doc": 2,
         "elastic_config": {
             "elastic": "elastic_global_search",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_default",
+        "rabbitmq_config": "rabbitmq_global_search",
+        "skip_doc_cnt": 100
+    },
+    "app_wise_quick": {
+        "Sites": {
+            "wise_marine": "config_wise_new_marine"
+        },
+        "allowed_errors_for_doc": 20,
+        "elastic_config": {
+            "elastic": "elastic_global_search",
+            "elastic_": "elastic_wise_quick",
             "elastic_mapping": "elastic_mapping_default",
             "elastic_raw_mapping": "elastic_raw_mapping_default",
             "elastic_settings": "elastic_settings_default"
@@ -233,7 +267,9 @@
                 "Page",
                 "eea.climateadapt.video",
                 "eea.climateadapt.c3sindicator",
-                "mission_story"
+                "mission_story",
+                "mission_tool",
+                "mission_funding_cca"
             ]
         },
         "normalizers_variable": "default_normalizers",
@@ -258,7 +294,9 @@
             "Page",
             "eea.climateadapt.mapgraphdataset",
             "eea.climateadapt.c3sindicator",
-            "mission_story"
+            "mission_story",
+            "mission_tool",
+            "mission_funding_cca"
         ],
         "scrape_pages": false,
         "scrape_with_js": true,
@@ -303,6 +341,36 @@
         "type": "plone_rest_api",
         "url": "https://clmsdemo.devel6cph.eea.europa.eu",
         "url_api_part": "api"
+    },
+    "config_copernicus_insitu": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "ignore_robots_txt": true,
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": []
+        },
+        "type": "plone_rest_api",
+        "url": "https://demo-insitu-p6.eea.europa.eu/",
+        "url_api_part": "++api++"
+    },
+    "config_copernicus_land": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "ignore_robots_txt": true,
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": []
+        },
+        "type": "plone_rest_api",
+        "url": "https://land.copernicus.eu",
+        "url_api_part": "++api++"
     },
     "config_discomap": {
         "concurrency": 1,
@@ -415,6 +483,17 @@
         "url_api_part": "api/SITE"
     },
     "config_eea_en": {
+        "attribute_to_content_type_mapping": {
+            "mapping": {
+                "country fact sheet": [
+                    "Country fact sheet"
+                ],
+                "country profile": [
+                    "Country fact sheet"
+                ]
+            },
+            "name": "subjects"
+        },
         "avoid_cache_api": true,
         "avoid_cache_web": true,
         "concurrency": 4,
@@ -436,7 +515,9 @@
         "type": "plone_rest_api",
         "types_blacklist": [
             "Image",
-            "LIF"
+            "LIF",
+            "discodataconnector",
+            "elasticconnector"
         ],
         "url": "https://www.eea.europa.eu/en",
         "url_api_part": "++api++/en"
@@ -1062,7 +1143,8 @@
                 "tableau_visualization",
                 "visualization",
                 "map_visualization",
-                "map_interactive"
+                "map_interactive",
+                "indicator"
             ]
         },
         "normalizers_variable": "default_normalizers",
@@ -1284,6 +1366,120 @@
         },
         "type": "plone_rest_api",
         "url": "https://water.europa.eu/freshwater/",
+        "url_api_part": ""
+    },
+    "config_wise_new_marine": {
+        "concurrency": 4,
+        "fix_items_url": {
+            "with_api": "https://water.europa.eu/marine/++api++",
+            "without_api": "https://water.europa.eu/marine"
+        },
+        "location_rules_fallback": "Webpage",
+        "normalize": {
+            "blacklist": [],
+            "location_rules": [
+                {
+                    "ct": [
+                        "Webpage"
+                    ],
+                    "path": "/marine/policy-and-reporting/*"
+                },
+                {
+                    "ct": [
+                        "Topic page"
+                    ],
+                    "path": "/marine/state-of-europe-seas/"
+                },
+                {
+                    "ct": [
+                        "Topic page"
+                    ],
+                    "path": "/marine/state-of-europe-seas/*"
+                },
+                {
+                    "ct": [
+                        "Dashboard"
+                    ],
+                    "path": "/marine/state-of-europe-seas/marine-sectors-catalogue-of-measures"
+                },
+                {
+                    "ct": [
+                        "Dashboard"
+                    ],
+                    "path": "/marine/data-maps-and-tools/map-viewers-visualization-tools/dashboards-on-marine-features-under-other-policies/*"
+                },
+                {
+                    "ct": [
+                        "Dashboard"
+                    ],
+                    "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/ges-assessment-dashboards/*"
+                },
+                {
+                    "ct": [
+                        "Country fact sheet",
+                        "Dashboard"
+                    ],
+                    "path": "/marine/data-maps-and-tools/msfd-reporting-information-products/ges-assessment-dashboards/country-thematic-dashboards/"
+                },
+                {
+                    "ct": [
+                        "Map (interactive)"
+                    ],
+                    "path": "/marine/data-maps-and-tools/map-viewers-visualization-tools/european-reference-maps"
+                },
+                {
+                    "ct": [
+                        "Country fact sheet",
+                        "Dashboard"
+                    ],
+                    "path": "/marine/countries-and-regional-seas/country-profiles/*"
+                }
+            ],
+            "whitelist": [
+                "Document",
+                "Page",
+                "File",
+                "country_factsheet",
+                "spmeasure",
+                "tableau_visualization",
+                "visualization",
+                "map_visualization",
+                "map_interactive",
+                "indicator"
+            ]
+        },
+        "normalizers_variable": "default_normalizers",
+        "portal_types": [
+            "Document",
+            "Page",
+            "File",
+            "country_factsheet",
+            "spmeasure",
+            "tableau_visualization",
+            "visualization",
+            "map_visualization",
+            "map_interactive",
+            "indicator"
+        ],
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".fp-header",
+                ".content-header",
+                ".plone-breadcrumb",
+                ".footer-wrapper",
+                ".left-logo-section",
+                ".navbar-header",
+                "#portal-globalnav",
+                ".hiddenStructure",
+                "#content-header",
+                ".daviz-toolbar-container",
+                ".leadimage-header"
+            ]
+        },
+        "type": "plone_rest_api",
+        "url": "https://water.europa.eu/marine/",
         "url_api_part": ""
     },
     "config_wise_test_freshwater": {
@@ -1530,6 +1726,7 @@
             "bise_factsheet": "Country fact sheet",
             "briefing": "Briefing",
             "case_study": "Case study",
+            "chart_static": "Figure (chart/map)",
             "chemicals": "Chemicals",
             "climate": "Climate change mitigation",
             "climate-change-adaptation": "Climate change adaptation",
@@ -1617,8 +1814,12 @@
             "landing_page": "Webpage",
             "landuse": "Land use",
             "map_interactive": "Map (interactive)",
+            "map_static": "Figure (chart/map)",
+            "map_visualization": "Map (interactive)",
             "measure": "Measure",
+            "mission_funding_cca": "Funding oportunity",
             "mission_story": "Mission story",
+            "mission_tool": "Mission tool",
             "plone.app.blob.interfaces.IATBlobImage": "Image",
             "plone.app.collection.interfaces.ICollection": "Catalogue / listing",
             "plone.app.layout.navigation.interfaces.INavigationRoot": "Website main section",
@@ -1701,7 +1902,10 @@
             "number_of_countries",
             "management_plan",
             "chemical_type",
-            "country"
+            "country",
+            "number_of_area",
+            "indicator_theme",
+            "indicator_last_update"
         ],
         "whiteMap": {}
     },
@@ -1710,6 +1914,12 @@
         "port": 9200,
         "raw_index": "ccatest_raw_new",
         "searchui_target_index": "ccatest_searchui"
+    },
+    "elastic_copernicus": {
+        "host": "elastic",
+        "port": 9200,
+        "raw_index": "copernicus_raw",
+        "searchui_target_index": "copernicus_searchui"
     },
     "elastic_datahub": {
         "host": "elastic",
@@ -2480,6 +2690,12 @@
             }
         }
     },
+    "elastic_wise_quick": {
+        "host": "elastic",
+        "port": 9200,
+        "raw_index": "wisequick_raw",
+        "searchui_target_index": "wisequick_searchui"
+    },
     "elastic_wise_test": {
         "host": "elastic",
         "port": 9200,
@@ -2487,7 +2703,9 @@
         "searchui_target_index": "wisetest_searchui"
     },
     "errors_cca_test": {},
+    "errors_copernicus": {},
     "errors_datahub": {},
+    "errors_global_search": {},
     "headless_chrome": {
         "endpoint": "http://headless-chrome-api:3000/content"
     },
@@ -5158,10 +5376,6 @@
             "instrument": "http://rod.eionet.europa.eu/instruments/217",
             "label": "GroundWater Directive dangerous substances (consolidated)"
         },
-        "http://rod.eionet.europa.eu/obligations/840": {
-            "instrument": "http://rod.eionet.europa.eu/instruments/705",
-            "label": "Single Use Plastic Directive"
-        },
         "http://rod.eionet.europa.eu/obligations/841": {
             "instrument": "http://rod.eionet.europa.eu/instruments/705",
             "label": "Single Use Plastic Directive"
@@ -5209,6 +5423,10 @@
         "http://rod.eionet.europa.eu/obligations/851": {
             "instrument": "http://rod.eionet.europa.eu/instruments/631",
             "label": "Marine Strategy Framework Directive"
+        },
+        "http://rod.eionet.europa.eu/obligations/852": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/676",
+            "label": "HDV Monitoring and Reporting Regulation"
         },
         "http://rod.eionet.europa.eu/obligations/9": {
             "instrument": "http://rod.eionet.europa.eu/instruments/500",
