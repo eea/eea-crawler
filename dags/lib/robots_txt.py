@@ -7,7 +7,10 @@ def init(site_config):
 
     allowed_items = []
     ts = datetime.now().timestamp()
-    robots_url = site_config.get("robots_txt", f"{site_config['url']}/robots.txt?ts={ts}")
+    if site_config['url'].startswith('https://water.europa.eu'):
+        robots_url = site_config.get("robots_txt", f"https://water.europa.eu/robots.txt?ts={ts}")
+    else:
+        robots_url = site_config.get("robots_txt", f"{site_config['url']}/robots.txt?ts={ts}")
     print(robots_url)
     rp = robotparser.RobotFileParser()
     rp.set_url(robots_url)
@@ -19,4 +22,7 @@ def test_url(rp, url):
     if not rp:
         return True
     else:
+        #temporarily only index /en for cca
+        if url.startswith("https://climate-adapt.eea.europa.eu") and not url.startswith("https://climate-adapt.eea.europa.eu/en"):
+            return False
         return rp.can_fetch("*", url)
