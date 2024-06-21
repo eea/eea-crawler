@@ -16,6 +16,13 @@ import logging
 
 logger = logging.getLogger(__file__)
 
+def simplify_list(attr_list, field="title"):
+    print("========================")
+    print(attr_list)
+    attr_list = attr_list or []
+    if type(attr_list) != list:
+        attr_list = [attr_list]
+    return [val[field] for val in attr_list or []]
 
 wm_spm_extra_fields = ["title",
     "sector",
@@ -124,6 +131,9 @@ def normalize_marine(doc, config):
         normalized_doc['legislative_reference'] = [val.get('title') for val in doc["raw_value"]["legislative_reference"]]
     if type(doc["raw_value"].get("theme")) is list:
         normalized_doc['wm_theme'] = doc["raw_value"].get("theme")
+
+
+    normalized_doc["wm_dpsir_type"] = simplify_list(doc.get("raw_value", {}).get("dpsir_type",[]))
 
     print("OBJECT PROVIDES")
     print(normalized_doc["objectProvides"])
