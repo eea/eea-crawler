@@ -33,7 +33,7 @@ def add_site_status(v, task_name='', msg='', status=''):
     raw_status['start_time'] = str_time
     raw_status['start_time_ts'] = strtime_to_ts(str_time)
     raw_status['next_execution_date'] = v.get('next_execution_date')
-    raw_status['next_execution_date_ts'] = strtime_to_ts(v.get('next_execution_date'))
+    raw_status['next_execution_date_ts'] = strtime_to_ts(v.get('next_execution_date')) + 30000 # add 5 minutes margin for next execution date
 
     es = elastic.elastic_connection(v)
     resp = elastic.search(es, body=STATUS_QUERY_ALL, index=elastic_conf["searchui_target_index"])
