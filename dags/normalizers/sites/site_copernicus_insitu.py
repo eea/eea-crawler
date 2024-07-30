@@ -34,6 +34,8 @@ def normalize_copernicus_insitu(doc, config):
     logger.info(doc["raw_value"].get("@id", ""))
     logger.info(doc["raw_value"].get("@type", ""))
 
+    insitu_preview_image = doc["raw_value"].get('preview_image')
+
     normalized_doc = common_normalizer(doc, config)
     if not normalized_doc:
         return None
@@ -46,7 +48,13 @@ def normalize_copernicus_insitu(doc, config):
     normalized_doc["taxonomy_copernicus_themes"] = simplify_list(doc.get("raw_value", {}).get("taxonomy_copernicus_themes",[]))
     normalized_doc["data_providers_list"] = simplify_list(doc.get("raw_value", {}).get("data_providers_list",[]))
 
+
+    normalized_doc['copernicus_services'] = simplify_list(doc.get('raw_value', {}).get("copernicus_services",[]))
+
     normalized_doc = check_readingTime(normalized_doc, config)
+
+    if insitu_preview_image is not None:
+        normalized_doc["insitu_preview_image"] = insitu_preview_image.get('scales',{}).get('preview', {}).get('download')
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc
