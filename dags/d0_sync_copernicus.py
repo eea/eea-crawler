@@ -14,7 +14,7 @@ TASK_PARAMS = {"params": {"app": "copernicus", "enable_prepare_docs": True}}
 
 @task
 def trigger_sync(ignore_delete_threshold):
-    app_id = get_app_identifier("wise_test")
+    app_id = get_app_identifier("copernicus_test")
     TASK_PARAMS["params"]["ignore_delete_threshold"] = ignore_delete_threshold
     TASK_PARAMS["params"]["app_identifier"] = app_id
     TASK_PARAMS["params"]["skip_status"] = True
