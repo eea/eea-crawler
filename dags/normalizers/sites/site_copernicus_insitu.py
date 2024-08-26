@@ -28,6 +28,7 @@ def simplify_list(attr_list, field="title"):
         attr_list = [attr_list]
     return [val[field] for val in attr_list or []]
 
+
 @register_facets_normalizer("insitu")
 def normalize_copernicus_insitu(doc, config):
     logger.info("NORMALIZE INSITU")
@@ -44,17 +45,23 @@ def normalize_copernicus_insitu(doc, config):
 
     normalized_doc['title'] = get_page_title(doc)
 
-    normalized_doc["taxonomy_copernicus_components"] = simplify_list(doc.get("raw_value", {}).get("taxonomy_copernicus_components",[]))
-    normalized_doc["taxonomy_copernicus_themes"] = simplify_list(doc.get("raw_value", {}).get("taxonomy_copernicus_themes",[]))
-    normalized_doc["data_providers_list"] = simplify_list(doc.get("raw_value", {}).get("data_providers_list",[]))
+    normalized_doc["taxonomy_report_category"] = simplify_list(
+        doc.get("raw_value", {}).get("taxonomy_report_category", []))
+    normalized_doc["taxonomy_copernicus_components"] = simplify_list(
+        doc.get("raw_value", {}).get("taxonomy_copernicus_components", []))
+    normalized_doc["taxonomy_copernicus_themes"] = simplify_list(
+        doc.get("raw_value", {}).get("taxonomy_copernicus_themes", []))
+    normalized_doc["data_providers_list"] = simplify_list(
+        doc.get("raw_value", {}).get("data_providers_list", []))
 
-
-    normalized_doc['copernicus_services'] = simplify_list(doc.get('raw_value', {}).get("copernicus_services",[]))
+    normalized_doc['copernicus_services'] = simplify_list(
+        doc.get('raw_value', {}).get("copernicus_services", []))
 
     normalized_doc = check_readingTime(normalized_doc, config)
 
     if insitu_preview_image is not None:
-        normalized_doc["insitu_preview_image"] = insitu_preview_image.get('scales',{}).get('preview', {}).get('download')
+        normalized_doc["insitu_preview_image"] = insitu_preview_image.get(
+            'scales', {}).get('preview', {}).get('download')
 
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc
