@@ -455,7 +455,6 @@
             "Document",
             "Page",
             "Fiche",
-            "EEAFigure",
             "File",
             "Folder",
             "Assessment",
@@ -1863,6 +1862,7 @@
             "image.scales.preview.download": "image_preview",
             "image.scales.thumb.download": "image_thumb",
             "image.scales.tile.download": "image_tile",
+            "preview_image.scales.preview.download": "image_preview",
             "location": "spatial",
             "subjects": "subject",
             "temporalCoverage": [
