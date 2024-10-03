@@ -276,6 +276,24 @@ def extract_attachments(json_doc, nlp_service_params, extract_pdf):
 
     text_fragments = []
 
+    if json_doc.get("@type") == "report_pdf":
+        for item in json_doc.get("items", []):
+            if item.get("@type") == "File":
+                download_url = f"{item.get('@id')}/@@download/file"
+                logger.info("Download url found: %s", download_url)
+                try:
+                    resp = request_with_retry(
+                        converter_dsn, "post", {"url": download_url}
+                    )
+                except Exception:
+                    logger.exception("failed file extraction for report_pdf")
+
+                if isinstance(resp, str):
+                    resp = json.loads(resp)
+                for doc in resp["documents"]:
+                    text_fragments.append(doc["text"].strip())
+
+
     for name, value in json_doc.items():
 
         # if (
