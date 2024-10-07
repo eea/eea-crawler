@@ -287,6 +287,8 @@ def pre_normalize_sdi(doc, config):
     #    doc["raw_value"]["prod_id"] = prodId[0]
     doc["raw_value"]["prod_id"] = prodId
     
+    doc["raw_value"]["title"] = doc["raw_value"].get("resourceTitleObject.default")
+
     return doc
 
 
