@@ -85,6 +85,9 @@ def normalize_freshwater(doc, config):
 
     normalized_doc["cluster_name"] = "wise-freshwater"
 
+    normalized_doc["wise_country"] = normalized_doc.get("country")
+    if normalized_doc.get('country'):
+        del(normalized_doc["country"])
     normalized_doc = check_readingTime(normalized_doc, config)
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc

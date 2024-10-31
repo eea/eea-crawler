@@ -115,7 +115,7 @@ def build_queries_list(site_config, query_config):
                 )
     else:
         queries = [
-            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date{query_limit}&ts={ts}"
+            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=UID{query_limit}&ts={ts}"
         ]
     return queries
 
