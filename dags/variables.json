@@ -1349,7 +1349,8 @@
                 "report_publication",
                 "visualization_tableau",
                 "glossary_term",
-                "tableau_visualization"
+                "tableau_visualization",
+                "chemical"
             ]
         },
         "normalizers_variable": "default_normalizers",
@@ -1824,6 +1825,7 @@
             "plone.app.layout.navigation.interfaces.INavigationRoot": "Website main section",
             "policy": "Policy instruments",
             "regions": "Specific regions",
+            "report_pdf": "Report",
             "report_publication": "Report/Publication",
             "soil": "Soil",
             "source": "Source",
@@ -1836,7 +1838,8 @@
             "visualization": "Chart (interactive)",
             "visualization_tableau": "Visualization (Tableau)",
             "waste": "Resource efficiency and waste",
-            "water": "Water and marine environment"
+            "water": "Water and marine environment",
+            "web_report": "Report"
         },
         "normProp": {
             "@type": "objectProvides",
@@ -1862,8 +1865,8 @@
             "image.scales.preview.download": "image_preview",
             "image.scales.thumb.download": "image_thumb",
             "image.scales.tile.download": "image_tile",
-            "preview_image.scales.preview.download": "image_preview",
             "location": "spatial",
+            "preview_image.scales.preview.download": "image_preview",
             "subjects": "subject",
             "temporalCoverage": [
                 "time_coverage"
@@ -5427,6 +5430,18 @@
         "http://rod.eionet.europa.eu/obligations/852": {
             "instrument": "http://rod.eionet.europa.eu/instruments/676",
             "label": "HDV Monitoring and Reporting Regulation"
+        },
+        "http://rod.eionet.europa.eu/obligations/853": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/712",
+            "label": "HDV Standards Regulation"
+        },
+        "http://rod.eionet.europa.eu/obligations/854": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/713",
+            "label": "Nature Restoration Law"
+        },
+        "http://rod.eionet.europa.eu/obligations/855": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/714",
+            "label": "European Climate Law"
         },
         "http://rod.eionet.europa.eu/obligations/9": {
             "instrument": "http://rod.eionet.europa.eu/instruments/500",
