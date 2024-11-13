@@ -19,12 +19,21 @@ class RuleLine():
         self.allowance = allowance
 
     def applies_to(self, filename):
-        self.path = unquote(self.path)
-        if '*' in self.path:
-            # print("RuleLine RobotsTxt: {} : {} : {}".format(filename, self.path,
-            #       len(fnmatch.filter([filename], self.path))))
-            return True if len(fnmatch.filter([filename], self.path)) else False
-        return self.path == "*" or filename.startswith(self.path)
+        pattern = unquote(self.path)
+        if pattern == "*":
+            return True
+
+        if filename.startswith(pattern):
+            return True
+
+        if pattern.endswith("$"):
+            # When ending with '$', needs to be an exact match
+            return fnmatch.fnmatchcase(filename, pattern[:-1])
+
+        if not pattern.endswith("*"):
+            pattern += "*"
+
+        return fnmatch.fnmatchcase(filename, pattern)
 
     def __str__(self):
         return ("Allow" if self.allowance else "Disallow") + ": " + self.path
