@@ -1,8 +1,6 @@
 from difflib import SequenceMatcher
 from lib import elastic
-# from lib import plone_rest_api, robots_txt
-from lib import plone_rest_api
-from lib import robots_txt_parse as robots_txt
+from lib import plone_rest_api, robots_txt
 import urllib.parse
 import requests
 from crawlers.registry import register_site_crawler, register_doc_crawler
