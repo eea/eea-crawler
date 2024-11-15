@@ -22,7 +22,7 @@ def normalize_freshwater(doc, config):
     logger.info("NORMALIZE FRESHWATER")
     logger.info(doc["raw_value"].get("@id", ""))
     logger.info(doc["raw_value"].get("@type", ""))
-    logger.info(doc)
+    # logger.info(doc)
     ct_normalize_config = config["site"].get("normalize", {})
 
     if not check_blacklist_whitelist(
@@ -65,20 +65,35 @@ def normalize_freshwater(doc, config):
         normalized_doc['exclude_from_globalsearch'] = ['True']
     print("OBJECT PROVIDES")
     print(normalized_doc["objectProvides"])
+    print("type if biophysical_impacts {}".format(
+        type(doc["raw_value"].get("biophysical_impacts").get("value"))))
 
-    if type(doc["raw_value"].get("biophysical_impacts")) is list:
-        normalized_doc['biophysical_impacts'] = [val.get('name') for val in doc["raw_value"]["biophysical_impacts"]]
-    if type(doc["raw_value"].get("ecosystem_services")) is list:
-        normalized_doc['ecosystem_services'] = [val.get('name') for val in doc["raw_value"]["ecosystem_services"]]
-    if type(doc["raw_value"].get("policy_objectives")) is list:
-        normalized_doc['policy_objectives'] = [val.get('name') for val in doc["raw_value"]["policy_objectives"]]
+    if type(doc["raw_value"].get("biophysical_impacts", {}).get("value")) is list:
+        print("biophysical_impacts start")
+        normalized_doc['biophysical_impacts'] = [
+            val.get('name') for val in doc["raw_value"]["biophysical_impacts"]["value"]]
+        print("biophysical_impacts end: {}".format(
+            normalized_doc['biophysical_impacts']))
+    if type(doc["raw_value"].get("ecosystem_services", {}).get("value")) is list:
+        print("ecosystem_services start")
+        normalized_doc['ecosystem_services'] = [
+            val.get('name') for val in doc["raw_value"]["ecosystem_services"]["value"]]
+        print("ecosystem_services end: {}".format(
+            normalized_doc['ecosystem_services']))
+    if type(doc["raw_value"].get("policy_objectives", {}).get("value")) is list:
+        print("policy_objectives start")
+        normalized_doc['policy_objectives'] = [
+            val.get('name') for val in doc["raw_value"]["policy_objectives"]["value"]]
+        print("policy_objectives end: {}".format(
+            normalized_doc['policy_objectives']))
     lr = doc["raw_value"].get("legislative_reference")
     if type(lr) is list:
         if len(lr) > 0:
             if type(lr[0]) is str:
                 normalized_doc['legislative_reference'] = lr
             else:
-                normalized_doc['legislative_reference'] = [val.get('title') for val in lr]
+                normalized_doc['legislative_reference'] = [
+                    val.get('title') for val in lr]
     if type(doc["raw_value"].get("category")) is list:
         normalized_doc['category'] = doc["raw_value"].get("category")
     normalized_doc['measure_sector'] = doc["raw_value"].get("measure_sector")
@@ -87,7 +102,7 @@ def normalize_freshwater(doc, config):
 
     normalized_doc["wise_country"] = normalized_doc.get("country")
     if normalized_doc.get('country'):
-        del(normalized_doc["country"])
+        del (normalized_doc["country"])
     normalized_doc = check_readingTime(normalized_doc, config)
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc
