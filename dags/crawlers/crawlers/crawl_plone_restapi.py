@@ -1,3 +1,8 @@
+from difflib import SequenceMatcher
+from lib import elastic
+from lib import plone_rest_api, robots_txt
+import urllib.parse
+import requests
 from crawlers.registry import register_site_crawler, register_doc_crawler
 
 from datetime import datetime
@@ -6,14 +11,11 @@ import logging
 import json
 
 logger = logging.getLogger(__file__)
-import requests
 
-import urllib.parse
-from lib import plone_rest_api, robots_txt
-from lib import elastic
-from difflib import SequenceMatcher
+
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
+
 
 SKIP_EXTENSIONS = ["png", "svg", "jpg", "gif", "eps", "jpeg"]
 
@@ -248,14 +250,16 @@ def crawl_doc(v, site, site_config, doc_id, handler=None, extra_opts=None):
         errors.append("converting pdf file")
         doc_errors.append("pdf")
     if doc.get("@type") == 'Report':
-        for item in doc.get("items",[]):
-            if item.get("@type") == 'Fiche' and similar(doc.get("description",{}).get("data"), item.get("description")) > 0.2:
+        for item in doc.get("items", []):
+            if item.get("@type") == 'Fiche' and similar(doc.get("description", {}).get("data"), item.get("description")) > 0.2:
                 print("Has duplicate")
                 print("Fetch:")
                 print(item.get("@id"))
                 try:
-                    item_id = plone_rest_api.get_no_api_url(site_config, item.get("@id"))
-                    item_doc = crawl_doc(v, site, site_config, item_id, handler=None, extra_opts={"skip_scrape":True})
+                    item_id = plone_rest_api.get_no_api_url(
+                        site_config, item.get("@id"))
+                    item_doc = crawl_doc(v, site, site_config, item_id, handler=None, extra_opts={
+                                         "skip_scrape": True})
                     if len(item_doc.get("errors", [])) == 0:
                         pdf_text += " "
                         pdf_text += item_doc.get("raw_doc").get("pdf_text", "")
@@ -265,7 +269,6 @@ def crawl_doc(v, site, site_config, doc_id, handler=None, extra_opts=None):
                         }
                 except:
                     print("error loading items of document")
-
 
     raw_doc = prepare_doc_for_rabbitmq(
         doc, scraped, pdf_text, doc_errors, site, site_config
