@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+import re
 
 from normalizers.registry import (
     register_facets_normalizer,
@@ -65,25 +66,26 @@ def normalize_freshwater(doc, config):
         normalized_doc['exclude_from_globalsearch'] = ['True']
     print("OBJECT PROVIDES")
     print(normalized_doc["objectProvides"])
-    print("type if biophysical_impacts {}".format(
-        type(doc["raw_value"].get("biophysical_impacts").get("value"))))
 
     if type(doc["raw_value"].get("biophysical_impacts", {}).get("value")) is list:
-        print("biophysical_impacts start")
         normalized_doc['biophysical_impacts'] = [
             val.get('name') for val in doc["raw_value"]["biophysical_impacts"]["value"]]
+        normalized_doc['biophysical_impacts'] = normalized_bep(
+            normalized_doc['biophysical_impacts'], 'BP')
         print("biophysical_impacts end: {}".format(
             normalized_doc['biophysical_impacts']))
     if type(doc["raw_value"].get("ecosystem_services", {}).get("value")) is list:
-        print("ecosystem_services start")
         normalized_doc['ecosystem_services'] = [
             val.get('name') for val in doc["raw_value"]["ecosystem_services"]["value"]]
+        normalized_doc['ecosystem_services'] = normalized_bep(
+            normalized_doc['ecosystem_services'], 'ES')
         print("ecosystem_services end: {}".format(
             normalized_doc['ecosystem_services']))
     if type(doc["raw_value"].get("policy_objectives", {}).get("value")) is list:
-        print("policy_objectives start")
         normalized_doc['policy_objectives'] = [
             val.get('name') for val in doc["raw_value"]["policy_objectives"]["value"]]
+        normalized_doc['policy_objectives'] = normalized_bep(
+            normalized_doc['policy_objectives'], 'PO')
         print("policy_objectives end: {}".format(
             normalized_doc['policy_objectives']))
     lr = doc["raw_value"].get("legislative_reference")
@@ -106,6 +108,28 @@ def normalize_freshwater(doc, config):
     normalized_doc = check_readingTime(normalized_doc, config)
     normalized_doc = add_counts(normalized_doc)
     return normalized_doc
+
+
+def normalized_bep(data, prefix):
+    # biophysical_impacts
+    # ecosystem_services
+    # policy_objectives
+    if type(data) is not list:
+        return data
+    if len(prefix) < 1:
+        return data
+    response = []
+    pattern = prefix+"\d+\s-\s(.+)"
+    for item in data:
+        if isinstance(item, str):
+            match = re.fullmatch(pattern, item)
+            if match:
+                response.append(match.group(1).strip())
+            else:
+                response.append(item)
+        else:
+            response.append(item)
+    return response
 
 
 @register_nlp_preprocessor("wise_freshwater")
