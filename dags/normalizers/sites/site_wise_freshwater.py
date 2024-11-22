@@ -76,8 +76,8 @@ def normalize_freshwater(doc, config):
             val.get('name') for val in doc["raw_value"]["biophysical_impacts"]["value"]]
         normalized_doc['biophysical_impacts'] = normalized_bep(
             normalized_doc['biophysical_impacts'], 'BP')
-        print("biophysical_impacts end: {}".format(
-            normalized_doc['biophysical_impacts']))
+        # print("biophysical_impacts end: {}".format(
+        #     normalized_doc['biophysical_impacts']))
 
 #    if type(doc["raw_value"].get("ecosystem_services", {}).get("value")) is list:
     des = doc["raw_value"].get("ecosystem_services", {}) or {}
@@ -86,8 +86,8 @@ def normalize_freshwater(doc, config):
             val.get('name') for val in doc["raw_value"]["ecosystem_services"]["value"]]
         normalized_doc['ecosystem_services'] = normalized_bep(
             normalized_doc['ecosystem_services'], 'ES')
-        print("ecosystem_services end: {}".format(
-            normalized_doc['ecosystem_services']))
+        # print("ecosystem_services end: {}".format(
+        #     normalized_doc['ecosystem_services']))
 
 #    if type(doc["raw_value"].get("policy_objectives", {}).get("value")) is list:
     dpo = doc["raw_value"].get("policy_objectives", {}) or {}
@@ -96,8 +96,8 @@ def normalize_freshwater(doc, config):
             val.get('name') for val in doc["raw_value"]["policy_objectives"]["value"]]
         normalized_doc['policy_objectives'] = normalized_bep(
             normalized_doc['policy_objectives'], 'PO')
-        print("policy_objectives end: {}".format(
-            normalized_doc['policy_objectives']))
+        # print("policy_objectives end: {}".format(
+        #     normalized_doc['policy_objectives']))
     lr = doc["raw_value"].get("legislative_reference")
     if type(lr) is list:
         if len(lr) > 0:
@@ -119,7 +119,7 @@ def normalize_freshwater(doc, config):
     normalized_doc = add_counts(normalized_doc)
     if 'Measure' in normalized_doc["objectProvides"] and doc.get("raw_value", {}).get('measure_summary', {}).get('data', None):
         normalized_doc['description'] = trafilatura.extract(
-            doc["raw_value"]['measure_summary']['data'])
+            doc["raw_value"]['measure_summary']['data']+"<p></p>")
     return normalized_doc
 
 
