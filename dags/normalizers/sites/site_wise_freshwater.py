@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+import trafilatura
 import re
 
 from normalizers.registry import (
@@ -116,6 +117,9 @@ def normalize_freshwater(doc, config):
         del (normalized_doc["country"])
     normalized_doc = check_readingTime(normalized_doc, config)
     normalized_doc = add_counts(normalized_doc)
+    if 'Measure' in normalized_doc["objectProvides"] and doc.get("raw_value", {}).get('measure_summary', {}).get('data', None):
+        normalized_doc['description'] = trafilatura.extract(
+            doc["raw_value"]['measure_summary']['data'])
     return normalized_doc
 
 
