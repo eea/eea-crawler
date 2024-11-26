@@ -117,9 +117,13 @@ def normalize_freshwater(doc, config):
         del (normalized_doc["country"])
     normalized_doc = check_readingTime(normalized_doc, config)
     normalized_doc = add_counts(normalized_doc)
+    print("MS pre:")
+    print(doc.get("raw_value", {}).get('measure_summary', {}))
     if 'Measure' in normalized_doc["objectProvides"] and doc.get("raw_value", {}).get('measure_summary', {}).get('data', None):
         normalized_doc['description'] = trafilatura.extract(
-            doc["raw_value"]['measure_summary']['data'])
+            doc["raw_value"]['measure_summary']['data'] + "<p></p>")
+    print("MS post:")
+    print(normalized_doc['description'])
     return normalized_doc
 
 

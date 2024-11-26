@@ -66,6 +66,6 @@ def test_url(rp, url):
         return True
     else:
         # temporarily only index /en for cca
-        if url.startswith("https://climate-adapt.eea.europa.eu") and not url.startswith("https://climate-adapt.eea.europa.eu/en"):
-            return False
+        # if url.startswith("https://climate-adapt.eea.europa.eu") and not url.startswith("https://climate-adapt.eea.europa.eu/en"):
+        #     return False
         return rp.can_fetch("*", url)
