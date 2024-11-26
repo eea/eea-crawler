@@ -50,6 +50,8 @@ def parse_all_documents(
     skip_docs = v.get("skip_docs", [])
     print("skip docs")
     print(skip_docs)
+    ignore_seo_noindex = site_config.get("ignore_seo_noindex", None)
+    print("site_config: ignore_seo_noindex={}".format(ignore_seo_noindex))
     cnt = 0
     for query in queries:
         docs = plone_rest_api.get_docs(query)
@@ -90,6 +92,9 @@ def parse_all_documents(
                     skip = True
             if doc["@type"] in types_blacklist:
                 print("Skiped by black list type")
+                skip = True
+            if not ignore_seo_noindex and doc.get("seo_noindex", None):
+                print('SKIP by head meta tag seo_noindex')
                 skip = True
             if doc_id in skip_docs:
                 print("Document had errors, skip")
