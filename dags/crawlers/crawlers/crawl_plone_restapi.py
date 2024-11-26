@@ -93,7 +93,7 @@ def parse_all_documents(
             if doc["@type"] in types_blacklist:
                 print("Skiped by black list type")
                 skip = True
-            if not ignore_seo_noindex and 'seo_noindex' in doc and doc["seo_noindex"]:
+            if not ignore_seo_noindex and doc.get("seo_noindex", None):
                 print('SKIP by head meta tag seo_noindex')
                 skip = True
             if doc_id in skip_docs:
