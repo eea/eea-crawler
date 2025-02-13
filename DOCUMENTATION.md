@@ -78,6 +78,10 @@ Settings for configuring rabbitmq: host, port, username, password, port, queue n
         "DOCUMENTTYPE1",
         "DOCUMENTTYPE2"
     ],
+    "types_blacklist": [
+        "Image",
+        "News"
+    ],
     "scrape_pages": false,
     "scrape_with_js": true,
     "type": "plone_rest_api",
@@ -89,6 +93,11 @@ Settings for configuring rabbitmq: host, port, username, password, port, queue n
     }
 }
 ```
+
+Config variables which will be used in dag D2
+- portal_types: if define and list has elements restrict the import
+- types_blacklist: if defined, list of types to skip
+
 #### Normalize
 In blacklist and whitelist : types of documents
 ##### normalizers_variable
@@ -234,3 +243,56 @@ After starting, the following will start in order:
 - `d1_sync`: for each specified website it will create the configurations and run the next DAG with the website data
 - `d2_crawl_site`: depending on the configuration, it will bring all the documents from the website
 - `d3_crawl_fetch_for_id`: will fetch all the documents according to the type of crawler dags/crawlers/crawlers/TYPE.py -> parse_all_documents. For each document, dags/crawlers/crawlers/TYPE.py -> crawl_doc will be called.
+
+## D1
+Goes through the list of websites defined in the app, for each site defined in SITES and for each one:
+- Create the configuration parameters
+- List skip_docs
+- Quick - if this variable is True, error testing is ignored
+
+Skip_docs - iterate through the list of previous errors, and if the number of error attempts for a document exceeds the value specified in "skip_doc_cnt", that document is removed from the list.
+
+## D2
+Reads the crawl mode, plone_rest_api, sdi, and sitemap.
+ The list of document tutors is loaded.
+ For plone_rest_api, each query is processed, and the documents are checked to see if:
+- The URL appears in the whitelist or blacklist
+- skipped by robots.txt
+- portal_types if is black_list
+- If document is file, check extension if is excluded (["png", "svg", "jpg", "gif", "eps", "jpeg"])
+- seo_noindex if set head meta tag
+- Skip_docs, if the document has encountered an error in the past.
+
+It will process the document only if the modification is different from the one at the previous read and if there are no errors.
+
+It checks if the number of documents not found exceeds the threshold, or if the configuration is set to True for "ignore_delete_threshold". Remaining documents not found will be deleted one by one from Elastic.
+
+## D3
+Crawl the document received, and if there are no errors, proceed to D5_prepare_doc_for_searchui.
+
+## D5
+During document normalization, a array is created with the needs for each site individually. Among the most common are cluster_name and title. Each site has its own normalizer that will create a list used, for example, for filtering and generating facets.
+
+In the example below, we process a value from the raw document (publication_date) and add it to the normalized response (issued). Keys such as include_in_custom_search can be created based on one or more values from the raw document or by processing other parameters (portal_type and path).
+Another example is transforming a dictionary into a list of values by creating a function to help us: vocab_to_list.
+
+```python
+def vocab_to_list(vocab, attr="title"):
+    return [term[attr] for term in vocab] if vocab else []
+
+# doc - raw document
+# doc_out - normalized document
+publication_date = doc["raw_value"].get("publication_date", None)
+if publication_date is not None:
+    doc_out["issued"] = publication_date
+
+include_in_custom_search = doc["raw_value"].get("include_in_search", False)
+portal_type = doc["raw_value"].get("@type", "")
+if portal_type in ['News Item', 'Event'] and \
+        any(path in _id for path in ["/some-path/news/", "/some-path/events/"]):
+    include_in_custom_search = True
+doc_out["include_in_custom_search"] = "true" if include_in_custom_search else 'false'
+
+categories = doc["raw_value"].get("categories", [])
+doc_out["categories"] = vocab_to_list(categories)
+```
