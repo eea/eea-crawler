@@ -34,6 +34,7 @@ def normalize_climate(doc, config):
         "include_in_observatory", False)
     include_in_mission = doc["raw_value"].get("include_in_mission", False)
     publication_date = doc["raw_value"].get("publication_date", None)
+    cca_created = doc["raw_value"].get("created", None)
     cca_published = doc["raw_value"].get("cca_published", None)
     cca_sectors = doc["raw_value"].get("sectors", [])
     cca_impacts = doc["raw_value"].get("climate_impacts", [])
@@ -48,7 +49,7 @@ def normalize_climate(doc, config):
     cca_countries = doc["raw_value"].get("country", [])
     cca_climate_threats = doc["raw_value"].get("climate_threats", [])
     cca_preview_image = doc["raw_value"].get('preview_image')
-    
+
     cca_readiness_for_use = doc["raw_value"].get("readiness_for_use", [])
     cca_rast_steps = doc["raw_value"].get("rast_steps", [])
     cca_eligible_entities = doc["raw_value"].get("eligible_entities", [])
@@ -85,6 +86,7 @@ def normalize_climate(doc, config):
     if not doc_out:
         return None
 
+    doc_out["created"] = cca_created
     if doc_out.get("issued", None) is None:
         if cca_published is not None:
             doc_out["issued"] = cca_published
@@ -110,12 +112,12 @@ def normalize_climate(doc, config):
     doc_out['key_system'] = vocab_to_list(cca_key_system, 'title')
     doc_countries = doc_out.get('spatial', [])
     if type(doc_countries) is not list:
-       doc_countries = [doc_countries]
+        doc_countries = [doc_countries]
     if doc_countries[0] == 'Other':
         doc_countries = []
     doc_out['spatial'] = doc_countries + vocab_to_list(cca_countries, "title")
     doc_out['climate_threats'] = vocab_to_list(cca_climate_threats, 'title')
-    
+
     if isinstance(cca_funding_programme, str):
         doc_out["cca_funding_programme"] = cca_funding_programme
     else:
