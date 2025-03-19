@@ -63,7 +63,9 @@ def normalize_freshwater(doc, config):
             normalized_doc["objectProvides"] = ["Webpage"]
         else:
             normalized_doc["objectProvides"].remove("Webpage")
-    if "Measure" in normalized_doc["objectProvides"] or "Source" in normalized_doc["objectProvides"] or "Case study" in normalized_doc["objectProvides"]:
+    if "Measure" in normalized_doc["objectProvides"] or "Source" in normalized_doc["objectProvides"] or "Case study" in normalized_doc["objectProvides"] or "chemical" in normalized_doc["objectProvides"]:
+        print(
+            "exclude_from_globalsearch by objectProvides in [Measure, Source, Case study, chemical]")
         normalized_doc['exclude_from_globalsearch'] = ['True']
     print("OBJECT PROVIDES")
     print(normalized_doc["objectProvides"])
