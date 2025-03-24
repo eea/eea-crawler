@@ -43,7 +43,7 @@ def normalize_copernicus_insitu(doc, config):
 
     normalized_doc["cluster_name"] = "copernicus_insitu"
 
-    normalized_doc['title'] = get_page_title(doc)
+    #normalized_doc['title'] = get_page_title(doc)
 
     normalized_doc["taxonomy_report_category"] = simplify_list(
         doc.get("raw_value", {}).get("taxonomy_report_category", []))
