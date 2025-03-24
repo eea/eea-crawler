@@ -105,17 +105,17 @@ def build_queries_list(site_config, query_config):
     if site_config.get("portal_types", None):
         # queries = []
         queries = [
-            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}{query_limit}&ts={ts}"
+            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}{query_limit}&ts={ts}"
             for portal_type in site_config["portal_types"]
         ]
         if site_config.get("languages", None):
             for language in site_config.get("languages"):
                 queries.append(
-                    f"{url}/{language}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=Date{query_limit}&ts={ts}"
+                    f"{url}/{language}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true&sort_order=reverse&sort_on=Date{query_limit}&ts={ts}"
                 )
     else:
         queries = [
-            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&show_inactive=true&sort_order=reverse&sort_on=UID{query_limit}&ts={ts}"
+            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true&sort_order=reverse&sort_on=UID{query_limit}&ts={ts}"
         ]
     return queries
 
@@ -276,7 +276,7 @@ def extract_attachments(json_doc, nlp_service_params, extract_pdf):
 
     text_fragments = []
 
-    if json_doc.get("@type") == "report_pdf":
+    if json_doc.get("@type") == "report_pdf" and extract_pdf:
         for item in json_doc.get("items", []):
             if item.get("@type") == "File":
                 download_url = f"{item.get('@id')}/@@download/file"
@@ -304,7 +304,7 @@ def extract_attachments(json_doc, nlp_service_params, extract_pdf):
         if is_field_of_type(value, "file"):
             if value["content-type"] == "application/pdf" and extract_pdf:
                 extract_doc = True
-            if value["content-type"] in CONTENT_TYPES_TO_EXTRACT:
+            if value["content-type"] in CONTENT_TYPES_TO_EXTRACT and extract_pdf:
                 extract_doc = True
 
         if extract_doc:
@@ -338,10 +338,15 @@ def extract_pdf(v, site_config, doc):
     nlp_service_params = v.get("nlp_services")
     should_extract_pdf = True
 
+    if doc.get("@id") == "https://www.eea.europa.eu/en/analysis/publications/european-union-greenhouse-gas-inventory-2014":
+        should_extract_pdf = False
+
     if site_config.get("pdf_days_limit", 0) > 0:
         current_date = datetime.now()
         logger.info("CHECK DATE")
-        mod_date_str = doc.get("modification_date", None)
+        mod_date_str = doc.get("modification_date", doc.get("modified", None))
+        print(mod_date_str)
+        print(doc.get("modified", None))
         if mod_date_str:
             mod_date = datetime.strptime(
                 mod_date_str.split("T")[0], "%Y-%m-%d"

@@ -14,12 +14,16 @@ class RuleLine():
         if path == '' and not allowance:
             # an empty value means allow all
             allowance = True
-        path = urllib.parse.urlunparse(urllib.parse.urlparse(path))
+        if not path.endswith("?"):
+            path = urllib.parse.urlunparse(urllib.parse.urlparse(path))
         self.path = unquote(urllib.parse.quote(path))
         self.allowance = allowance
 
     def applies_to(self, filename):
         pattern = unquote(self.path)
+        if pattern.endswith("?"):
+            return filename.startswith(self.path)
+
         if pattern == "*":
             return True
 
