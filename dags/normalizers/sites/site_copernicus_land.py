@@ -32,7 +32,7 @@ def normalize_copernicus_land(doc, config):
 
     normalized_doc["cluster_name"] = "copernicus_land"
 
-    normalized_doc['title'] = get_page_title(doc)
+    #normalized_doc['title'] = get_page_title(doc)
 
     normalized_doc = check_readingTime(normalized_doc, config)
 
