@@ -139,7 +139,7 @@ def crawl_doc(v, site, sdi_conf, metadataIdentifier, handler=None, extra_opts=No
     doc = crawl_for_metadata_identifier(v, sdi_conf, metadataIdentifier)
     doc["children"] = []
 
-    children = doc.get("agg_associated", [])
+    children = doc.get("agg_associated_isComposedOf", [])
     if type(children) != list:
         children = [children]
     for child_id in list(dict.fromkeys(children)):
