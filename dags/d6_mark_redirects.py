@@ -17,10 +17,17 @@ def trigger_mark_redirects_bulk(task_params):
         bulk_cnt = divmod(cnt, task_params["bulk_size"])
         if bulk_cnt[1] == 0:
             bulks.append([])
-        bulks[bulk_cnt[0]].append({"doc_id":doc_id, "doc_value":doc_value})
+        print("doc_id:")
+        print(doc_id)
+        print("doc_value")
+        print(doc_value)
+        if doc_id.startswith("https://www.eea.europa.eu/publications"):
+            bulks[bulk_cnt[0]].append({"doc_id":doc_id, "doc_value":doc_value})
         cnt+=1
         print(cnt)
-    print(cnt)
+#        print(doc_value)
+#        return
+#    print(cnt)
     for bulk in bulks:
         bulk_config = {
             "item" : "",

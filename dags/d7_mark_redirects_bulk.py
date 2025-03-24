@@ -46,7 +46,7 @@ def update_redirect_in_es(v, url, redirect):
     else:
         doc['exclude_from_globalsearch'] = None
         print("REDIRECTED NO")
-    #send_to_rabbitmq(v, doc)
+    send_to_rabbitmq(v, doc)
 
 
 def _mark_redirects(task_params):
