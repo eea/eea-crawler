@@ -2,7 +2,7 @@ import logging
 
 from normalizers.lib.nlp import common_preprocess
 from normalizers.lib.normalizers import (add_counts, check_blacklist_whitelist,
-                                         common_normalizer,check_readingTime)
+                                         common_normalizer,check_readingTime, apply_norm_obj)
 from normalizers.registry import (register_facets_normalizer,
                                   register_nlp_preprocessor)
 
@@ -66,10 +66,11 @@ def normalize_climate(doc, config):
 
     _id = doc["raw_value"].get("@id", "")
 
-    if portal_type in ['News Item', 'Event'] and \
-            any(path in _id
-                for path in ["/mission/news/", "/mission/events/"]):
-        include_in_mission = True
+    # if portal_type in ['News Item', 'Event'] and \
+    #         any(path in _id
+    #             for path in ["/mission/news/", "/mission/events/"]):
+    if '/mission/' in _id:
+            include_in_mission = True
 
     if not check_blacklist_whitelist(
         doc,
@@ -143,6 +144,12 @@ def normalize_climate(doc, config):
         if include_in_mission else 'false'
     print("preview")
     print(cca_preview_image)
+    if portal_type == "mission_funding_cca":
+        is_eu_funded = doc['raw_value'].get('is_eu_funded', False)
+        if is_eu_funded:
+            doc_out["cca_is_eu_funded"] = 'Yes'
+        else:
+            doc_out["cca_is_eu_funded"] = 'No'
     if cca_preview_image is not None:
         doc_out["cca_preview_image"] = cca_preview_image.get('scales',{}).get('preview', {}).get('download')
     # if doc["raw_value"].get("review_state") == "archived":
@@ -152,6 +159,7 @@ def normalize_climate(doc, config):
     #     logger.info("RS EXPIRES")
     doc_out = check_readingTime(doc_out, config)
 
+    doc_out = apply_norm_obj(doc_out, config.get("normalizers",{}).get("normObj", {}))
     doc_out = add_counts(doc_out)
     return doc_out
 
