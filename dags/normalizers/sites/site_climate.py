@@ -2,7 +2,7 @@ import logging
 
 from normalizers.lib.nlp import common_preprocess
 from normalizers.lib.normalizers import (add_counts, check_blacklist_whitelist,
-                                         common_normalizer,check_readingTime, apply_norm_obj)
+                                         common_normalizer, check_readingTime, apply_norm_obj)
 from normalizers.registry import (register_facets_normalizer,
                                   register_nlp_preprocessor)
 
@@ -34,8 +34,10 @@ def normalize_climate(doc, config):
         "include_in_observatory", False)
     include_in_mission = doc["raw_value"].get("include_in_mission", False)
     publication_date = doc["raw_value"].get("publication_date", None)
+    cca_uid = doc["raw_value"].get("UID", None)
     cca_created = doc["raw_value"].get("created", None)
     cca_published = doc["raw_value"].get("cca_published", None)
+    cca_keywords = doc["raw_value"].get("keywords", [])
     cca_sectors = doc["raw_value"].get("sectors", [])
     cca_impacts = doc["raw_value"].get("climate_impacts", [])
     cca_elements = doc["raw_value"].get("elements", [])
@@ -70,7 +72,7 @@ def normalize_climate(doc, config):
     #         any(path in _id
     #             for path in ["/mission/news/", "/mission/events/"]):
     if '/mission/' in _id:
-            include_in_mission = True
+        include_in_mission = True
 
     if not check_blacklist_whitelist(
         doc,
@@ -87,6 +89,7 @@ def normalize_climate(doc, config):
     if not doc_out:
         return None
 
+    doc_out["cca_uid"] = cca_uid
     doc_out["created"] = cca_created
     if doc_out.get("issued", None) is None:
         if cca_published is not None:
@@ -95,20 +98,28 @@ def normalize_climate(doc, config):
             if publication_date is not None:
                 doc_out["issued"] = publication_date
 
+    doc_out["cca_keywords"] = cca_keywords
     doc_out["cca_adaptation_sectors"] = vocab_to_list(cca_sectors)
     doc_out["cca_climate_impacts"] = vocab_to_list(cca_impacts)
     doc_out["cca_adaptation_elements"] = vocab_to_list(cca_elements)
     doc_out['cca_health_impacts'] = vocab_to_list(cca_health_impacts, "token")
-    doc_out['cca_key_type_measure'] = vocab_to_list(cca_key_type_measure, "token")
-    doc_out['cca_partner_contributors'] = vocab_to_list(cca_partner_contributors, 'title')
+    doc_out['cca_key_type_measure'] = vocab_to_list(
+        cca_key_type_measure, "token")
+    doc_out['cca_partner_contributors'] = vocab_to_list(
+        cca_partner_contributors, 'title')
 
-    doc_out['cca_readiness_for_use'] = vocab_to_list(cca_readiness_for_use, 'title')
+    doc_out['cca_readiness_for_use'] = vocab_to_list(
+        cca_readiness_for_use, 'title')
     doc_out['cca_rast_steps'] = vocab_to_list(cca_rast_steps, 'title')
-    doc_out['cca_eligible_entities'] = vocab_to_list(cca_eligible_entities, 'title')
-    doc_out['cca_geographical_scale'] = vocab_to_list(cca_geographical_scale, 'title')
+    doc_out['cca_eligible_entities'] = vocab_to_list(
+        cca_eligible_entities, 'title')
+    doc_out['cca_geographical_scale'] = vocab_to_list(
+        cca_geographical_scale, 'title')
     doc_out['cca_tool_language'] = vocab_to_list(cca_tool_language, 'title')
-    doc_out['cca_most_useful_for'] = vocab_to_list(cca_most_useful_for, 'title')
-    doc_out['cca_user_requirements'] = vocab_to_list(cca_user_requirements, 'title')
+    doc_out['cca_most_useful_for'] = vocab_to_list(
+        cca_most_useful_for, 'title')
+    doc_out['cca_user_requirements'] = vocab_to_list(
+        cca_user_requirements, 'title')
 
     doc_out['key_system'] = vocab_to_list(cca_key_system, 'title')
     doc_countries = doc_out.get('spatial', [])
@@ -123,7 +134,6 @@ def normalize_climate(doc, config):
         doc_out["cca_funding_programme"] = cca_funding_programme
     else:
         doc_out["cca_funding_programme"] = vocab_to_term(cca_funding_programme)
-
 
     doc_out["cca_origin_websites"] = vocab_to_list(cca_origin_websites)
 
@@ -151,7 +161,8 @@ def normalize_climate(doc, config):
         else:
             doc_out["cca_is_eu_funded"] = 'No'
     if cca_preview_image is not None:
-        doc_out["cca_preview_image"] = cca_preview_image.get('scales',{}).get('preview', {}).get('download')
+        doc_out["cca_preview_image"] = cca_preview_image.get(
+            'scales', {}).get('preview', {}).get('download')
     # if doc["raw_value"].get("review_state") == "archived":
     #     # raise Exception("review_state")
     #     expires = date.today() - timedelta(days=2)
@@ -159,7 +170,8 @@ def normalize_climate(doc, config):
     #     logger.info("RS EXPIRES")
     doc_out = check_readingTime(doc_out, config)
 
-    doc_out = apply_norm_obj(doc_out, config.get("normalizers",{}).get("normObj", {}))
+    doc_out = apply_norm_obj(doc_out, config.get(
+        "normalizers", {}).get("normObj", {}))
     doc_out = add_counts(doc_out)
     return doc_out
 
