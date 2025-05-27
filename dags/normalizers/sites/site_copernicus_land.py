@@ -20,6 +20,24 @@ import logging
 logger = logging.getLogger(__file__)
 
 
+def vocab_to_list(vocab, attr="title"):
+    return [term[attr] for term in vocab] if vocab else []
+
+
+def get_library_categories_values(raw_doc):
+    categories = vocab_to_list(raw_doc.get("taxonomy_technical_library_categorization"), "title")
+    return [cat.split("#")[-1] for cat in categories]
+
+def get_library_categories_facet(raw_doc):
+    values = get_library_categories_values(raw_doc)
+    return list(dict.fromkeys([cat.split("»")[0].strip() for cat in values]))
+
+def get_file_size(raw_doc):
+    return raw_doc.get("file",{}).get("size")
+
+def get_version(raw_doc):
+    return raw_doc.get("version", "")
+
 @register_facets_normalizer("land")
 def normalize_copernicus_land(doc, config):
     logger.info("NORMALIZE LAND")
@@ -33,6 +51,11 @@ def normalize_copernicus_land(doc, config):
     normalized_doc["cluster_name"] = "copernicus_land"
 
     #normalized_doc['title'] = get_page_title(doc)
+
+    normalized_doc["library_categories_facet"] =  get_library_categories_facet(doc["raw_value"])
+    normalized_doc["library_categories_values"] =  get_library_categories_values(doc["raw_value"])
+    normalized_doc["file_size"] = get_file_size(doc["raw_value"])
+    normalized_doc["version"] = get_version(doc["raw_value"])
 
     normalized_doc = check_readingTime(normalized_doc, config)
 
