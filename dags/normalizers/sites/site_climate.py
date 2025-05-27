@@ -98,6 +98,7 @@ def normalize_climate(doc, config):
             if publication_date is not None:
                 doc_out["issued"] = publication_date
 
+    doc_out["publication_date"] = publication_date
     doc_out["cca_keywords"] = cca_keywords
     doc_out["cca_adaptation_sectors"] = vocab_to_list(cca_sectors)
     doc_out["cca_climate_impacts"] = vocab_to_list(cca_impacts)
