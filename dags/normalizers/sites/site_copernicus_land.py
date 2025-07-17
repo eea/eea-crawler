@@ -57,6 +57,10 @@ def normalize_copernicus_land(doc, config):
     normalized_doc["file_size"] = get_file_size(doc["raw_value"])
     normalized_doc["version"] = get_version(doc["raw_value"])
 
+    if doc["raw_value"].get("@type", "") == "TechnicalLibrary":
+        normalized_doc["issued"] = doc["raw_value"].get("publication_date")
+        normalized_doc["year"] = doc["raw_value"].get("publication_date")
+        normalized_doc["description"] = doc["raw_value"].get("description", "")
     normalized_doc = check_readingTime(normalized_doc, config)
 
     normalized_doc = add_counts(normalized_doc)
