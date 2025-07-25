@@ -1,7 +1,5 @@
 {
     "!": "IMPORTANT",
-    "_attr_find_publisher": {
-    },
     "app_cca_test": {
         "Sites": {
             "climate": "config_cca_mission_stories"
@@ -20,7 +18,7 @@
     },
     "app_copernicus": {
         "Sites": {
-            "insitu": "config_copernicus_insitu",
+            "insitu": "config_copernicus_insitu_prod",
             "land": "config_copernicus_land"
         },
         "allowed_errors_for_doc": 20,
@@ -73,6 +71,7 @@
             "fise": "config_fise",
             "ias": "config_ias",
             "industry": "config_industry",
+            "insitu": "config_copernicus_insitu_prod",
             "noise": "config_noise",
             "sdi": "config_sdi_prod",
             "wise_freshwater": "config_wise_new_freshwater",
@@ -214,7 +213,12 @@
         "trafilatura": {
             "remove_by_selector": [
                 ".header-wrapper",
-                ".footerWrapper"
+                ".footerWrapper",
+                ".skiplinks-wrapper",
+                ".eea.header",
+                ".breadcrumbs",
+                ".svg-container",
+                "#inpage-navigation"
             ]
         },
         "type": "plone_rest_api",
@@ -298,7 +302,7 @@
             "mission_tool",
             "mission_funding_cca"
         ],
-        "scrape_pages": false,
+        "scrape_pages": true,
         "scrape_with_js": true,
         "type": "plone_rest_api",
         "url": "https://climate-adapt.eea.europa.eu",
@@ -355,6 +359,21 @@
         },
         "type": "plone_rest_api",
         "url": "https://demo-insitu-p6.eea.europa.eu/",
+        "url_api_part": "++api++"
+    },
+    "config_copernicus_insitu_prod": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "ignore_robots_txt": true,
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": []
+        },
+        "type": "plone_rest_api",
+        "url": "https://insitu.copernicus.eu/",
         "url_api_part": "++api++"
     },
     "config_copernicus_land": {
@@ -502,13 +521,20 @@
         },
         "ignore_robots_txt": false,
         "normalizers_variable": "default_normalizers",
+        "pdf_days_limit": 730,
         "robots_txt": "https://www.eea.europa.eu/robots.txt",
         "scrape_pages": true,
         "scrape_with_js": true,
         "trafilatura": {
             "remove_by_selector": [
                 ".stagingBanner",
-                ".header-top-item"
+                ".header-top-item",
+                ".skiplinks-wrapper",
+                ".tab-accordion-container",
+                ".main-menu",
+                ".eea.banner",
+                ".breadcrumbs",
+                "#inpage-navigation"
             ]
         },
         "type": "plone_rest_api",
@@ -661,7 +687,7 @@
         },
         "type": "plone_rest_api",
         "url": "https://forest.eea.europa.eu",
-        "url_api_part": "api"
+        "url_api_part": "++api++"
     },
     "config_ias": {
         "avoid_cache_api": true,
@@ -1674,6 +1700,29 @@
             "Article": "Article",
             "Assessment": "Indicator",
             "AssessmentPart": "Indicator",
+            "Bijodiversit\u00e0": "\u0126arsien tal-bijodiversit\u00e0",
+            "Biodiversidad": "Protecci\u00f3n de la biodiversidad",
+            "Biodiversidade": "Prote\u00e7\u00e3o da biodiversidade",
+            "Biodiversitate": "Protec\u021bia biodiversit\u0103\u021bii",
+            "Biodiversitatea": "Protec\u021bia biodiversit\u0103\u021bii",
+            "Biodiversiteit": "Bescherming van de biodiversiteit",
+            "Biodiversitet": "Beskyttelse af biodiversitet",
+            "Biodiversity": "Biodiversity protection",
+            "Biodiversit\u00e0": "Tutela della biodiversit\u00e0",
+            "Biodiversit\u00e4t": "Schutz der Artenvielfalt",
+            "Biodiversit\u00e9": "Protection de la biodiversit\u00e9",
+            "Biodiverzita": "Ochrana biodiverzity",
+            "Biodiverzit\u00e1s": "A biodiverzit\u00e1s v\u00e9delme",
+            "Biologinen monimuotoisuus": "Biologisen monimuotoisuuden suojelu",
+            "Biologin\u0117 \u012fvairov\u0117": "Biologin\u0117s \u012fvairov\u0117s apsauga",
+            "Biologisk mangfold": "Beskyttelse av biologisk mangfold",
+            "Biologisk m\u00e5ngfald": "Skydd av biologisk m\u00e5ngfald",
+            "Bioloogiline mitmekesisus": "Bioloogilise mitmekesisuse kaitse",
+            "Biolo\u0123isk\u0101 daudzveid\u012bba": "Biolo\u0123isk\u0101s daudzveid\u012bbas aizsardz\u012bba",
+            "Bioraznolikost": "Za\u0161tita biolo\u0161ke raznolikosti",
+            "Bior\u00f3\u017cnorodno\u015b\u0107": "Ochrona r\u00f3\u017cnorodno\u015bci biologicznej",
+            "Biotska raznovrstnost": "Varstvo biotske raznovrstnosti",
+            "Biyo\u00e7e\u015fitlilik": "Biyo\u00e7e\u015fitlili\u011fin korunmas\u0131",
             "CallForInterest": "Contract opportunity",
             "CallForProposal": "Contract opportunity",
             "CallForTender": "Contract opportunity",
@@ -1693,6 +1742,7 @@
             "Infographic": "Infographic",
             "Kosovo (UNSCR 1244/99)": "Kosovo",
             "LRF": "Webpage",
+            "L\u00edffr\u00e6\u00f0ilegur fj\u00f6lbreytileiki": "Vernd l\u00edffr\u00e6\u00f0ilegrar fj\u00f6lbreytni",
             "News": "News",
             "News Item": "News",
             "Organisation": "Organisation",
@@ -1718,6 +1768,7 @@
             "Report": "Report",
             "Term": "Glossary term",
             "Turkey": "T\u00fcrkiye",
+            "UK": "United Kingdom",
             "agriculture": "Agriculture",
             "air": "Air pollution",
             "article": "Article",
@@ -1811,6 +1862,9 @@
             "ims_indicator": "Indicator",
             "indicator": "Indicator",
             "industry": "Industry",
+            "infographic": "Infographic",
+            "insitu.report": "Report",
+            "insitu.use_case": "Case study",
             "landing_page": "Webpage",
             "landuse": "Land use",
             "map_interactive": "Map (interactive)",
@@ -1839,7 +1893,11 @@
             "visualization_tableau": "Visualization (Tableau)",
             "waste": "Resource efficiency and waste",
             "water": "Water and marine environment",
-            "web_report": "Report"
+            "web_report": "Report",
+            "web_report_page": "Webpage",
+            "\u0392\u03b9\u03bf\u03c0\u03bf\u03b9\u03ba\u03b9\u03bb\u03cc\u03c4\u03b7\u03c4\u03b1": "\u03a0\u03c1\u03bf\u03c3\u03c4\u03b1\u03c3\u03af\u03b1 \u03c4\u03b7\u03c2 \u03b2\u03b9\u03bf\u03c0\u03bf\u03b9\u03ba\u03b9\u03bb\u03cc\u03c4\u03b7\u03c4\u03b1\u03c2",
+            "\u0411\u0438\u043e\u0440\u0430\u0437\u043d\u043e\u043e\u0431\u0440\u0430\u0437\u0438\u0435": "\u041e\u043f\u0430\u0437\u0432\u0430\u043d\u0435 \u043d\u0430 \u0431\u0438\u043e\u0440\u0430\u0437\u043d\u043e\u043e\u0431\u0440\u0430\u0437\u0438\u0435\u0442\u043e",
+            "\u0431\u0438\u043e\u0440\u0430\u0437\u043d\u043e\u043e\u0431\u0440\u0430\u0437\u0438\u0435": "\u041e\u043f\u0430\u0437\u0432\u0430\u043d\u0435 \u043d\u0430 \u0431\u0438\u043e\u0440\u0430\u0437\u043d\u043e\u043e\u0431\u0440\u0430\u0437\u0438\u0435\u0442\u043e"
         },
         "normProp": {
             "@type": "objectProvides",
@@ -2705,10 +2763,6 @@
         "raw_index": "wisetest_raw_new",
         "searchui_target_index": "wisetest_searchui"
     },
-    "errors_cca_test": {},
-    "errors_copernicus": {},
-    "errors_datahub": {},
-    "errors_global_search": {},
     "headless_chrome": {
         "endpoint": "http://headless-chrome-api:3000/content"
     },
@@ -5442,6 +5496,70 @@
         "http://rod.eionet.europa.eu/obligations/855": {
             "instrument": "http://rod.eionet.europa.eu/instruments/714",
             "label": "European Climate Law"
+        },
+        "http://rod.eionet.europa.eu/obligations/856": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/858": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/859": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/860": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/861": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/862": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/863": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/864": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/865": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/866": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/867": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/696",
+            "label": "Adapted Governance Regulation for the Energy Community"
+        },
+        "http://rod.eionet.europa.eu/obligations/868": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/715",
+            "label": "F-gas Regulation 2024"
+        },
+        "http://rod.eionet.europa.eu/obligations/869": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/716",
+            "label": "Ozone Regulation 2024"
+        },
+        "http://rod.eionet.europa.eu/obligations/870": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/715",
+            "label": "F-gas Regulation 2024"
+        },
+        "http://rod.eionet.europa.eu/obligations/871": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/630",
+            "label": "Floods Directive"
+        },
+        "http://rod.eionet.europa.eu/obligations/872": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/630",
+            "label": "Floods Directive"
         },
         "http://rod.eionet.europa.eu/obligations/9": {
             "instrument": "http://rod.eionet.europa.eu/instruments/500",
