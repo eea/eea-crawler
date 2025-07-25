@@ -1,6 +1,6 @@
 from lib import elastic
 from normalizers.registry import get_facets_normalizer, get_nlp_preprocessor
-from normalizers.lib.nlp import preprocess_split_doc, add_embeddings_to_doc
+from normalizers.lib.nlp import preprocess_split_doc, add_embeddings_to_doc, common_preprocess
 
 def parse_all_documents_for_site(site_id, v, handler, doc_handler):
     print("HERE")
@@ -106,4 +106,7 @@ def preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler):
             # normalized_doc = add_embeddings_to_doc(
             #     normalized_doc, nlp_services["embedding"], field_name="nlp_100"
             # )
+        else:
+            preprocessed_data = common_preprocess(raw_doc, config)
+            normalized_doc["fulltext"] = preprocessed_data.get("text", "")
         doc_handler(v, normalized_doc)
