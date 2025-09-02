@@ -88,9 +88,9 @@ def preprocess_doc(v, doc_id, site_id, raw_doc, doc_handler):
             #     normalized_doc, nlp_services["embedding"], field_name="nlp_500"
             # )
 
-            normalized_doc = preprocess_split_doc(
-                normalized_doc, nlp_services["split"]
-            )
+#            normalized_doc = preprocess_split_doc(
+#                normalized_doc, nlp_services["split"]
+#            )
             if not disable_embeddings:
                 normalized_doc = add_embeddings_to_doc(
                     normalized_doc, nlp_services["embedding"]
