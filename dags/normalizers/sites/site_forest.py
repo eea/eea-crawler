@@ -33,6 +33,10 @@ def normalize_forest(doc, config):
         return None
     logger.info("whitelisted")
 
+    # Do not index this fise folder
+    if '/resources/data-catalogue' in doc["raw_value"]["about"]:
+        return None
+
     if doc["raw_value"]["@type"] in [
         "basic_data_factsheet",
         "european_union_factsheet",
