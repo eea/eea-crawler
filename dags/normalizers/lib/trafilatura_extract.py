@@ -1,5 +1,5 @@
 import logging
-
+import json
 import lxml.html
 import trafilatura
 
@@ -51,6 +51,7 @@ patched_BODY_XPATH = [
 
 trafilatura.xpaths.BODY_XPATH[:] = patched_BODY_XPATH
 
+
 def remove_element(el):
     parent = el.getparent()
     if el.tail and el.tail.strip():
@@ -63,27 +64,113 @@ def remove_element(el):
 
 
 def get_text_from_html(html, config):
+    # logger.info("trafilatura extract get_text_from_html config type: %s, value is: %s", type(
+    #     config), json.dumps(config))
+    logger.info("TRAFILATURA DOCUMENT")
     if not html or len(html) == 0:
+        logger.info("TRAFILATURA DOCUMENT EMPTY")
         return html
 
+    main_by_css_selector = config.get("main_by_css_selector", None)
+    # main_by_css_selector = '.db-item-view .col-left'
+    logger.info('TRAFILATURA main css selecteor: %s', main_by_css_selector)
+
+    # logger.info("TRAFILATURA LENGTH: %d and value is: %s",
+    #             len(html), html)
     e = lxml.html.fromstring(html)
+    if main_by_css_selector:
+        matches = e.cssselect(main_by_css_selector)
+        if matches:
+            e = matches[0]
+        else:
+            logger.error(
+                "trafilatura not found main_by_css_selector: %s", main_by_css_selector)
+            # If not found return empty string
+            return ''
+
     selectors = config.get("remove_by_selector", [])
+    logger.info("remove_by_selector")
+    logger.info(selectors)
     for selector in selectors:
         elements = e.cssselect(selector)
         for el in elements:
             try:
-                remove_element(el)
+                el.getparent().remove(el)
+                # remove_element(el)
+                logger.info("remove an element with selector: %s", selector)
             except Exception:
                 logger.exception(
                     "Could not remove an element with selector: %s", selector
                 )
 
+    skip_extract_with_trafilatura = config.get(
+        "skip_extract_with_trafilatura", None)
+
+    if skip_extract_with_trafilatura:
+        text_elements = collect_leaf_elements_text(e)
+        lines = []
+        for text_element in text_elements:
+            lines.append(text_element)
+
+        text = ' '.join(filter(None, lines))
+        logger.info("TRAFILATURA skip_extract_with_trafilatura type: %s, length: %d and value is: %s",
+                    type(e), len(text), text)
+        return text
+
     cleaned = lxml.html.tostring(e)
     text = trafilatura.extract(cleaned, favor_recall=True) or ""
+    logger.info("TRAFILATURA DOCUMENT END")
     return text
+
 
 def get_title_from_html(html, config):
     try:
         return (lxml.html.fromstring(html).find(".//title").text)
     except Exception:
         return config.get('fallback_title')
+
+
+# def collect_elements(element, collected=None):
+#     if collected is None:
+#         collected = []
+
+#     for child in element:
+#         collected.append(child)
+#         collect_elements(child, collected)
+
+#     return collected
+
+
+# def collect_leaf_elements(element, collected=None):
+#     if collected is None:
+#         collected = []
+
+#     # Check if element has any child elements (tags)
+#     has_child_tags = any(isinstance(child.tag, str) for child in element)
+
+#     if not has_child_tags:
+#         collected.append(element)
+#     else:
+#         for child in element:
+#             collect_leaf_elements(child, collected)
+
+#     return collected
+
+
+def collect_leaf_elements_text(element, collected=None):
+    if collected is None:
+        collected = []
+
+    # Check if element has any child elements (tags)
+    has_child_tags = any(isinstance(child.tag, str) for child in element)
+
+    if element.text:
+        collected.append(element.text.strip())
+
+    if has_child_tags:
+        for child in element:
+            collect_leaf_elements_text(child, collected)
+            if child.tail:
+                collected.append(child.tail.strip())
+
+    return collected
