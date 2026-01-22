@@ -60,6 +60,11 @@ def normalize_climate(doc, config):
     cca_most_useful_for = doc["raw_value"].get("most_useful_for", [])
     cca_user_requirements = doc["raw_value"].get("user_requirements", [])
 
+    cca_funding_type = doc["raw_value"].get("funding_type", [])
+    cca_budget_range = doc["raw_value"].get("budget_range", [])
+
+
+
     ct_normalize_config = config["site"].get("normalize", {})
 
     logger.info("DATES:")
@@ -161,6 +166,34 @@ def normalize_climate(doc, config):
             doc_out["cca_is_eu_funded"] = 'Yes'
         else:
             doc_out["cca_is_eu_funded"] = 'No'
+
+        doc_out["cca_objective_funding_programme"] = doc['raw_value'].get('objective_funding_programme', None)
+        doc_out['cca_funding_type'] = vocab_to_list(
+            cca_funding_type, 'title')
+        doc_out["cca_funding_rate"] = doc['raw_value'].get('funding_rate', None)
+        doc_out['cca_budget_range'] = vocab_to_list(
+            cca_budget_range, 'title')
+
+        is_blended = doc['raw_value'].get('is_blended', False)
+        if is_blended:
+            doc_out["cca_is_blended"] = 'Yes'
+        else:
+            doc_out["cca_is_blended"] = 'No'
+
+        is_consortium_required = doc['raw_value'].get('is_consortium_required', False)
+        if is_consortium_required:
+            doc_out["cca_is_consortium_required"] = 'Yes'
+        else:
+            doc_out["cca_is_consortium_required"] = 'No'
+
+
+        doc_out["cca_administering_authority"] = doc['raw_value'].get('administering_authority', None)
+        doc_out["cca_further_information"] = doc['raw_value'].get('further_information', None)
+        doc_out["cca_general_information"] = doc['raw_value'].get('general_information', None)
+        doc_out["cca_publication_page"] = doc['raw_value'].get('publication_page', None)
+        doc_out["cca_funding_region"] = doc['raw_value'].get('funding_region', None)
+
+
     if cca_preview_image is not None:
         doc_out["cca_preview_image"] = cca_preview_image.get(
             'scales', {}).get('preview', {}).get('download')

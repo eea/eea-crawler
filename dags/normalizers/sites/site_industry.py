@@ -44,13 +44,13 @@ def normalize_industry(doc, config):
 
     doc_loc = urlparse(normalized_doc["id"]).path
 
-    ct = find_ct_by_rules(
-        doc_loc,
-        ct_normalize_config.get("location_rules", []),
-        ct_normalize_config.get("location_rules_fallback", "fallback"),
-    )
-    logger.info(ct)
-    normalized_doc["objectProvides"] = ct
+    # ct = find_ct_by_rules(
+    #     doc_loc,
+    #     ct_normalize_config.get("location_rules", []),
+    #     ct_normalize_config.get("location_rules_fallback", "fallback"),
+    # )
+    # logger.info(ct)
+    # normalized_doc["objectProvides"] = ct
     normalized_doc = check_readingTime(normalized_doc, config)
 
     normalized_doc = add_counts(normalized_doc)
