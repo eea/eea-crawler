@@ -81,7 +81,7 @@ default_args = {"owner": "airflow"}
     schedule_interval="0 2 * * *",
 )
 
-def d0_clean_dagruns(older_than=2, dag_states=['success', 'failed']):
+def d0_clean_dagruns(older_than=1, dag_states=['success', 'failed']):
     clean_dagruns(older_than, dag_states)
 
 

@@ -55,7 +55,7 @@ default_args = {"owner": "airflow"}
     catchup=False,
     schedule_interval="0 2 * * *",
 )
-def d0_clean_daglogs(logs_dir="/opt/airflow/logs/", older_than=2):
+def d0_clean_daglogs(logs_dir="/opt/airflow/logs/", older_than=1):
     clean_logs(logs_dir, older_than)
 
 

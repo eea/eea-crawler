@@ -38,8 +38,8 @@ def send_to_rabbitmq(v, doc):
 
 def doc_handler_fast(v, doc_id, site_id, doc_handler):
     print(doc_id)
-    # if doc_id != 'https://climate-adapt.eea.europa.eu/en/metadata/indicators/growing-degree-days':
-    #     return
+    # if doc_id != 'https://climate-adapt.eea.europa.eu/en/mission/solutions/tools/010_create-your-future-2013-participatory-workshop-for-creating-goals-for-climate-adaptation-efforts-work':
+    #      return
     # print("fast")
     # print(raw_doc)
     # print(raw_doc['original_id'])

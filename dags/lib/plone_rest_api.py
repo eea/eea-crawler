@@ -102,21 +102,42 @@ def build_queries_list(site_config, query_config):
         if url_api_part != "":
             url = f"{url}/{url_api_part}"
     ts = datetime.now().timestamp()
-    if site_config.get("portal_types", None):
-        # queries = []
-        queries = [
-            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}{query_limit}&ts={ts}"
-            for portal_type in site_config["portal_types"]
-        ]
-        if site_config.get("languages", None):
-            for language in site_config.get("languages"):
-                queries.append(
-                    f"{url}/{language}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true&sort_order=reverse&sort_on=Date{query_limit}&ts={ts}"
-                )
+    url_substrings = ["demo-forest.01dev.eea", "demo-forest.02pre.eea.europa.eu", "forest.eea.europa.eu"]
+    if not any(substring in url for substring in url_substrings):
+        if site_config.get("portal_types", None):
+            # queries = []
+               
+            queries = [
+                f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}{query_limit}&ts={ts}"
+                for portal_type in site_config["portal_types"]
+            ]
+            if site_config.get("languages", None):
+                for language in site_config.get("languages"):
+                    queries.append(
+                        f"{url}/{language}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true&sort_order=reverse&sort_on=Date{query_limit}&ts={ts}"
+                    )
+        else:
+            queries = [
+                f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true&sort_order=reverse&sort_on=UID{query_limit}&ts={ts}"
+            ]
     else:
-        queries = [
-            f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true&sort_order=reverse&sort_on=UID{query_limit}&ts={ts}"
-        ]
+        if site_config.get("portal_types", None):
+            # queries = []
+               
+            queries = [
+                f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true&portal_type={portal_type}{query_limit}&ts={ts}"
+                for portal_type in site_config["portal_types"]
+            ]
+            if site_config.get("languages", None):
+                for language in site_config.get("languages"):
+                    queries.append(
+                        f"{url}/{language}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true{query_limit}&ts={ts}"
+                    )
+        else:
+            queries = [
+                f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true{query_limit}&ts={ts}"
+            ]
+        
     return queries
 
 

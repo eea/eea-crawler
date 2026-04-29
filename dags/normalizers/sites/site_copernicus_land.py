@@ -33,7 +33,13 @@ def get_library_categories_facet(raw_doc):
     return list(dict.fromkeys([cat.split("»")[0].strip() for cat in values]))
 
 def get_file_size(raw_doc):
-    return raw_doc.get("file",{}).get("size")
+    size = 0
+    try:
+        size = raw_doc.get("file",{}).get("size")
+    except:
+        size = 0
+
+    return size
 
 def get_version(raw_doc):
     return raw_doc.get("version", "")

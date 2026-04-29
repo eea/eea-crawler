@@ -35,6 +35,7 @@ def normalize_fise(doc, config):
     uid = doc["raw_value"].get("UID", None)
     created = doc["raw_value"].get("created", None)
     keywords = doc["raw_value"].get("subjects", [])
+    resource_topics = doc["raw_value"].get("resource_topics", None)
     # countries = doc["raw_value"].get("country", [])
 
     ct_normalize_config = config["site"].get("normalize", {})
@@ -76,13 +77,14 @@ def normalize_fise(doc, config):
     doc_out["cluster_name"] = "fise_sdi"
     doc_out["objectProvides"] = [portal_type]
     doc_out["keywords"] = keywords
-
+    doc_out["publicationYear"] = publication_year
     # FORCED VALUES
     doc_out["update_frequency_value"] = 'As needed'
     doc_out = check_readingTime(doc_out, config)
 
     doc_out = apply_norm_obj(doc_out, config.get(
         "normalizers", {}).get("normObj", {}))
+    doc_out["topic"] = resource_topics
     doc_out = add_counts(doc_out)
     logger.info(doc_out)
     logger.info("NORMALIZE FISE END")

@@ -206,8 +206,11 @@ def pre_normalize_sdi(doc, config):
             # fallback to creation date
             doc["raw_value"]["issued"] = doc["raw_value"].get(
                 "publicationDateForResource",
-                doc["raw_value"].get("createDate"),
+                doc["raw_value"].get("creationDateForResource",
+                    doc["raw_value"].get("createDate")
+                )
             )
+                
     print("ISSUED:")
     print(doc["raw_value"].get("issued"))
 
@@ -259,6 +262,7 @@ def pre_normalize_sdi(doc, config):
     rods = simplify_list(
         doc["raw_value"].get("th_rod-eionet-europa-eu", []), field="link"
     )
+
 
     doc["raw_value"]["dataset_formats"] = get_formats(
         doc["raw_value"].get("children", [])
@@ -377,8 +381,29 @@ def normalize_sdi(doc, config):
     normalized_doc["publicationYear"] = 2500
     if 'publicationYearForResource' in doc["raw_value"]:
         normalized_doc["publicationYear"] = int(
-            doc["raw_value"]['publicationYearForResource'])
+            doc["raw_value"].get('publicationYearForResource')
+        )
+    else:
+        if 'creationYearForResource' in doc["raw_value"]:
+            normalized_doc["publicationYear"] = int(
+                doc["raw_value"].get("creationYearForResource")
+            )
+        else:
+            if 'revisionDateForResource' in doc["raw_value"]:
+                raw_val = doc["raw_value"].get("revisionYearForResource")
+
+                # Check if the value is a list and extract the first element if it is
+                if isinstance(raw_val, list):
+                    raw_val = raw_val[-1]
+
+                normalized_doc["publicationYear"] = int(raw_val)
+                # normalized_doc["publicationYear"] = int(
+                #     doc["raw_value"].get("revisionYearForResource")
+                # )
+        
     print("PUBLICATION YEAR")
+    print(doc["raw_value"].get('publicationYearForResource')) 
+    print(doc["raw_value"].get("creationYearForResource"))
     print(normalized_doc["publicationYear"])
 
     normalized_doc["update_frequency_value"] = 'Unknown'
@@ -466,6 +491,13 @@ def normalize_sdi(doc, config):
         normalized_doc["created"] = doc["raw_value"]["creationDateForResource"][0]
     if 'publicationDateForResource' in doc['raw_value']:
         normalized_doc["date_publication"] = doc["raw_value"]["publicationDateForResource"][0]
+    
+    normalized_doc["publication_year"] = doc["raw_value"].get("creationYearForResource")
+
+    topics = simplify_list(
+        doc["raw_value"].get("cl_topic", [])
+    )
+    normalized_doc["topic"] = topics
 
     normalized_doc = check_readingTime(normalized_doc, config)
 

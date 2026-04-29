@@ -63,7 +63,10 @@ def normalize_climate(doc, config):
     cca_funding_type = doc["raw_value"].get("funding_type", [])
     cca_budget_range = doc["raw_value"].get("budget_range", [])
 
+    cca_governance_level = doc["raw_value"].get("governance_level", [])
+    cca_gallery_urls = doc["raw_value"].get("cca_gallery_urls", [])
 
+    cca_ipcc_category = doc["raw_value"].get("ipcc_category", [])
 
     ct_normalize_config = config["site"].get("normalize", {})
 
@@ -126,7 +129,12 @@ def normalize_climate(doc, config):
         cca_most_useful_for, 'title')
     doc_out['cca_user_requirements'] = vocab_to_list(
         cca_user_requirements, 'title')
+    doc_out['cca_governance_level_list'] = vocab_to_list(
+        cca_governance_level, 'title')
+    doc_out["cca_gallery_urls"] = cca_gallery_urls
+    doc_out["cca_ipcc_category"] = vocab_to_list(cca_ipcc_category, 'title')
 
+    doc_out["cca_updated_params"] = 1
     doc_out['key_system'] = vocab_to_list(cca_key_system, 'title')
     doc_countries = doc_out.get('spatial', [])
     if type(doc_countries) is not list:
@@ -151,6 +159,15 @@ def normalize_climate(doc, config):
             doc_out["cca_geographic_transnational_region"] = [
                 country for country in cca_geographic['transnational_region']]
 
+        if 'biogeographical_regions' in cca_geographic:
+            doc_out["cca_biogeographical_regions"] = [
+                biogeographical_region for biogeographical_region in cca_geographic['biogeographical_regions']]
+        if 'geographic_characterisation' in cca_geographic:
+            doc_out["cca_geographic_characterisation"] = [
+                geographic_characterisation for geographic_characterisation in cca_geographic['geographic_characterisation']]
+        if 'sub_nationals' in cca_geographic:
+            doc_out["cca_sub_nationals"] = [
+                sub_national for sub_national in cca_geographic['sub_nationals']]
     doc_out["cluster_name"] = "cca"
     doc_out["cca_include_in_search"] = "true" if is_portal_type_in_search(
         portal_type) else 'false'
