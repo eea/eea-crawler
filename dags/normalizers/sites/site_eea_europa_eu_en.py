@@ -50,7 +50,12 @@ def normalize_eea_europa_eu(doc, config):
     normalized_doc["dpsir"] = simplify_list(doc.get("raw_value", {}).get("taxonomy_dpsir",[]))
     normalized_doc["typology"] = simplify_list(doc.get("raw_value", {}).get("taxonomy_typology",[]))
     normalized_doc["un_sdgs"] = simplify_list(doc.get("raw_value", {}).get("taxonomy_un_sdgs",[]))
-
+    pt = doc.get("raw_value", {}).get("publication_type", {}).get("title")
+    print("publication_type:")
+    print(pt)
+    if pt is not None:
+        normalized_doc["publication_type"] = pt    
+    #normalized_doc["publication_type"] = doc.get("raw_value", {}).get("publication_type", {}).get("title")
 
     op = normalized_doc.get("objectProvides", [])
     if "File" in op or "Image" in op:

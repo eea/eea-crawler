@@ -4,7 +4,7 @@ from datetime import datetime
 from urllib.parse import unquote
 import urllib.parse
 import fnmatch
-
+import ssl
 
 class RuleLine():
     """A rule line is a single "Allow:" (allowance==True) or "Disallow:"
@@ -61,7 +61,16 @@ def init(site_config):
     print(robots_url)
     rp = urllib.robotparser.RobotFileParser()
     rp.set_url(robots_url)
-    rp.read()
+
+    original_context = ssl._create_default_https_context
+    ssl._create_default_https_context = ssl._create_unverified_context
+    try:
+        rp.read()
+    finally:
+        # Restore original context safety immediately after
+        ssl._create_default_https_context = original_context
+
+    #rp.read()
     return rp
 
 

@@ -176,6 +176,44 @@ def normalize_climate(doc, config):
     doc_out["cca_include_in_mission"] = "true" \
         if include_in_mission else 'false'
     print("preview")
+    if portal_type == 'eea.climateadapt.extendedtool':
+        doc_out["cluster_name"] = "cca_navigator"
+        doc_out['exclude_from_globalsearch'] = ['True']
+        doc_out["coder_1"] = doc["raw_value"].get("coder_1", None)
+        doc_out["coder_2"] = doc["raw_value"].get("coder_2", None)
+        doc_out["adaptation_support_cycle_step"] = doc["raw_value"].get(
+            "adaptation_support_cycle_step", [])
+        doc_out["intended_user_groups"] = doc["raw_value"].get(
+            "intended_user_groups", [])
+        doc_out["place_of_implementation"] = doc["raw_value"].get(
+            "place_of_implementation", [])
+        doc_out["type_of_data"] = doc["raw_value"].get("type_of_data", [])
+        doc_out["data_sources"] = doc["raw_value"].get("data_sources", [])
+        doc_out["license_status"] = doc["license_status"].get("aa", [])
+        doc_out["user_support_provisions"] = doc["raw_value"].get(
+            "user_support_provisions", [])
+        doc_out["tool_validation_use"] = doc["raw_value"].get(
+            "tool_validation_use", [])
+        doc_out["number_of_users_tool"] = doc["raw_value"].get(
+            "number_of_users_tool", [])
+        doc_out["tool_provider_mode"] = doc["raw_value"].get(
+            "tool_provider_mode", [])
+        doc_out["adaptation_support_cycle_step"] = doc["raw_value"].get(
+            "adaptation_support_cycle_step", [])
+        doc_out["type_of_outputs"] = doc["raw_value"].get(
+            "type_of_outputs", [])
+        doc_out["temporality_of_data"] = doc["raw_value"].get(
+            "temporality_of_data", [])
+        doc_out["only_interactive_support_tool"] = doc["only_interactive_support_tool"].get(
+            "aa", None)
+        doc_out["adaptation_cycle_step"] = doc["raw_value"].get(
+            "adaptation_cycle_step", None)
+        doc_out["updating_cycle_of_the_tool"] = doc["raw_value"].get(
+            "updating_cycle_of_the_tool", None)
+        doc_out["language_accessibility"] = doc["raw_value"].get(
+            "language_accessibility", None)
+        doc_out["free_access"] = doc["raw_value"].get("free_access", None)
+        doc_out["hyperlink"] = doc["raw_value"].get("hyperlink", None)
     print(cca_preview_image)
     if portal_type == "mission_funding_cca":
         is_eu_funded = doc['raw_value'].get('is_eu_funded', False)
@@ -249,6 +287,7 @@ def is_portal_type_in_search(portal_type):
         "eea.climateadapt.mapgraphdataset",
         "eea.climateadapt.researchproject",
         "eea.climateadapt.c3sindicator",
+        "eea.climateadapt.extendedtool",
     ]
     if portal_type in allowed_portal_types:
         return True

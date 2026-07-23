@@ -32,6 +32,21 @@
         "rabbitmq_config": "rabbitmq_global_search",
         "skip_doc_cnt": 100
     },
+    "app_copernicus_demo": {
+        "Sites": {
+            "land_demo": "config_copernicus_land_demo"
+        },
+        "allowed_errors_for_doc": 20,
+        "elastic_config": {
+            "elastic": "elastic_copernicus_demo",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_default",
+        "rabbitmq_config": "rabbitmq_global_search",
+        "skip_doc_cnt": 100
+    },
     "app_datahub": {
         "Sites": {
             "sdi": "config_sdi_prod"
@@ -59,12 +74,81 @@
         "nlp_config": "nlp_services_s3",
         "rabbitmq_config": "rabbitmq_datahub"
     },
+    "app_fise_demo": {
+        "Sites": {
+            "fise_resource": "config_fise_demo_resource",
+            "sdi_fise": "config_fise_sdi"
+        },
+        "allowed_errors_for_doc": 20,
+        "elastic_config": {
+            "elastic": "elastic_fise_demo",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_default",
+        "rabbitmq_config": "rabbitmq_fise_sdi",
+        "rabbitmq_config_": "rabbitmq_global_search",
+        "schedule_interval": "@daily",
+        "skip_doc_cnt": 100
+    },
+    "app_fise_pre": {
+        "Sites": {
+            "fise_resource": "config_fise_pre_resource",
+            "sdi_fise": "config_fise_sdi"
+        },
+        "allowed_errors_for_doc": 20,
+        "elastic_config": {
+            "elastic": "elastic_fise_pre",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_default",
+        "rabbitmq_config": "rabbitmq_fise_sdi",
+        "rabbitmq_config_": "rabbitmq_global_search",
+        "schedule_interval": "@daily",
+        "skip_doc_cnt": 100
+    },
+    "app_fise_prod": {
+        "Sites": {
+            "fise_resource": "config_fise_resource",
+            "sdi_fise": "config_fise_sdi"
+        },
+        "allowed_errors_for_doc": 20,
+        "elastic_config": {
+            "elastic": "elastic_fise_prod",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_default",
+        "rabbitmq_config": "rabbitmq_fise_sdi",
+        "rabbitmq_config_": "rabbitmq_global_search",
+        "schedule_interval": "@yearly",
+        "skip_doc_cnt": 100
+    },
+    "app_fise_sdi": {
+        "Sites": {
+            "sdi_fise": "config_fise_sdi"
+        },
+        "allowed_errors_for_doc": 20,
+        "elastic_config": {
+            "elastic": "elastic_fise_sdi",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_default",
+        "rabbitmq_config": "rabbitmq_fise_sdi",
+        "schedule_interval": "@yearly",
+        "skip_doc_cnt": 100
+    },
     "app_global_search": {
         "Sites": {
             "bise": "config_bise",
             "climate": "config_climate",
             "discomap": "config_discomap",
-            "eea": "config_eea",
             "eea_en": "config_eea_en",
             "eionet": "config_eionet",
             "energy": "config_energy",
@@ -130,6 +214,31 @@
         "rabbitmq_config": "rabbitmq_global_search",
         "skip_doc_cnt": 100
     },
+    "app_gs_demo": {
+        "Sites": {
+            "eea_en": "config_eea_en_demo"
+        },
+        "allowed_errors_for_doc": 2,
+        "elastic_config": {
+            "elastic": "elastic_gs_demo",
+            "elastic_mapping": "elastic_mapping_default",
+            "elastic_raw_mapping": "elastic_raw_mapping_default",
+            "elastic_settings": "elastic_settings_default"
+        },
+        "nlp_config": "nlp_services_default",
+        "rabbitmq_config": "rabbitmq_global_search",
+        "reading_time_blacklist_op": [
+            "Figure (chart/map)",
+            "Chart (interactive)",
+            "Infographic",
+            "Dashboard",
+            "Map (interactive)",
+            "Data set",
+            "External data reference"
+        ],
+        "schedule_interval": "@daily",
+        "skip_doc_cnt": 100
+    },
     "app_wise_quick": {
         "Sites": {
             "wise_marine": "config_wise_new_marine"
@@ -148,7 +257,12 @@
     },
     "app_wise_test": {
         "Sites": {
+            "wise_freshwater": "config_wise_demo_freshwater_02_pre",
+            "wise_marine": "config_wise_demo_marine"
+        },
+        "Sites_old": {
             "wise_freshwater": "config_wise_demo_freshwater",
+            "wise_freshwater_02_pre": "config_wise_demo_freshwater_02_pre",
             "wise_marine": "config_wise_demo_marine"
         },
         "allowed_errors_for_doc": 20,
@@ -273,7 +387,8 @@
                 "eea.climateadapt.c3sindicator",
                 "mission_story",
                 "mission_tool",
-                "mission_funding_cca"
+                "mission_funding_cca",
+                "eea.climateadapt.extendedtool"
             ]
         },
         "normalizers_variable": "default_normalizers",
@@ -300,7 +415,8 @@
             "eea.climateadapt.c3sindicator",
             "mission_story",
             "mission_tool",
-            "mission_funding_cca"
+            "mission_funding_cca",
+            "eea.climateadapt.extendedtool"
         ],
         "scrape_pages": true,
         "scrape_with_js": true,
@@ -389,6 +505,24 @@
         },
         "type": "plone_rest_api",
         "url": "https://land.copernicus.eu",
+        "url_api_part": "++api++"
+    },
+    "config_copernicus_land_demo": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "ignore_robots_txt": true,
+        "normalizers_variable": "default_normalizers",
+        "portal_types": [
+            "TechnicalLibrary"
+        ],
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": []
+        },
+        "type": "plone_rest_api",
+        "url": "https://clmsdemo.devel6cph.eea.europa.eu/",
         "url_api_part": "++api++"
     },
     "config_discomap": {
@@ -547,6 +681,60 @@
         "url": "https://www.eea.europa.eu/en",
         "url_api_part": "++api++/en"
     },
+    "config_eea_en_demo": {
+        "attribute_to_content_type_mapping": {
+            "mapping": {
+                "country fact sheet": [
+                    "Country fact sheet"
+                ],
+                "country profile": [
+                    "Country fact sheet"
+                ]
+            },
+            "name": "subjects"
+        },
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "fix_items_url": {
+            "with_api": "https://demo-www.eea.europa.eu/++api++/en",
+            "without_api": "https://demo-www.eea.europa.eu/en"
+        },
+        "full_portal_types": [
+            "report_pdf",
+            "web_report",
+            "briefing"
+        ],
+        "ignore_robots_txt": true,
+        "languages": [
+            "en"
+        ],
+        "normalizers_variable": "default_normalizers",
+        "pdf_days_limit": 730,
+        "portal_types": [
+            "report_pdf",
+            "web_report",
+            "briefing"
+        ],
+        "robots_txt": "https://demo-www.eea.europa.eu/robots.txt",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".stagingBanner",
+                ".header-top-item",
+                ".skiplinks-wrapper",
+                ".tab-accordion-container",
+                ".main-menu",
+                ".eea.banner",
+                ".breadcrumbs",
+                "#inpage-navigation"
+            ]
+        },
+        "type": "plone_rest_api",
+        "url": "https://demo-www.eea.europa.eu/en",
+        "url_api_part": "++api++/en"
+    },
     "config_eea_tmp": {
         "nlp_preprocessing": {
             "text": {
@@ -672,7 +860,9 @@
                 "country_biodiversity_factsheet",
                 "country_bioeconomy_factsheet",
                 "country_climate_factsheet",
-                "country_vitality_factsheet"
+                "country_vitality_factsheet",
+                "country_factsheet",
+                "glossary_term"
             ]
         },
         "normalizers_variable": "default_normalizers",
@@ -689,10 +879,191 @@
         "url": "https://forest.eea.europa.eu",
         "url_api_part": "++api++"
     },
+    "config_fise_demo_resource": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "ignore_robots_txt": true,
+        "ignore_seo_noindex_": true,
+        "normalize": {
+            "blacklist": [],
+            "whitelist": [
+                "resource",
+                "Documentation",
+                "Resource",
+                "Tabular data"
+            ]
+        },
+        "normalizers_variable": "default_normalizers",
+        "portal_types": [
+            "resource",
+            "Documentation",
+            "Resource",
+            "Tabular data"
+        ],
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".header",
+                ".breadcrumbs",
+                ".footer"
+            ]
+        },
+        "type": "plone_rest_api",
+        "url": "https://demo-forest.01dev.eea.europa.eu/",
+        "url_api_part": "++api++"
+    },
+    "config_fise_pre_resource": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "ignore_robots_txt": true,
+        "ignore_seo_noindex_": true,
+        "normalize": {
+            "blacklist": [],
+            "whitelist": [
+                "resource",
+                "Documentation",
+                "Resource",
+                "Tabular data"
+            ]
+        },
+        "normalizers_variable": "default_normalizers",
+        "portal_types": [
+            "resource",
+            "Documentation",
+            "Resource",
+            "Tabular data"
+        ],
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".header",
+                ".breadcrumbs",
+                ".footer"
+            ]
+        },
+        "type": "plone_rest_api",
+        "url": "https://demo-forest.02pre.eea.europa.eu/",
+        "url_api_part": "++api++"
+    },
+    "config_fise_resource": {
+        "avoid_cache_api": true,
+        "avoid_cache_web": true,
+        "concurrency": 4,
+        "ignore_robots_txt": true,
+        "ignore_seo_noindex_": true,
+        "normalize": {
+            "blacklist": [],
+            "whitelist": [
+                "resource",
+                "Documentation",
+                "Resource",
+                "Tabular data"
+            ]
+        },
+        "normalizers_variable": "default_normalizers",
+        "portal_types": [
+            "resource",
+            "Documentation",
+            "Resource",
+            "Tabular data"
+        ],
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".header",
+                ".breadcrumbs",
+                ".footer"
+            ]
+        },
+        "type": "plone_rest_api",
+        "url": "https://forest.eea.europa.eu/",
+        "url_api_part": "++api++"
+    },
+    "config_fise_sdi": {
+        "custom_dag": "sdi_1_crawl",
+        "custom_task_id": "crawl_sdi",
+        "disable_authorization": "AIRFLOW_VAR_SDI_AUTH_PROD",
+        "endpoint": "sdi.eea.europa.eu",
+        "fetch_all_docs": true,
+        "metadata_query": {
+            "_source": {
+                "excludes": [
+                    "*.data"
+                ]
+            },
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "metadataIdentifier": "<metadataIdentifier>"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "nlp_preprocessing": {
+            "text": {
+                "blacklist": [],
+                "whitelist": [
+                    "resourceTitleObject.default",
+                    "resourceAbstractObject.default"
+                ]
+            }
+        },
+        "normalizers_variable": "sdi_normalizers",
+        "path": "/catalogue/fise/api/search/records",
+        "port": 443,
+        "query": {
+            "_source": {
+                "includes": [
+                    "metadataIdentifier",
+                    "changeDate"
+                ]
+            },
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "terms": {
+                                "isTemplate": [
+                                    "n"
+                                ]
+                            }
+                        },
+                        {
+                            "terms": {
+                                "resourceType": [
+                                    "dataset",
+                                    "service",
+                                    "nonGeographicDataset"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            "size": 10000,
+            "track_total_hits": true
+        },
+        "threshold": 35,
+        "type": "sdi",
+        "url": "https://sdi.eea.europa.eu/catalogue/fise/api"
+    },
     "config_ias": {
         "avoid_cache_api": true,
         "avoid_cache_web": true,
         "concurrency": 4,
+        "demo_trafilatura": {
+            "main_by_css_selector": "article#content #content-core",
+            "skip_extract_with_trafilatura": true
+        },
         "ignore_robots_txt": true,
         "normalize": {
             "blacklist": [],
@@ -742,7 +1113,8 @@
             "location_rules_fallback": "Webpage",
             "whitelist": [
                 "Document",
-                "Page"
+                "Page",
+                "tableau_visualization"
             ]
         },
         "normalizers_variable": "default_normalizers",
@@ -1091,6 +1463,60 @@
         "type": "plone_rest_api",
         "url": "https://demo-water.devel5cph.eea.europa.eu/freshwater/",
         "url_api_part": ""
+    },
+    "config_wise_demo_freshwater_02_pre": {
+        "fix_items_url": {
+            "with_api": "https://demo-wise.02pre.eea.europa.eu/freshwater/++api++",
+            "without_api": "https://demo-wise.02pre.eea.europa.eu/freshwater"
+        },
+        "normalize": {
+            "blacklist": [],
+            "location_rules": [
+                {
+                    "ct": [
+                        "Topic page"
+                    ],
+                    "path": "/freshwater/europe-freshwater/*"
+                }
+            ],
+            "location_rules_fallback": "Webpage",
+            "whitelist": [
+                "Document",
+                "Page",
+                "File",
+                "News Item",
+                "visualization",
+                "CompositePage",
+                "dashboard",
+                "dataset",
+                "database",
+                "briefing",
+                "map_interactive",
+                "country_profile",
+                "measure",
+                "case_study",
+                "indicator",
+                "report_publication",
+                "visualization_tableau",
+                "glossary_term",
+                "tableau_visualization",
+                "chemical"
+            ]
+        },
+        "normalizers_variable": "default_normalizers",
+        "scrape_pages": true,
+        "scrape_with_js": true,
+        "trafilatura": {
+            "remove_by_selector": [
+                ".header",
+                ".breadcrumbs",
+                ".footerWrapper",
+                ".skiplinks-wrapper"
+            ]
+        },
+        "type": "plone_rest_api",
+        "url": "https://demo-wise.02pre.eea.europa.eu/freshwater/",
+        "url_api_part": "++api++"
     },
     "config_wise_demo_marine": {
         "concurrency": 4,
@@ -1966,7 +2392,10 @@
             "country",
             "number_of_area",
             "indicator_theme",
-            "indicator_last_update"
+            "indicator_last_update",
+            "main_content",
+            "external_content_text",
+            "external_source_url"
         ],
         "whiteMap": {}
     },
@@ -1982,6 +2411,12 @@
         "raw_index": "copernicus_raw",
         "searchui_target_index": "copernicus_searchui"
     },
+    "elastic_copernicus_demo": {
+        "host": "elastic",
+        "port": 9200,
+        "raw_index": "copernicus_demo_raw",
+        "searchui_target_index": "copernicus_demo_searchui"
+    },
     "elastic_datahub": {
         "host": "elastic",
         "port": 9200,
@@ -1994,6 +2429,30 @@
         "raw_index": "datahub_raw_demo",
         "searchui_target_index": "datahub_searchui_demo"
     },
+    "elastic_fise_demo": {
+        "host": "elastic",
+        "port": 9200,
+        "raw_index": "fise_demo_raw",
+        "searchui_target_index": "fise_demo_searchui"
+    },
+    "elastic_fise_pre": {
+        "host": "elastic",
+        "port": 9200,
+        "raw_index": "fise_pre_raw",
+        "searchui_target_index": "fise_pre_searchui"
+    },
+    "elastic_fise_prod": {
+        "host": "elastic",
+        "port": 9200,
+        "raw_index": "fise_prod_raw",
+        "searchui_target_index": "fise_prod_searchui"
+    },
+    "elastic_fise_sdi": {
+        "host": "elastic",
+        "port": 9200,
+        "raw_index": "fise_sdi_raw",
+        "searchui_target_index": "fise_sdi_searchui"
+    },
     "elastic_global_search": {
         "host": "elastic",
         "port": 9200,
@@ -2005,6 +2464,12 @@
         "port": 9200,
         "raw_index": "data_raw",
         "searchui_target_index": "data_searchui"
+    },
+    "elastic_gs_demo": {
+        "host": "elastic",
+        "port": 9200,
+        "raw_index": "data_raw_demo",
+        "searchui_target_index": "data_searchui_demo"
     },
     "elastic_mapping_default": {
         "SearchableText": {
@@ -2136,6 +2601,14 @@
         },
         "expires": {
             "type": "date"
+        },
+        "external_content_text": {
+            "copy_to": [
+                "did_you_mean",
+                "all_fields_for_freetext"
+            ],
+            "fielddata": true,
+            "type": "text"
         },
         "fleschReadingEaseScore": {
             "type": "double"
@@ -2648,7 +3121,8 @@
                         ],
                         "filter": [
                             "lowercase",
-                            "english_stop"
+                            "english_stop",
+                            "english_stemmer"
                         ],
                         "tokenizer": "standard",
                         "type": "custom"
@@ -5561,6 +6035,70 @@
             "instrument": "http://rod.eionet.europa.eu/instruments/630",
             "label": "Floods Directive"
         },
+        "http://rod.eionet.europa.eu/obligations/873": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/630",
+            "label": "Floods Directive"
+        },
+        "http://rod.eionet.europa.eu/obligations/874": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/630",
+            "label": "Floods Directive"
+        },
+        "http://rod.eionet.europa.eu/obligations/875": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/717",
+            "label": "Ambient Air Quality Directive (recast)"
+        },
+        "http://rod.eionet.europa.eu/obligations/876": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/699",
+            "label": "Drinking Water Directive (recast 2020)"
+        },
+        "http://rod.eionet.europa.eu/obligations/877": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/516",
+            "label": "Water Framework Directive (consolidated)"
+        },
+        "http://rod.eionet.europa.eu/obligations/880": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/718",
+            "label": "IEPR"
+        },
+        "http://rod.eionet.europa.eu/obligations/881": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/718",
+            "label": "IEPR"
+        },
+        "http://rod.eionet.europa.eu/obligations/882": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/654",
+            "label": "Industrial Emissions Directive (IED)"
+        },
+        "http://rod.eionet.europa.eu/obligations/883": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/699",
+            "label": "Drinking Water Directive (recast 2020)"
+        },
+        "http://rod.eionet.europa.eu/obligations/884": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/699",
+            "label": "Drinking Water Directive (recast 2020)"
+        },
+        "http://rod.eionet.europa.eu/obligations/885": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/719",
+            "label": "EU Common Data Platform for Chemicals"
+        },
+        "http://rod.eionet.europa.eu/obligations/886": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/719",
+            "label": "EU Common Data Platform for Chemicals"
+        },
+        "http://rod.eionet.europa.eu/obligations/887": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/720",
+            "label": "UWWTD (recast)"
+        },
+        "http://rod.eionet.europa.eu/obligations/888": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/720",
+            "label": "UWWTD (recast)"
+        },
+        "http://rod.eionet.europa.eu/obligations/889": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/721",
+            "label": "Decision 1313/2013 - Union Civil Protection Mechanism (UCPM)"
+        },
+        "http://rod.eionet.europa.eu/obligations/890": {
+            "instrument": "http://rod.eionet.europa.eu/instruments/516",
+            "label": "Water Framework Directive (consolidated)"
+        },
         "http://rod.eionet.europa.eu/obligations/9": {
             "instrument": "http://rod.eionet.europa.eu/instruments/500",
             "label": "LCP Directive"
@@ -5583,6 +6121,13 @@
         }
     },
     "rabbitmq_datahub": {
+        "host": "rabbitmq",
+        "password": "guest",
+        "port": "5672",
+        "queue": "search_queue",
+        "username": "guest"
+    },
+    "rabbitmq_fise_sdi": {
         "host": "rabbitmq",
         "password": "guest",
         "port": "5672",
