@@ -183,13 +183,9 @@ def normalize_climate(doc, config):
         doc_out["coder_2"] = doc["raw_value"].get("coder_2", None)
         doc_out["adaptation_support_cycle_step"] = doc["raw_value"].get(
             "adaptation_support_cycle_step", [])
-        doc_out["intended_user_groups"] = doc["raw_value"].get(
-            "intended_user_groups", [])
         doc_out["place_of_implementation"] = doc["raw_value"].get(
             "place_of_implementation", [])
-        doc_out["type_of_data"] = doc["raw_value"].get("type_of_data", [])
         doc_out["data_sources"] = doc["raw_value"].get("data_sources", [])
-        doc_out["license_status"] = doc["license_status"].get("aa", [])
         doc_out["user_support_provisions"] = doc["raw_value"].get(
             "user_support_provisions", [])
         doc_out["tool_validation_use"] = doc["raw_value"].get(
@@ -198,14 +194,10 @@ def normalize_climate(doc, config):
             "number_of_users_tool", [])
         doc_out["tool_provider_mode"] = doc["raw_value"].get(
             "tool_provider_mode", [])
-        doc_out["adaptation_support_cycle_step"] = doc["raw_value"].get(
-            "adaptation_support_cycle_step", [])
-        doc_out["type_of_outputs"] = doc["raw_value"].get(
-            "type_of_outputs", [])
         doc_out["temporality_of_data"] = doc["raw_value"].get(
             "temporality_of_data", [])
-        doc_out["only_interactive_support_tool"] = doc["only_interactive_support_tool"].get(
-            "aa", None)
+        doc_out["only_interactive_support_tool"] = doc["raw_value"].get(
+            "only_interactive_support_tool", None)
         doc_out["adaptation_cycle_step"] = doc["raw_value"].get(
             "adaptation_cycle_step", None)
         doc_out["updating_cycle_of_the_tool"] = doc["raw_value"].get(
@@ -214,6 +206,35 @@ def normalize_climate(doc, config):
             "language_accessibility", None)
         doc_out["free_access"] = doc["raw_value"].get("free_access", None)
         doc_out["hyperlink"] = doc["raw_value"].get("hyperlink", None)
+
+        doc_out["nature_based_solution"] = doc["raw_value"].get(
+            "nature_based_solution", None)
+        doc_out["tool_provider"] = doc["raw_value"].get("tool_provider", None)
+
+        accessibility_and_usability = doc["raw_value"].get(
+            "accessibility_and_usability", None)
+        print(accessibility_and_usability)
+
+        if accessibility_and_usability:
+            accessibility_and_usability = accessibility_and_usability.get(
+                'title', None)
+        doc_out["accessibility_and_usability"] = accessibility_and_usability
+
+        adaptation_support_cycle_step = doc["raw_value"].get(
+            "adaptation_support_cycle_step", None)
+        doc_out["cca_adaptation_support_cycle_step"] = vocab_to_list(
+            adaptation_support_cycle_step, 'title')
+        intended_user_groups = doc["raw_value"].get(
+            "intended_user_groups", None)
+        doc_out["cca_intended_user_groups"] = vocab_to_list(
+            intended_user_groups, 'title')
+        type_of_outputs = doc["raw_value"].get("type_of_outputs", None)
+        doc_out["cca_type_of_outputs"] = vocab_to_list(type_of_outputs, 'title')
+        type_of_data = doc["raw_value"].get("type_of_data", None)
+        doc_out["cca_type_of_data"] = vocab_to_list(type_of_data, 'title')
+        license_status = doc["raw_value"].get("license_status", None)
+        doc_out["cca_license_status"] = vocab_to_list(license_status, 'title')
+
     print(cca_preview_image)
     if portal_type == "mission_funding_cca":
         is_eu_funded = doc['raw_value'].get('is_eu_funded', False)
