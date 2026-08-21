@@ -45,6 +45,7 @@ def normalize_climate(doc, config):
     cca_origin_websites = doc["raw_value"].get("origin_website", [])
     cca_funding_programme = doc["raw_value"].get("funding_programme", None)
     cca_geographic = doc["raw_value"].get("geographic", None)
+    cca_adaptation_options = doc["raw_value"].get("cca_adaptation_options", [])
     cca_key_type_measure = doc["raw_value"].get("key_type_measures", [])
     cca_partner_contributors = doc["raw_value"].get("contributor_list", [])
     cca_key_system = doc["raw_value"].get("key_system", [])
