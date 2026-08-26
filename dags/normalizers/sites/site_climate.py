@@ -109,6 +109,7 @@ def normalize_climate(doc, config):
 
     doc_out["publication_date"] = publication_date
     doc_out["cca_keywords"] = cca_keywords
+    doc_out["cca_adaptation_options"] = cca_adaptation_options
     doc_out["cca_adaptation_sectors"] = vocab_to_list(cca_sectors)
     doc_out["cca_climate_impacts"] = vocab_to_list(cca_impacts)
     doc_out["cca_adaptation_elements"] = vocab_to_list(cca_elements)
