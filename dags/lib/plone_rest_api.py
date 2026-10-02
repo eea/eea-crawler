@@ -208,6 +208,7 @@ def get_doc_from_plone(site_config, doc_id):
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
 # def scrape_with_retry(v, url, js=False):
 def scrape_with_retry(v, url, params=[]):
+    js = params.get("scrape_with_js", False)
     logger.info("Scraping url: %s", url)
     hc = v.get("headless_chrome").get("endpoint")
     logger.info("HC: %s", hc)
