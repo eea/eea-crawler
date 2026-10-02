@@ -146,6 +146,11 @@ def request_with_retry(url, method="get", data=None):
     print("Query:")
     print(url)
     print("-------------")
+    timeout=120
+    if url == "http://nlp-searchlib:8000/api/converter":
+        timeout = 1200
+    print("Timeout:")
+    print(timeout)
     logger.info("Fetching %s", url)
     handler = getattr(requests, method)
     resp = ""
@@ -154,9 +159,9 @@ def request_with_retry(url, method="get", data=None):
             url,
             headers={"Accept": "application/json"},
             data=json.dumps(data),
-            timeout=120,
+            timeout=timeout,
         )
-        logger.info("Response: %s", resp.text)
+#        logger.info("Response: %s", resp.text)
     except:
         logger.info("Timeout")
 
@@ -206,6 +211,7 @@ def get_doc_from_plone(site_config, doc_id):
 def scrape_with_retry(v, url, js=False):
     logger.info("Scraping url: %s", url)
     hc = v.get("headless_chrome").get("endpoint")
+    logger.info("HC: %s", hc)
     if js:
         resp = requests.post(
             hc,
@@ -228,7 +234,7 @@ def scrape_with_retry(v, url, js=False):
             "final_url": final_url.split("?scrape")[0],
         }
 
-    logger.info("Downloaded: %s", downloaded)
+#    logger.info("Downloaded: %s", downloaded)
 
     return {
         "downloaded": downloaded,
@@ -296,23 +302,27 @@ def extract_attachments(json_doc, nlp_service_params, extract_pdf):
     )
 
     text_fragments = []
-
+    found_pdf = False
     if json_doc.get("@type") == "report_pdf" and extract_pdf:
         for item in json_doc.get("items", []):
             if item.get("@type") == "File":
-                download_url = f"{item.get('@id')}/@@download/file"
-                logger.info("Download url found: %s", download_url)
-                try:
-                    resp = request_with_retry(
-                        converter_dsn, "post", {"url": download_url}
-                    )
-                except Exception:
-                    logger.exception("failed file extraction for report_pdf")
+                logger.info("here 1")
+                if not found_pdf:
+                    logger.info("here 2")
+                    found_pdf = True
+                    download_url = f"{item.get('@id')}/@@download/file"
+                    logger.info("Download url found: %s", download_url)
+                    try:
+                        resp = request_with_retry(
+                            converter_dsn, "post", {"url": download_url}
+                        )
+                    except Exception:
+                        logger.exception("failed file extraction for report_pdf")
 
-                if isinstance(resp, str):
-                    resp = json.loads(resp)
-                for doc in resp["documents"]:
-                    text_fragments.append(doc["text"].strip())
+                    if isinstance(resp, str):
+                        resp = json.loads(resp)
+                    for doc in resp["documents"]:
+                        text_fragments.append(doc["text"].strip())
 
 
     for name, value in json_doc.items():
@@ -329,23 +339,28 @@ def extract_attachments(json_doc, nlp_service_params, extract_pdf):
                 extract_doc = True
 
         if extract_doc:
-            download_url = fix_download_url(value["download"], url)
-            logger.info("Download url found: %s", download_url)
-            try:
-                resp = request_with_retry(
-                    converter_dsn, "post", {"url": download_url}
-                )
-            except Exception:
-                logger.exception("failed file extraction, retry")
-                download_url = value["download"]
-                logger.info("Retry with download url: %s", download_url)
-                resp = request_with_retry(
-                    converter_dsn, "post", {"url": download_url}
-                )
-            if isinstance(resp, str):
-                resp = json.loads(resp)
-            for doc in resp["documents"]:
-                text_fragments.append(doc["text"].strip())
+            logger.info("here 3")
+            if not found_pdf:
+                logger.info("here 4")
+                found_pdf = True
+
+                download_url = fix_download_url(value["download"], url)
+                logger.info("Download url found: %s", download_url)
+                try:
+                    resp = request_with_retry(
+                        converter_dsn, "post", {"url": download_url}
+                    )
+                except Exception:
+                    logger.exception("failed file extraction, retry")
+                    download_url = value["download"]
+                    logger.info("Retry with download url: %s", download_url)
+                    resp = request_with_retry(
+                        converter_dsn, "post", {"url": download_url}
+                    )
+                if isinstance(resp, str):
+                    resp = json.loads(resp)
+                for doc in resp["documents"]:
+                    text_fragments.append(doc["text"].strip())
 
     text = "\n".join(text_fragments)
 
@@ -365,7 +380,7 @@ def extract_pdf(v, site_config, doc):
     if site_config.get("pdf_days_limit", 0) > 0:
         current_date = datetime.now()
         logger.info("CHECK DATE")
-        mod_date_str = doc.get("modification_date", doc.get("modified", None))
+        mod_date_str = doc.get("effective", doc.get("modification_date", doc.get("modified", None)))
         print(mod_date_str)
         print(doc.get("modified", None))
         if mod_date_str:

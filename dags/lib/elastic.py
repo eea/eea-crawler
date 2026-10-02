@@ -279,6 +279,43 @@ def get_all_ids_with_error(v):
         }
     return docs_dict
 
+def get_all_ids_from_raw_for_site_with_types(v, site, types):
+    es = elastic_connection(v)
+    elastic_conf = v.get("elastic")
+    query = {
+        "query": {
+            "bool": {
+                "must": [
+                    {"match": {"site_id": site}},
+                    {
+                        "terms": {
+                            "@type": types
+                        }
+                    }
+                    ],
+                "must_not": [],
+                "should": [],
+            }
+        }
+    }
+    print(query)
+    docs = get_docs(
+        es,
+        index=elastic_conf.get("raw_index"),
+        _source=["site_id", "id", "modified", "errors"],
+        query=query,
+    )
+    print("HERE!!!")
+    print(docs)
+    docs_dict = {}
+    for doc in docs:
+        docs_dict[doc["_source"]["id"]] = {
+            "modified": doc["_source"]["modified"],
+            "errors": doc["_source"].get("errors", []),
+        }
+    print(docs_dict)
+    return docs_dict
+
 
 def get_all_ids_from_raw_for_site(v, site):
     es = elastic_connection(v)
@@ -290,7 +327,8 @@ def get_all_ids_from_raw_for_site(v, site):
                 "must_not": [],
                 "should": [],
             }
-        }
+        },
+        "sort": ["_doc"]
     }
     docs = get_docs(
         es,

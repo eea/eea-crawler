@@ -45,6 +45,7 @@ def normalize_climate(doc, config):
     cca_origin_websites = doc["raw_value"].get("origin_website", [])
     cca_funding_programme = doc["raw_value"].get("funding_programme", None)
     cca_geographic = doc["raw_value"].get("geographic", None)
+    cca_adaptation_options = doc["raw_value"].get("cca_adaptation_options", [])
     cca_key_type_measure = doc["raw_value"].get("key_type_measures", [])
     cca_partner_contributors = doc["raw_value"].get("contributor_list", [])
     cca_key_system = doc["raw_value"].get("key_system", [])
@@ -108,6 +109,7 @@ def normalize_climate(doc, config):
 
     doc_out["publication_date"] = publication_date
     doc_out["cca_keywords"] = cca_keywords
+    doc_out["cca_adaptation_options"] = cca_adaptation_options
     doc_out["cca_adaptation_sectors"] = vocab_to_list(cca_sectors)
     doc_out["cca_climate_impacts"] = vocab_to_list(cca_impacts)
     doc_out["cca_adaptation_elements"] = vocab_to_list(cca_elements)
@@ -168,6 +170,8 @@ def normalize_climate(doc, config):
         if 'sub_nationals' in cca_geographic:
             doc_out["cca_sub_nationals"] = [
                 sub_national for sub_national in cca_geographic['sub_nationals']]
+        if 'city' in cca_geographic:
+            doc_out["cca_city"] = cca_geographic["city"]
     doc_out["cluster_name"] = "cca"
     doc_out["cca_include_in_search"] = "true" if is_portal_type_in_search(
         portal_type) else 'false'
@@ -206,9 +210,16 @@ def normalize_climate(doc, config):
             "language_accessibility", None)
         doc_out["free_access"] = doc["raw_value"].get("free_access", None)
         doc_out["hyperlink"] = doc["raw_value"].get("hyperlink", None)
+        doc_out["functionality"] = doc["raw_value"].get(
+            "functionality", None)
 
         doc_out["nature_based_solution"] = doc["raw_value"].get(
             "nature_based_solution", None)
+        if doc_out["nature_based_solution"]:
+            doc_out["cca_nature_based_solution"] = 'Yes'
+        else:
+            doc_out["cca_nature_based_solution"] = 'No'
+
         doc_out["tool_provider"] = doc["raw_value"].get("tool_provider", None)
 
         accessibility_and_usability = doc["raw_value"].get(
@@ -234,6 +245,14 @@ def normalize_climate(doc, config):
         doc_out["cca_type_of_data"] = vocab_to_list(type_of_data, 'title')
         license_status = doc["raw_value"].get("license_status", None)
         doc_out["cca_license_status"] = vocab_to_list(license_status, 'title')
+
+
+        focus_areas = doc["raw_value"].get("focus_areas", [])
+        place_of_implementation = doc["raw_value"].get("place_of_implementation", [])
+        elements = doc["raw_value"].get("elements", [])
+        doc_out["cca_focus_areas"] = vocab_to_list(focus_areas, 'title')
+        doc_out["cca_place_of_implementation"] = vocab_to_list(place_of_implementation, 'title')
+        doc_out["cca_elements"] = vocab_to_list(elements, 'title')
 
     print(cca_preview_image)
     if portal_type == "mission_funding_cca":
@@ -313,3 +332,4 @@ def is_portal_type_in_search(portal_type):
     if portal_type in allowed_portal_types:
         return True
     return False
+

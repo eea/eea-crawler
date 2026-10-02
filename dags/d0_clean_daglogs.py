@@ -24,8 +24,13 @@ def clean_log(dag_id, logs_dir, older_than=2, prefix="dag_id="):
     print(dag_id)
     dir_to_check = f'{logs_dir}{prefix}{dag_id}'
     print(dir_to_check)
+    print("OLDER THAN")
+    print(older_than)
 #    print(os.listdir(dir_to_check))
-    os.system(f"find {dir_to_check} -mtime +{older_than} -delete")
+    if older_than > 0:
+        os.system(f"find {dir_to_check} -mtime +{older_than} -delete")
+    else:
+        os.system(f"find {dir_to_check} -delete")
 
 @task
 def clean_logs(logs_dir, older_than):
@@ -39,6 +44,7 @@ def clean_logs(logs_dir, older_than):
     clean_log("d1_sync", logs_dir, older_than)
     clean_log("d2_crawl_site", logs_dir, older_than)
     clean_log("d3_crawl_fetch_for_id", logs_dir, older_than)
+    clean_log("d4_prepare_docs_for_searchui", logs_dir, older_than)
     clean_log("d5_prepare_doc_for_searchui", logs_dir, older_than)
     clean_log("scheduler", logs_dir, older_than, prefix="")
 

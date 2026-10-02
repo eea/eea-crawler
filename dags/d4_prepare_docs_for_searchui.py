@@ -81,10 +81,16 @@ def parse_all_documents(task_params):
     print(task_params)
     task_params['variables']['metadata_only'] = task_params.get('metadata_only')
     task_params["variables"]["sync_portal_types"] = task_params.get("portal_types", [])
-    normalizer.parse_all_documents_for_site(
-        task_params['site'], task_params["variables"], handler, send_to_rabbitmq
-    )
-
+    if len(task_params["variables"]["sync_portal_types"]) == 0:
+        print("11")
+        normalizer.parse_all_documents_for_site(
+            task_params['site'], task_params["variables"], handler, send_to_rabbitmq
+        )
+    else:
+        print("22")
+        normalizer.parse_all_documents_for_site_with_types(
+            task_params['site'], task_params["variables"]["sync_portal_types"], task_params["variables"], handler, send_to_rabbitmq
+        )
 
 @dag(
     default_args=default_args,
