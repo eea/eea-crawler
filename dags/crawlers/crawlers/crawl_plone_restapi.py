@@ -4,6 +4,7 @@ from lib import plone_rest_api, robots_txt
 import urllib.parse
 import requests
 from crawlers.registry import register_site_crawler, register_doc_crawler
+from urllib.parse import urlparse, parse_qsl, urlencode, urlunparse
 
 from datetime import datetime
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -211,6 +212,19 @@ def crawl_doc(v, site, site_config, doc_id, handler=None, extra_opts=None):
         try:
             redirected = False
             redirected_url = "initial"
+
+            url_add_visibility_sensor = site_config.get(
+                "url_add_visibility_sensor", None)
+            if url_add_visibility_sensor:
+                parsed_url = urlparse(doc_id)
+
+                query_params = parse_qsl(
+                    parsed_url.query, keep_blank_values=True)
+                query_params.append(("visibility_sensor", "off"))
+
+                doc_id = urlunparse(parsed_url._replace(
+                    query=urlencode(query_params)))
+
             while True:
                 scraped = plone_rest_api.scrape(v, site_config, doc_id)
                 if int(scraped.get("status_code", 0)) >= 400:

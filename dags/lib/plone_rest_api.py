@@ -106,7 +106,6 @@ def build_queries_list(site_config, query_config):
     if not any(substring in url for substring in url_substrings):
         if site_config.get("portal_types", None):
             # queries = []
-               
             queries = [
                 f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true&sort_order=reverse&sort_on=Date&portal_type={portal_type}{query_limit}&ts={ts}"
                 for portal_type in site_config["portal_types"]
@@ -123,7 +122,7 @@ def build_queries_list(site_config, query_config):
     else:
         if site_config.get("portal_types", None):
             # queries = []
-               
+
             queries = [
                 f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true&portal_type={portal_type}{query_limit}&ts={ts}"
                 for portal_type in site_config["portal_types"]
@@ -137,7 +136,6 @@ def build_queries_list(site_config, query_config):
             queries = [
                 f"{url}/@search?b_size={query_config['query_size']}&metadata_fields=modification_date&metadata_fields=modified&metadata_fields=seo_noindex&show_inactive=true{query_limit}&ts={ts}"
             ]
-        
     return queries
 
 
@@ -208,15 +206,23 @@ def get_doc_from_plone(site_config, doc_id):
 
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
-def scrape_with_retry(v, url, js=False):
+# def scrape_with_retry(v, url, js=False):
+def scrape_with_retry(v, url, params=[]):
+    js = params.get("scrape_with_js", False)
     logger.info("Scraping url: %s", url)
     hc = v.get("headless_chrome").get("endpoint")
     logger.info("HC: %s", hc)
     if js:
+        request_post_data = {"url": url, "js": True, "raw": True}
+        if "viewport_width" in params and params['viewport_width']:
+            request_post_data['width'] = params["viewport_width"]
+        if "viewport_height" in params and params['viewport_height']:
+            request_post_data['height'] = params["viewport_height"]
         resp = requests.post(
             hc,
             headers={"Content-Type": "application/json"},
-            data=f'{{"url":"{url}", "js":true,"raw":true}}',
+            # data=f'{{"url":"{url}", "js":true,"raw":true}}',
+            data=json.dumps(request_post_data),
         )
         downloaded = resp.text
         status = resp.status_code
@@ -247,10 +253,19 @@ def scrape(v, site_config, doc_id):
     url_without_api = get_no_api_url(site_config, doc_id)
     scrape = False
     s_url = ""
-    scrape_with_js = False
+    # scrape_with_js = False
+    scrape_params = []
     if site_config.get("scrape_pages", False):
         s_url = url_without_api
-        scrape_with_js = site_config.get("scrape_with_js", False)
+        # scrape_with_js = site_config.get("scrape_with_js", False)
+        scrape_params = {
+            'scrape_with_js': site_config.get("scrape_with_js", False),
+            'viewport_width': site_config.get(
+                "headless_chrome_viewport_width", None),
+            'viewport_height': site_config.get(
+                "headless_chrome_viewport_height", None)
+        }
+
         scrape = True
     response = {}
     if scrape:
@@ -260,7 +275,8 @@ def scrape(v, site_config, doc_id):
             #         dt.split("T")[0], "%Y-%m-%d"
             #     )
             s_url = f"{url_without_api}?scrape={dt}"
-        response = scrape_with_retry(v, s_url, scrape_with_js)
+        # response = scrape_with_retry(v, s_url, scrape_with_js)
+        response = scrape_with_retry(v, s_url, scrape_params)
     return response
 
 
