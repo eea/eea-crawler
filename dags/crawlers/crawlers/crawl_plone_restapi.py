@@ -45,11 +45,18 @@ def parse_all_documents(
 
     portal_types = site_config.get("portal_types", [])
     types_blacklist = site_config.get("types_blacklist", [])
+    site_config_normalize = site_config.get("normalize", [])
     print("TYPES BLACKLIST")
     print(types_blacklist)
     skip_docs = v.get("skip_docs", [])
     print("skip docs")
     print(skip_docs)
+    normalize_blacklist = site_config_normalize.get("blacklist", [])
+    print("site config normalize blacklist")
+    print(normalize_blacklist)
+    normalize_whitelist = site_config_normalize.get("whitelist", [])
+    print("site config normalize whitelist")
+    print(normalize_whitelist)
     ignore_seo_noindex = site_config.get("ignore_seo_noindex", None)
     print("site_config: ignore_seo_noindex={}".format(ignore_seo_noindex))
     cnt = 0
@@ -85,6 +92,14 @@ def parse_all_documents(
             if len(portal_types) > 0:
                 if doc["@type"] not in portal_types:
                     print("Skiped by portal_types")
+                    skip = True
+            if len(normalize_blacklist) > 0:
+                if doc["@type"] in normalize_blacklist:
+                    print("Skiped by normalized black portal_types")
+                    skip = True
+            if len(normalize_whitelist) > 0:
+                if doc["@type"] not in normalize_whitelist:
+                    print("Skiped by normalized white portal_types")
                     skip = True
             if doc["@type"] == "File":
                 if doc_id.split(".")[-1].lower() in SKIP_EXTENSIONS:
