@@ -46,7 +46,7 @@ def parse_all_documents(
 
     portal_types = site_config.get("portal_types", [])
     types_blacklist = site_config.get("types_blacklist", [])
-    site_config_normalize = site_config.get("normalize", [])
+    site_config_normalize = site_config.get("normalize", {})
     print("TYPES BLACKLIST")
     print(types_blacklist)
     skip_docs = v.get("skip_docs", [])
