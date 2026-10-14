@@ -126,7 +126,7 @@ def get_docs(
         es=es,
         path=path,
         index=index,
-        scroll="60m",
+        scroll="2m",
         size=scroll_size,
         body=query,
         _source=_source,
@@ -141,7 +141,7 @@ def get_docs(
         if sid is None:
             scroll_size = 0
         else:
-            data = es.scroll(scroll_id=sid, scroll="60m")
+            data = es.scroll(scroll_id=sid, scroll="2m")
 
             sid = data["_scroll_id"]
 
