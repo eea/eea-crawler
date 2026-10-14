@@ -269,7 +269,7 @@ def pre_normalize_sdi(doc, config):
             [
                 config.get("full_config", {})
                 .get("obligations", {})
-                .get(rod)["label"]
+                .get(rod,{}).get("label",None)
                 for rod in rods
             ]
         )
