@@ -17,8 +17,8 @@ def vocab_to_list(vocab, attr="title"):
     return [term[attr] for term in vocab] if vocab else []
 
 
-def vocab_to_term(term):
-    return term['title'] if term else None
+def vocab_to_term(term, attr="title"):
+    return term[attr] if term else None
 
 
 @register_facets_normalizer("climate")
@@ -230,6 +230,12 @@ def normalize_climate(doc, config):
             accessibility_and_usability = accessibility_and_usability.get(
                 'title', None)
         doc_out["accessibility_and_usability"] = accessibility_and_usability
+        print(accessibility_and_usability)
+
+        doc_out["tool_type_title"] = vocab_to_term(doc["raw_value"].get(
+            "tool_type", {}))
+        doc_out["tool_type_keyword"] = vocab_to_term(doc["raw_value"].get(
+            "tool_type", {}), 'token')
 
         adaptation_support_cycle_step = doc["raw_value"].get(
             "adaptation_support_cycle_step", None)
