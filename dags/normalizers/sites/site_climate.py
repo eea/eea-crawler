@@ -230,7 +230,6 @@ def normalize_climate(doc, config):
             accessibility_and_usability = accessibility_and_usability.get(
                 'title', None)
         doc_out["accessibility_and_usability"] = accessibility_and_usability
-        print(accessibility_and_usability)
 
         doc_out["tool_type_title"] = vocab_to_term(doc["raw_value"].get(
             "tool_type", {}))
